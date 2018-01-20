@@ -7,25 +7,30 @@ public class Player : MonoBehaviour {
 
 	/*
 	 * TODO:
-	 * wall jumps
+	 * slide down >= 45 degree slopes weirdness
+	 * stick to slopes
 	 * don't slow on walls
+	 * wall jumps
 	 * dive/roll, "attack", move combinations
 	 */
 
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
-	private const float MAX_RUN_VEL = 7.0f;
+	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
 	private const float JUMP_VEL = 12.0f;
 
-	private static Vector2 GRAVITY_VEC = new Vector2(0, GRAVITY_ACCEL);
+	private static float SLIDE_THRESHOLD;
+	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
 
 	private Rigidbody2D rb;
-
+	private float groundAngle;
 	private bool jumpQueued = false;
 	private List<GameObject> grounds = new List<GameObject>();
 	
-	void Start () {
+	void Start ()
+	{
 		rb = gameObject.GetComponent<Rigidbody2D>();
+		SLIDE_THRESHOLD = -Mathf.Sqrt(2) / 2; //player will slide down 45 degree angle slopes
 	}
 
 	private void Update()
@@ -57,18 +62,25 @@ public class Player : MonoBehaviour {
 		else
 		{
 			velocity.x += RUN_ACCEL * xVel;
-			velocity.x = Mathf.Clamp(velocity.x, -MAX_RUN_VEL, MAX_RUN_VEL);
+			float speedCap = Mathf.Abs(xVel * MAX_RUN_VEL); //use input to clamp max speed so half tilted joystick is slower
+			velocity.x = Mathf.Clamp(velocity.x, -speedCap, speedCap);
 		}
 
 		bool onGround = grounds.Count > 0;
 		if (onGround && velocity.y <= 0)
 		{
-			velocity.y = 0;
-			if (jumpQueued)
+			if (groundAngle >= SLIDE_THRESHOLD)
 			{
-				velocity.y += JUMP_VEL;
-				//print("jump~");
-				//print(velocity);
+				print("slide");
+				velocity.y += GRAVITY_ACCEL; //* slope (perp. to ground angle), * friction?
+			}
+			else
+			{
+				velocity.y = 0;
+				if (jumpQueued)
+				{
+					velocity.y += JUMP_VEL;
+				}
 			}
 		}
 		else // if (!rb.IsSleeping())
@@ -95,6 +107,8 @@ public class Player : MonoBehaviour {
 		if (IsGround(collision))
 		{
 			grounds.Add(collision.gameObject);
+			groundAngle = NormalDot(collision);
+			print(groundAngle);
 		}
 		else if (IsCeiling(collision))
 		{
@@ -116,7 +130,7 @@ public class Player : MonoBehaviour {
 		// < 0 for floor
 		// > 0 for ceiling
 		Vector2 normal = collision.contacts[0].normal;
-		return Vector2.Dot(normal, GRAVITY_VEC);
+		return Vector2.Dot(normal, GRAVITY_NORMAL);
 	}
 
 	private bool IsGround(Collision2D collision)
