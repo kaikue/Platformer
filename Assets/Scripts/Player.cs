@@ -5,10 +5,17 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-	private const float RUN_ACCEL = 0.2f;
-	private const float GRAVITY_ACCEL = -0.3f;
-	private const float MAX_RUN_VEL = 5.0f;
-	private const float JUMP_VEL = 10;
+	/*
+	 * TODO:
+	 * wall jumps
+	 * don't slow on walls
+	 * dive/roll, "attack", move combinations
+	 */
+
+	private const float RUN_ACCEL = 0.4f;
+	private const float GRAVITY_ACCEL = -0.6f;
+	private const float MAX_RUN_VEL = 7.0f;
+	private const float JUMP_VEL = 12.0f;
 
 	private static Vector2 GRAVITY_VEC = new Vector2(0, GRAVITY_ACCEL);
 
@@ -89,20 +96,42 @@ public class Player : MonoBehaviour {
 		{
 			grounds.Add(collision.gameObject);
 		}
+		else if (IsCeiling(collision))
+		{
+			Vector2 velocity = rb.velocity;
+			velocity.y = 0;
+			rb.velocity = velocity;
+		}
 	}
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
-		//TODO: try switching this back to stay so i can use normal for sliding down slopes?
-
 		//print("collision stay " + Time.fixedTime);
 		grounds.Remove(collision.gameObject);
 	}
 	
+	private float NormalDot(Collision2D collision)
+	{
+		//   0 for horizontal (walls)
+		// < 0 for floor
+		// > 0 for ceiling
+		Vector2 normal = collision.contacts[0].normal;
+		return Vector2.Dot(normal, GRAVITY_VEC);
+	}
+
 	private bool IsGround(Collision2D collision)
 	{
-		//print("Points colliding: " + collision.contacts.Length);
-		Vector2 normal = collision.contacts[0].normal;
-		return Vector2.Dot(normal, GRAVITY_VEC) < 0;
+		//TODO: Store normal for sliding down slopes?
+		return NormalDot(collision) < 0;
+	}
+
+	private bool IsCeiling(Collision2D collision)
+	{
+		return NormalDot(collision) > 0;
+	}
+
+	private bool IsWall(Collision2D collision)
+	{
+		return NormalDot(collision) == 0;
 	}
 }
