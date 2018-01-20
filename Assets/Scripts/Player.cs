@@ -8,7 +8,7 @@ public class Player : MonoBehaviour {
 	/*
 	 * TODO:
 	 * slide down >= 45 degree slopes weirdness
-	 * stick to slopes
+	 * stick to slopes while walking down
 	 * don't slow on walls
 	 * wall jumps
 	 * dive/roll, "attack", move combinations
@@ -25,6 +25,7 @@ public class Player : MonoBehaviour {
 	private Rigidbody2D rb;
 	private float groundAngle;
 	private bool jumpQueued = false;
+	private bool jumping = false;
 	private List<GameObject> grounds = new List<GameObject>();
 	
 	void Start ()
@@ -47,17 +48,12 @@ public class Player : MonoBehaviour {
 			if (Input.GetKeyDown(kcode))
 				Debug.Log("KeyCode down: " + kcode);
 		}*/
-		/*if (rb.IsSleeping()) {
-			print("i sleep");
-			rb.WakeUp();
-		}*/
-		//print("fixed update " + Time.fixedTime);
 		Vector2 velocity = rb.velocity;
 		float xVel = Input.GetAxisRaw("Horizontal");
 		if (xVel == 0 || 
 			(velocity.x != 0 && Mathf.Sign(xVel) != Mathf.Sign(velocity.x)))
 		{
-			velocity.x = 0; //TODO: slow to a stop
+			velocity.x = 0;
 		}
 		else
 		{
@@ -69,46 +65,45 @@ public class Player : MonoBehaviour {
 		bool onGround = grounds.Count > 0;
 		if (onGround && velocity.y <= 0)
 		{
-			if (groundAngle >= SLIDE_THRESHOLD)
+			/*if (groundAngle >= SLIDE_THRESHOLD)
 			{
 				print("slide");
 				velocity.y += GRAVITY_ACCEL; //* slope (perp. to ground angle), * friction?
 			}
 			else
+			{*/
+			velocity.y = 0;
+			jumping = false;
+			if (jumpQueued)
 			{
-				velocity.y = 0;
-				if (jumpQueued)
-				{
-					velocity.y += JUMP_VEL;
-				}
+				velocity.y += JUMP_VEL;
+				jumping = true;
 			}
+			//}
 		}
-		else // if (!rb.IsSleeping())
+		else
 		{
 			velocity.y += GRAVITY_ACCEL;
-			//print("offground " + rb.IsSleeping());
+			print("offground " + jumping);
+			if (!jumping)
+			{
+				//clamp to ground a bit
+			}
 		}
-
-		//print(grounds.Count);
+		
 		rb.velocity = velocity;
 		rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
 
 		jumpQueued = false;
-
-		/*if (rb.IsSleeping())
-		{
-			rb.WakeUp();
-		}*/
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		//print("collision enter " + Time.fixedTime);
 		if (IsGround(collision))
 		{
 			grounds.Add(collision.gameObject);
 			groundAngle = NormalDot(collision);
-			print(groundAngle);
+			//print(groundAngle);
 		}
 		else if (IsCeiling(collision))
 		{
@@ -120,7 +115,6 @@ public class Player : MonoBehaviour {
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
-		//print("collision stay " + Time.fixedTime);
 		grounds.Remove(collision.gameObject);
 	}
 	
@@ -135,7 +129,6 @@ public class Player : MonoBehaviour {
 
 	private bool IsGround(Collision2D collision)
 	{
-		//TODO: Store normal for sliding down slopes?
 		return NormalDot(collision) < 0;
 	}
 
