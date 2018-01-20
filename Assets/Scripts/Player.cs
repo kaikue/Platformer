@@ -14,10 +14,19 @@ public class Player : MonoBehaviour {
 
 	private Rigidbody2D rb;
 
-	private bool onGround;
+	private bool jumpQueued = false;
+	private List<GameObject> grounds = new List<GameObject>();
 	
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D>();
+	}
+
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
+		{
+			jumpQueued = true;
+		}
 	}
 
 	void FixedUpdate() {
@@ -44,51 +53,56 @@ public class Player : MonoBehaviour {
 			velocity.x = Mathf.Clamp(velocity.x, -MAX_RUN_VEL, MAX_RUN_VEL);
 		}
 
+		bool onGround = grounds.Count > 0;
 		if (onGround && velocity.y <= 0)
 		{
 			velocity.y = 0;
-			if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
+			if (jumpQueued)
 			{
 				velocity.y += JUMP_VEL;
 				//print("jump~");
 				//print(velocity);
 			}
 		}
-		else if (!rb.IsSleeping())
+		else // if (!rb.IsSleeping())
 		{
 			velocity.y += GRAVITY_ACCEL;
-			print("offground " + rb.IsSleeping());
+			//print("offground " + rb.IsSleeping());
 		}
-		
+
+		//print(grounds.Count);
 		rb.velocity = velocity;
 		rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
 
-		if (rb.IsSleeping())
+		jumpQueued = false;
+
+		/*if (rb.IsSleeping())
 		{
 			rb.WakeUp();
-		}
-		onGround = false;
+		}*/
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
 		//print("collision enter " + Time.fixedTime);
-		CheckGround(collision);
+		if (IsGround(collision))
+		{
+			grounds.Add(collision.gameObject);
+		}
 	}
 
-	private void OnCollisionStay2D(Collision2D collision)
+	private void OnCollisionExit2D(Collision2D collision)
 	{
-		//print("collision stay " + Time.fixedTime);
-		CheckGround(collision);
-	}
+		//TODO: try switching this back to stay so i can use normal for sliding down slopes?
 
-	private void CheckGround(Collision2D collision)
+		//print("collision stay " + Time.fixedTime);
+		grounds.Remove(collision.gameObject);
+	}
+	
+	private bool IsGround(Collision2D collision)
 	{
 		//print("Points colliding: " + collision.contacts.Length);
 		Vector2 normal = collision.contacts[0].normal;
-		if (Vector2.Dot(normal, GRAVITY_VEC) < 0)
-		{
-			onGround = true;
-		}
+		return Vector2.Dot(normal, GRAVITY_VEC) < 0;
 	}
 }
