@@ -6,6 +6,8 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
 	/*
+	 * https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
+	 * 
 	 * TODO:
 	 * slide down >= 45 degree slopes weirdness
 	 * stick to slopes while walking down
