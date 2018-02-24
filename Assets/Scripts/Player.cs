@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
 	 * TODO:
 	 * 
 	 * Make stars have rotatey glow (shaders)
+	 * Star pickup and animation/overlay
 	 * 
 	 * sounds
 	 *	jump/walljump/roll cancel
@@ -97,7 +98,7 @@ public class Player : MonoBehaviour {
 	private Sprite[] runSprites;
 	private Sprite[] rollSprites;
 
-	void Start()
+	private void Start()
 	{
 		baseScaleX = gameObject.transform.localScale.x;
 		baseScaleY = gameObject.transform.localScale.y;
@@ -171,7 +172,7 @@ public class Player : MonoBehaviour {
 		return standSprite;
 	}
 
-	void FixedUpdate() {
+	private void FixedUpdate() {
 		/*foreach (KeyCode kcode in Enum.GetValues(typeof(KeyCode)))
 		{
 			if (Input.GetKeyDown(kcode))
@@ -439,5 +440,19 @@ public class Player : MonoBehaviour {
 	private bool IsWall(Collision2D collision)
 	{
 		return NormalDot(collision) == 0;
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		Star star = collision.gameObject.GetComponent<Star>();
+		if (star != null)
+		{
+			//collect star if not collected
+			if (!star.WasCollected())
+			{
+				//TODO: save to file
+			}
+			Destroy(star.gameObject);
+		}
 	}
 }
