@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,35 +8,58 @@ public class Player : MonoBehaviour {
 	 * https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 	 * 
 	 * TODO:
-	 * don't slow on walls
-	 * roll, jump out in air
+	 * 
+	 * show facing direction (towards movement, not input)
+	 * 
+	 * don't slow when jumping against walls? makes walljumping easier...
+	 *		maybe just not when going up? somehow?
+	 * 
 	 * pick up/throw?
 	 * 
-	 * slide down >= 45 degree slopes weirdness
-	 * stick to slopes while walking down
+	 * slopes?
+	 *  slide down >= 45 degree slopes weirdness
+	 *  stick to slopes while walking down
+	 * 
+	 * Cool moves:
+	 *	Jump-roll for height & distance
+	 *	Jump-roll-jump for controlled distance
+	 *	Walljump-roll to climb over a lip
 	 */
 
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
 	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
-	private const float JUMP_VEL = 12.0f;
+
+	private const float JUMP_VEL = 12.0f; //jump y speed
 	private const float WALLJUMP_VEL = MAX_RUN_VEL; //speed applied at time of walljump
 	private const float WALLJUMP_MIN_FACTOR = 0.5f; //amount of walljump kept at minimum if no input
 	private const float WALLJUMP_TIME = 0.4f; //time it takes for walljump to wear off
+
+	private const float ROLL_VEL = 2 * MAX_RUN_VEL; //speed of roll
+	private const float ROLL_TIME = 0.8f; //time it takes for roll to wear off naturally
+	private const float ROLLJUMP_VEL = JUMP_VEL * 2 / 3; //roll cancel jump y speed
+	private const float ROLL_COOLDOWN_TIME = 0.1f; //time on ground it takes after a completed roll before a new one
 
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
 
 	private Rigidbody2D rb;
 	private float groundAngle;
+
 	private bool jumpQueued = false;
 	private bool jumping = false;
 	private List<GameObject> grounds = new List<GameObject>();
 	private GameObject wall = null;
-	private int wallSide = 0; //1 for left, 0 for none, -1 for right
+	private int wallSide = 0; //1 for wall on left, 0 for none, -1 for wall on right (i.e. points away from wall in x)
 	private int lastWallSide = 0;
-	private float walljumpTimer = 0; //counts down from WALLJUMP_TIME
+	private float walljumpTime = 0; //counts down from WALLJUMP_TIME
 	private bool walljumpPush = false; //if the player hasn't touched anything and the walljump should keep moving them
+	
+	private bool rollQueued = false;
+	private float rollTime = 0;
+	private bool canRoll = true;
+	private int rollDir = 1; //-1 for left, 1 for right
+	private float rollCooldown = 0;
 
 	void Start ()
 	{
@@ -51,6 +73,12 @@ public class Player : MonoBehaviour {
 		{
 			jumpQueued = true;
 		}
+
+		bool triggerPressed = Input.GetAxis("RTrigger") > 0;
+		if (Input.GetKeyDown(KeyCode.LeftShift) || triggerPressed)
+		{
+			rollQueued = true;
+		}
 	}
 
 	void FixedUpdate() {
@@ -59,6 +87,7 @@ public class Player : MonoBehaviour {
 			if (Input.GetKeyDown(kcode))
 				Debug.Log("KeyCode down: " + kcode);
 		}*/
+
 		Vector2 velocity = rb.velocity;
 		float xVel = Input.GetAxisRaw("Horizontal");
 		if (xVel == 0)
@@ -78,10 +107,15 @@ public class Player : MonoBehaviour {
 				velocity.x = Mathf.Clamp(velocity.x, -speedCap, speedCap);
 			}
 
-			if (walljumpTimer <= 0)
+			if (walljumpTime <= 0)
 			{
 				//received horizontal input, so don't let player get pushed by natural walljump velocity
 				walljumpPush = false;
+			}
+
+			if (rollTime <= 0)
+			{
+				rollDir = Math.Sign(xVel);
 			}
 		}
 
@@ -96,43 +130,62 @@ public class Player : MonoBehaviour {
 			else
 			{*/
 			ResetWalljump();
+			
+			if (rollCooldown <= 0)
+			{
+				canRoll = true;
+			}
+			else if (rollTime <= 0)
+			{
+				rollCooldown -= Time.fixedDeltaTime;
+			}
+			
 			velocity.y = 0;
 			jumping = false;
 			if (jumpQueued)
 			{
+				//regular jump
+				StopRoll();
 				velocity.y += JUMP_VEL;
 				jumping = true;
+				jumpQueued = false;
 			}
 			//}
 		}
 		else
 		{
-			if (jumpQueued)
-			{
-				print("wanna walljump: " + onGround + " " + wallSide);
-			}
 			if (!onGround && jumpQueued && wallSide != 0)
 			{
 				//walljump
-				print("walljump");
-				walljumpTimer = WALLJUMP_TIME;
+				walljumpTime = WALLJUMP_TIME;
 				lastWallSide = wallSide;
 				velocity.y = JUMP_VEL;
 				walljumpPush = true;
 				jumping = true;
+				jumpQueued = false;
 			}
+
 			velocity.y += GRAVITY_ACCEL;
-			//print("offground " + jumping);
-			if (!jumping)
+			/*if (!jumping)
 			{
 				//clamp to ground a bit
-			}
+			}*/
 		}
 		
-		if (walljumpTimer > 0 || walljumpPush)
+		if (rollTime > 0 && jumpQueued)
+		{
+			//roll cancel
+			StopRoll();
+			ResetWalljump();
+			velocity.y = ROLLJUMP_VEL;
+			jumping = true;
+			jumpQueued = false;
+		}
+
+		if (walljumpTime > 0 || walljumpPush)
 		{
 			//apply walljump velocity
-			float timeFactor = walljumpTimer / WALLJUMP_TIME;
+			float timeFactor = walljumpTime / WALLJUMP_TIME;
 			if (walljumpPush)
 			{
 				timeFactor = Mathf.Max(timeFactor, WALLJUMP_MIN_FACTOR);
@@ -142,22 +195,47 @@ public class Player : MonoBehaviour {
 			velocity.x += walljumpVel;
 			velocity.x = Mathf.Clamp(velocity.x, -MAX_RUN_VEL, MAX_RUN_VEL);
 
-			if (walljumpTimer > 0)
+			if (walljumpTime > 0)
 			{
-				walljumpTimer -= Time.fixedDeltaTime;
+				walljumpTime -= Time.fixedDeltaTime;
 			}
 		}
 
+		if (rollQueued)
+		{
+			if (canRoll)
+			{
+				canRoll = false;
+				rollTime = ROLL_TIME;
+				rollCooldown = ROLL_COOLDOWN_TIME;
+			}
+		}
+
+		if (rollTime > 0)
+		{
+			//apply roll velocity
+			float timeFactor = rollTime / ROLL_TIME;
+			float rollVel = ROLL_VEL * timeFactor;
+			velocity.x = rollDir * rollVel;
+			rollTime -= Time.fixedDeltaTime;
+		}
+		
 		rb.velocity = velocity;
 		rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
 
 		jumpQueued = false;
+		rollQueued = false;
 	}
 
 	private void ResetWalljump()
 	{
 		walljumpPush = false;
-		walljumpTimer = 0;
+		walljumpTime = 0;
+	}
+
+	private void StopRoll()
+	{
+		rollTime = 0;
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
@@ -182,6 +260,7 @@ public class Player : MonoBehaviour {
 			wall = collision.gameObject;
 
 			ResetWalljump();
+			StopRoll();
 		}
 	}
 
