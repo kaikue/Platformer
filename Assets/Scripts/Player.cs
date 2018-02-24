@@ -9,16 +9,24 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * pick up/throw?
+	 * Make stars have rotatey glow (shaders)
+	 * 
+	 * sounds
+	 *	jump/walljump/roll cancel
+	 *	roll
+	 *	wall slide?
 	 * 
 	 * slopes?
 	 *  slide down >= 45 degree slopes weirdness
 	 *  stick to slopes while walking down
 	 * 
-	 * Animation notes:
-	 *	Be sure to set NUM_RUN_FRAMES and NUM_ROLL_FRAMES
+	 * pick up/throw?
+	 * 
+	 * Art notes:
+	 *	Be sure to set NUM_RUN_FRAMES and NUM_ROLL_FRAMES to the correct values
 	 *	Default sprite facing is left (remove - in facing calculation if not)
 	 *	Wall slide sprite should face opposite of other sprites
+	 *	Star should be white, colored by material
 	 * 
 	 * Cool moves:
 	 *	Jump-roll for height & distance
