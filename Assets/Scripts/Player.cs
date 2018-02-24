@@ -9,11 +9,6 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * transition frames for roll? dont know from/to which state
-	 * 
-	 * don't slow when jumping against walls? makes walljumping easier...
-	 *		maybe just not when going up? somehow?
-	 * 
 	 * pick up/throw?
 	 * 
 	 * slopes?
@@ -61,7 +56,6 @@ public class Player : MonoBehaviour {
 	private float groundAngle;
 
 	private bool jumpQueued = false;
-	private bool jumping = false;
 	private List<GameObject> grounds = new List<GameObject>();
 	private GameObject wall = null;
 	private int wallSide = 0; //1 for wall on left, 0 for none, -1 for wall on right (i.e. points away from wall in x)
@@ -229,13 +223,11 @@ public class Player : MonoBehaviour {
 			}
 			
 			velocity.y = 0;
-			jumping = false;
 			if (jumpQueued)
 			{
 				//regular jump
 				StopRoll();
 				velocity.y += JUMP_VEL;
-				jumping = true;
 				jumpQueued = false;
 			}
 			//}
@@ -249,7 +241,6 @@ public class Player : MonoBehaviour {
 				lastWallSide = wallSide;
 				velocity.y = JUMP_VEL;
 				walljumpPush = true;
-				jumping = true;
 				jumpQueued = false;
 			}
 
@@ -266,7 +257,6 @@ public class Player : MonoBehaviour {
 			StopRoll();
 			ResetWalljump();
 			velocity.y = ROLLJUMP_VEL;
-			jumping = true;
 			jumpQueued = false;
 		}
 
