@@ -9,7 +9,7 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * show facing direction (towards movement, not input)
+	 * animate player
 	 * 
 	 * don't slow when jumping against walls? makes walljumping easier...
 	 *		maybe just not when going up? somehow?
@@ -43,6 +43,13 @@ public class Player : MonoBehaviour {
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
 
+	private const int NUM_WALK_SPRITES = 2;
+	private const int NUM_ROLL_SPRITES = 2;
+
+	private float baseScaleX;
+	private float baseScaleY;
+	private float baseScaleZ;
+
 	private Rigidbody2D rb;
 	private float groundAngle;
 
@@ -61,10 +68,59 @@ public class Player : MonoBehaviour {
 	private int rollDir = 1; //-1 for left, 1 for right
 	private float rollCooldown = 0;
 
-	void Start ()
+	enum AnimState
 	{
+		STAND,
+		JUMP,
+		WALLSLIDE,
+		WALK,
+		ROLL
+	}
+	private AnimState animState = AnimState.STAND;
+	private int animFrame = 0;
+	private int facing = 1; //for animation: -1 for left, 1 for right
+
+	private Sprite standSprite;
+	private Sprite jumpSprite;
+	private Sprite wallslideSprite;
+	private Sprite[] walkSprites;
+	private Sprite[] rollSprites;
+
+	void Start()
+	{
+		baseScaleX = gameObject.transform.localScale.x;
+		baseScaleY = gameObject.transform.localScale.y;
+		baseScaleZ = gameObject.transform.localScale.z;
+
 		rb = gameObject.GetComponent<Rigidbody2D>();
+
 		SLIDE_THRESHOLD = -Mathf.Sqrt(2) / 2; //player will slide down 45 degree angle slopes
+
+		LoadSprites();
+	}
+
+	private void LoadSprites()
+	{
+		standSprite = LoadSprite("walk");
+		jumpSprite = LoadSprite("jump");
+		wallslideSprite = LoadSprite("wallslide");
+
+		walkSprites = new Sprite[NUM_WALK_SPRITES];
+		for (int i = 0; i < NUM_WALK_SPRITES; i++)
+		{
+			walkSprites[i] = LoadSprite("walk/frame" + (i + 1));
+		}
+
+		rollSprites = new Sprite[NUM_ROLL_SPRITES];
+		for (int i = 0; i < NUM_ROLL_SPRITES; i++)
+		{
+			rollSprites[i] = LoadSprite("roll/frame" + (i + 1));
+		}
+	}
+
+	private Sprite LoadSprite(string name)
+	{
+		return Resources.Load<Sprite>("Images/player/" + name);
 	}
 
 	private void Update()
@@ -219,7 +275,13 @@ public class Player : MonoBehaviour {
 			velocity.x = rollDir * rollVel;
 			rollTime -= Time.fixedDeltaTime;
 		}
-		
+
+		if (velocity.x != 0)
+		{
+			facing = -Math.Sign(velocity.x); //make this positive if sprites face right
+		}
+		gameObject.transform.localScale = new Vector3(facing * baseScaleX, baseScaleY, baseScaleZ);
+
 		rb.velocity = velocity;
 		rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
 
