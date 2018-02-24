@@ -25,4 +25,4 @@ N/A
 
 **Other resources used:**
 
-- N/A
+- Wind chimes: https://freesound.org/people/MrCisum/sounds/336664/

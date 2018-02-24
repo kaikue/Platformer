@@ -9,8 +9,22 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * Make stars have rotatey glow (shaders)
-	 * Star pickup and animation/overlay
+	 * Star collect overlay
+	 *	from left: (picture) STAR
+	 *	from right: GET! (name)
+	 *	slows for a bit, then speeds off
+	 * 
+	 * Roll shrinks hitbox
+	 * Rolling down slopes increases speed/time
+	 * Rolling hurts enemies
+	 * 
+	 * Star pickup save in file
+	 * 
+	 * Water
+	 *	Decreases gravity
+	 *	Decreases move speed
+	 *	Allows offground jumps after swim animation is complete
+	 *		plays full swim animation then goes to swim-stand
 	 * 
 	 * sounds
 	 *	jump/walljump/roll cancel
