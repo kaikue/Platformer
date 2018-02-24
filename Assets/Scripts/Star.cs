@@ -17,7 +17,7 @@ public class Star : MonoBehaviour {
 
 	void Update()
 	{
-		float y = (Mathf.Cos(Time.time * STAR_SPEED) - 0.5f) * STAR_DISTANCE;
+		float y = (Mathf.Sin(Time.time * STAR_SPEED) - 0.5f) * STAR_DISTANCE;
 		starImage.transform.position = transform.position + new Vector3(0, y, 0);
 	}
 }
