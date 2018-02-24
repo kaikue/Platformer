@@ -200,6 +200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80cdf29cd69fcd4d96d2fd8828255f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  starCollectOverlay: {fileID: 1305064771743206, guid: 2d725f17608912745ba40d95f53849b2,
+    type: 2}
 --- !u!124 &124652417936658490
 Behaviour:
   m_ObjectHideFlags: 1

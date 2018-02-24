@@ -26,3 +26,5 @@ N/A
 **Other resources used:**
 
 - Wind chimes: https://freesound.org/people/MrCisum/sounds/336664/
+- Star collect: https://freesound.org/people/elmasmalo1/sounds/350841/
+- Font: https://www.dafont.com/mont.font

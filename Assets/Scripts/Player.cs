@@ -9,10 +9,10 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * Star collect overlay
-	 *	from left: (picture) STAR
-	 *	from right: GET! (name)
-	 *	slows for a bit, then speeds off
+	 * Fancy transitions for banner and overlay in star collect
+	 * 
+	 * Pause
+	 *	Pause when star collect overlay is up
 	 * 
 	 * Roll shrinks hitbox
 	 * Rolling down slopes increases speed/time
@@ -30,6 +30,8 @@ public class Player : MonoBehaviour {
 	 *	jump/walljump/roll cancel
 	 *	roll
 	 *	wall slide?
+	 * 
+	 * Team logo (with sound)
 	 * 
 	 * slopes?
 	 *  slide down >= 45 degree slopes weirdness
@@ -50,6 +52,8 @@ public class Player : MonoBehaviour {
 	 *	Roll-jump repeatedly to run fast
 	 */
 
+	public GameObject starCollectOverlay;
+	
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
 	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
@@ -465,6 +469,8 @@ public class Player : MonoBehaviour {
 			if (!star.WasCollected())
 			{
 				//TODO: save to file
+				GameObject o = Instantiate(starCollectOverlay);
+				o.GetComponent<StarCollectOverlay>().SetStarName(star.starText);
 			}
 			Destroy(star.gameObject);
 		}
