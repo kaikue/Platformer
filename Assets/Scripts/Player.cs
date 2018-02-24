@@ -9,7 +9,8 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * animate player
+	 * remove roll cooldown
+	 * transition frames for roll? dont know from/to which state
 	 * 
 	 * don't slow when jumping against walls? makes walljumping easier...
 	 *		maybe just not when going up? somehow?
@@ -20,10 +21,16 @@ public class Player : MonoBehaviour {
 	 *  slide down >= 45 degree slopes weirdness
 	 *  stick to slopes while walking down
 	 * 
+	 * Animation notes:
+	 *	Be sure to set NUM_RUN_FRAMES and NUM_ROLL_FRAMES
+	 *	Default sprite facing is left (remove - in facing calculation if not)
+	 *	Wall slide sprite should face opposite of other sprites
+	 * 
 	 * Cool moves:
 	 *	Jump-roll for height & distance
 	 *	Jump-roll-jump for controlled distance
 	 *	Walljump-roll to climb over a lip
+	 *	Roll-jump repeatedly to run fast
 	 */
 
 	private const float RUN_ACCEL = 0.4f;
@@ -43,8 +50,10 @@ public class Player : MonoBehaviour {
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
 
-	private const int NUM_WALK_SPRITES = 2;
-	private const int NUM_ROLL_SPRITES = 2;
+	private const int NUM_RUN_FRAMES = 2;
+	private const int NUM_ROLL_FRAMES = 2;
+
+	private const float FRAME_TIME = 0.1f; //time per frame of animation
 
 	private float baseScaleX;
 	private float baseScaleY;
@@ -73,17 +82,20 @@ public class Player : MonoBehaviour {
 		STAND,
 		JUMP,
 		WALLSLIDE,
-		WALK,
+		RUN,
 		ROLL
 	}
+	private SpriteRenderer sr;
 	private AnimState animState = AnimState.STAND;
 	private int animFrame = 0;
+	private float frameTime = FRAME_TIME;
 	private int facing = 1; //for animation: -1 for left, 1 for right
+	private bool shouldStand = false;
 
 	private Sprite standSprite;
 	private Sprite jumpSprite;
 	private Sprite wallslideSprite;
-	private Sprite[] walkSprites;
+	private Sprite[] runSprites;
 	private Sprite[] rollSprites;
 
 	void Start()
@@ -96,31 +108,34 @@ public class Player : MonoBehaviour {
 
 		SLIDE_THRESHOLD = -Mathf.Sqrt(2) / 2; //player will slide down 45 degree angle slopes
 
+		sr = gameObject.GetComponent<SpriteRenderer>();
 		LoadSprites();
 	}
 
 	private void LoadSprites()
 	{
-		standSprite = LoadSprite("walk");
+		standSprite = LoadSprite("stand");
 		jumpSprite = LoadSprite("jump");
 		wallslideSprite = LoadSprite("wallslide");
 
-		walkSprites = new Sprite[NUM_WALK_SPRITES];
-		for (int i = 0; i < NUM_WALK_SPRITES; i++)
-		{
-			walkSprites[i] = LoadSprite("walk/frame" + (i + 1));
-		}
-
-		rollSprites = new Sprite[NUM_ROLL_SPRITES];
-		for (int i = 0; i < NUM_ROLL_SPRITES; i++)
-		{
-			rollSprites[i] = LoadSprite("roll/frame" + (i + 1));
-		}
+		runSprites = new Sprite[NUM_RUN_FRAMES];
+		LoadAnim("run", runSprites, NUM_RUN_FRAMES);
+		
+		rollSprites = new Sprite[NUM_ROLL_FRAMES];
+		LoadAnim("roll", rollSprites, NUM_ROLL_FRAMES);
 	}
 
 	private Sprite LoadSprite(string name)
 	{
 		return Resources.Load<Sprite>("Images/player/" + name);
+	}
+
+	private void LoadAnim(string name, Sprite[] sprites, int numFrames)
+	{
+		for (int i = 0; i < numFrames; i++)
+		{
+			sprites[i] = LoadSprite(name + "/frame" + (i + 1));
+		}
 	}
 
 	private void Update()
@@ -135,6 +150,26 @@ public class Player : MonoBehaviour {
 		{
 			rollQueued = true;
 		}
+
+		sr.sprite = GetAnimSprite();
+	}
+
+	private Sprite GetAnimSprite()
+	{
+		switch (animState)
+		{
+			case AnimState.STAND:
+				return standSprite;
+			case AnimState.JUMP:
+				return jumpSprite;
+			case AnimState.WALLSLIDE:
+				return wallslideSprite;
+			case AnimState.RUN:
+				return runSprites[animFrame];
+			case AnimState.ROLL:
+				return rollSprites[animFrame];
+		}
+		return standSprite;
 	}
 
 	void FixedUpdate() {
@@ -145,22 +180,26 @@ public class Player : MonoBehaviour {
 		}*/
 
 		Vector2 velocity = rb.velocity;
+		shouldStand = false;
 		float xVel = Input.GetAxisRaw("Horizontal");
 		if (xVel == 0)
 		{
 			velocity.x = 0;
+			shouldStand = true;
 		}
 		else
 		{
 			if (velocity.x != 0 && Mathf.Sign(xVel) != Mathf.Sign(velocity.x)) //don't slide if switching directions on same frame
 			{
 				velocity.x = 0;
+				shouldStand = true;
 			}
 			else
 			{
 				velocity.x += RUN_ACCEL * xVel;
 				float speedCap = Mathf.Abs(xVel * MAX_RUN_VEL); //use input to clamp max speed so half tilted joystick is slower
 				velocity.x = Mathf.Clamp(velocity.x, -speedCap, speedCap);
+				SetAnimState(AnimState.RUN);
 			}
 
 			if (walljumpTime <= 0)
@@ -193,6 +232,7 @@ public class Player : MonoBehaviour {
 			}
 			else if (rollTime <= 0)
 			{
+				//finished roll and on ground, so do cooldown
 				rollCooldown -= Time.fixedDeltaTime;
 			}
 			
@@ -257,6 +297,18 @@ public class Player : MonoBehaviour {
 			}
 		}
 
+		if (velocity.y != 0 && rollTime <= 0)
+		{
+			if (wallSide != 0 && Math.Sign(velocity.x) != wallSide)
+			{
+				SetAnimState(AnimState.WALLSLIDE);
+			}
+			else
+			{
+				SetAnimState(AnimState.JUMP);
+			}
+		}
+
 		if (rollQueued)
 		{
 			if (canRoll)
@@ -274,6 +326,12 @@ public class Player : MonoBehaviour {
 			float rollVel = ROLL_VEL * timeFactor;
 			velocity.x = rollDir * rollVel;
 			rollTime -= Time.fixedDeltaTime;
+			SetAnimState(AnimState.ROLL);
+		}
+
+		if (shouldStand)
+		{
+			SetAnimState(AnimState.STAND);
 		}
 
 		if (velocity.x != 0)
@@ -298,6 +356,40 @@ public class Player : MonoBehaviour {
 	private void StopRoll()
 	{
 		rollTime = 0;
+	}
+
+	private void SetAnimState(AnimState state)
+	{
+		animState = state;
+
+		if (state != AnimState.STAND)
+		{
+			shouldStand = false;
+		}
+
+		if (state == AnimState.RUN)
+		{
+			AdvanceFrame(NUM_RUN_FRAMES);
+		}
+		else if (state == AnimState.ROLL)
+		{
+			AdvanceFrame(NUM_ROLL_FRAMES);
+		}
+		else
+		{
+			animFrame = 0;
+			frameTime = FRAME_TIME;
+		}
+	}
+
+	private void AdvanceFrame(int maxFrames)
+	{
+		frameTime -= Time.fixedDeltaTime; //physics based animations but whatever
+		if (frameTime <= 0)
+		{
+			frameTime = FRAME_TIME;
+			animFrame = (animFrame + 1) % maxFrames;
+		}
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
