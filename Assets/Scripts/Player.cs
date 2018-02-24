@@ -9,7 +9,6 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * remove roll cooldown
 	 * transition frames for roll? dont know from/to which state
 	 * 
 	 * don't slow when jumping against walls? makes walljumping easier...
@@ -45,7 +44,6 @@ public class Player : MonoBehaviour {
 	private const float ROLL_VEL = 2 * MAX_RUN_VEL; //speed of roll
 	private const float ROLL_TIME = 0.8f; //time it takes for roll to wear off naturally
 	private const float ROLLJUMP_VEL = JUMP_VEL * 2 / 3; //roll cancel jump y speed
-	private const float ROLL_COOLDOWN_TIME = 0.1f; //time on ground it takes after a completed roll before a new one
 
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
@@ -75,7 +73,6 @@ public class Player : MonoBehaviour {
 	private float rollTime = 0;
 	private bool canRoll = true;
 	private int rollDir = 1; //-1 for left, 1 for right
-	private float rollCooldown = 0;
 
 	enum AnimState
 	{
@@ -226,14 +223,9 @@ public class Player : MonoBehaviour {
 			{*/
 			ResetWalljump();
 			
-			if (rollCooldown <= 0)
+			if (rollTime <= 0)
 			{
 				canRoll = true;
-			}
-			else if (rollTime <= 0)
-			{
-				//finished roll and on ground, so do cooldown
-				rollCooldown -= Time.fixedDeltaTime;
 			}
 			
 			velocity.y = 0;
@@ -315,7 +307,6 @@ public class Player : MonoBehaviour {
 			{
 				canRoll = false;
 				rollTime = ROLL_TIME;
-				rollCooldown = ROLL_COOLDOWN_TIME;
 			}
 		}
 
