@@ -16,6 +16,7 @@ public class Star : MonoBehaviour {
 	public GameObject glow;
 	public string starText;
 	public StarType starType;
+	public int starValue;
 
 	private const float STAR_DISTANCE = 0.1f;
 	private const float STAR_SPEED = 3.0f;
@@ -33,6 +34,7 @@ public class Star : MonoBehaviour {
 		//main.startColor = new Color(color.r, color.g, color.b, ;
 
 		//TODO: set wasCollected (read from file)
+		wasCollected = GameObject.Find("GameManager").GetComponent<GameManager>().WasStarCollected(this);
 
 		if (wasCollected)
 		{

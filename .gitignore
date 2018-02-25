@@ -44,3 +44,4 @@ tags
 Application/ETRExamRoom/ExamRoomLog.s3db
 Application/ETRClockface/ClockfaceRoomLog.s3db
 config.xml
+/.save

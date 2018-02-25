@@ -9,10 +9,8 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * Star pickup save in file
-	 *
 	 * Render # stars in UI...
-	 *  of current level color, after collecting a star
+	 *  of current level color, after collecting a star or when starting level
 	 *	of door's required color, when near a door
 	 * 
 	 * Hub upper path
@@ -30,6 +28,12 @@ public class Player : MonoBehaviour {
 	 *	Glow and slide open
 	 *	Scene transition
 	 * 
+	 * Main menu
+	 *	new game button
+	 *		deletes save file if exists, creates a new one and goes to hub
+	 *	continue button (if save exists)
+	 *		loads scene corresponding to save index (first line in save)
+	 * 
 	 * Snap level objects to grid in editor?
 	 *	Player can jump ~3 units
 	 * 
@@ -42,8 +46,9 @@ public class Player : MonoBehaviour {
 	 *	Rolling hurts enemies
 	 * Bosses
 	 *	SuperStars
+	 *	Don't spawn if superstar was collected
 	 * Levels
-	 *	left: Water? Forest? Temple?
+	 *	left: Water? Rainy forest? Temple?
 	 *	up: Ice/mountain
 	 *	down: Rock
 	 *	right: Fire
@@ -66,6 +71,8 @@ public class Player : MonoBehaviour {
 	 *	star collect (level up)
 	 *	star twinkle
 	 *	collect star again (bloop)
+	 *	Landing from high fall
+	 *	Music (mute during star overlay)
 	 * 
 	 * Art
 	 *	Player animations
@@ -74,6 +81,7 @@ public class Player : MonoBehaviour {
 	 *	Spikes
 	 *	Door
 	 *	Levels, backgrounds
+	 *	Button prompts
 	 * 
 	 * Team logo (with sound)
 	 * 
