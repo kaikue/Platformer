@@ -12,18 +12,27 @@ public class Player : MonoBehaviour {
 	 * Star pickup save in file
 	 *	Render # stars of current level color in UI?
 	 * 
+	 * Doors
+	 *	Star prefab
+	 *		Get color and type
+	 *	Number required
+	 *	Left door requires yellow x 8
+	 *	Top door requires green x 8
+	 *	Bottom door requires green x 8
+	 *	Right door requires blue & red x8
+	 *	Glow and slide open
+	 *	Scene transition
+	 * 
+	 * Snap level objects to grid in editor?
+	 *	Player can jump ~3 units
+	 * 
 	 * Spikes
 	 *	Health
 	 *	Hurt you, send you back to latest checkpoint
 	 *	If you die you restart at beginning of level but keep stars
 	 * 
-	 * Doors
-	 *	Star prefab
-	 *		Get color and type
-	 *	Number required
-	 *	Slide open
-	 * 
 	 * Enemies
+	 *	Rolling hurts enemies
 	 * Bosses
 	 *	SuperStars
 	 * Levels
@@ -31,12 +40,6 @@ public class Player : MonoBehaviour {
 	 *	up: Ice/mountain
 	 *	down: Rock
 	 *	right: Fire
-	 * 
-	 * Snap level objects to grid in editor?
-	 *	Player can jump ~3 units
-	 * 
-	 * Rolling down slopes increases speed/time
-	 * Rolling hurts enemies
 	 * 
 	 * Water
 	 *	Decreases gravity
@@ -68,6 +71,7 @@ public class Player : MonoBehaviour {
 	 * Team logo (with sound)
 	 * 
 	 * slopes?
+	 *	Rolling down slopes increases roll speed/time
 	 *  slide down >= 45 degree slopes weirdness
 	 *  stick to slopes while walking down
 	 * 
@@ -87,7 +91,7 @@ public class Player : MonoBehaviour {
 	 *	Walljump-roll backwards to climb over a lip
 	 *	Roll-jump repeatedly to run fast?
 	 */
-	
+
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
 	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
