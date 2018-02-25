@@ -184,6 +184,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   starCollectOverlay: {fileID: 1305064771743206, guid: 2d725f17608912745ba40d95f53849b2,
     type: 2}
+  pausePrefab: {fileID: 1305064771743206, guid: 91f123374a64cf3468eb1ca5d9adc126,
+    type: 2}
 --- !u!124 &124652417936658490
 Behaviour:
   m_ObjectHideFlags: 1

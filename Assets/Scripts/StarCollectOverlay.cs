@@ -20,45 +20,52 @@ public class StarCollectOverlay : MonoBehaviour {
 	private const float CENTER_OFFSET = 200;
 
 	private float time = 0;
+	private float lastRealTime = 0;
 	private RectTransform leftRect;
 	private RectTransform rightRect;
 
 	private void Start()
 	{
-		float canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
 		leftRect = left.GetComponent<RectTransform>();
 		rightRect = right.GetComponent<RectTransform>();
 
+		float canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
 		leftRect.anchoredPosition = new Vector2(-CENTER_OFFSET - canvasWidth / 2, leftRect.anchoredPosition.y);
 		rightRect.anchoredPosition = new Vector2(CENTER_OFFSET + canvasWidth / 2, rightRect.anchoredPosition.y);
 
-		StartCoroutine(Animate());
+		lastRealTime = Time.realtimeSinceStartup;
 	}
-	
-	private IEnumerator Animate()
+
+	private void Update()
 	{
+		float realTime = Time.realtimeSinceStartup;
+		float deltaTime = realTime - lastRealTime;
+		lastRealTime = realTime;
+
 		//fade in overlay
 
 		//slide up contents from bottom
 
-		//slide in left and right, then slow, then out
-		while (time < SLIDE_TIME)
+		//slide in left and right, then pause, then out
+		if (time < SLIDE_TIME)
 		{
-			float offset = getTextMovement();
+			float offset = getTextMovement(deltaTime);
 			leftRect.anchoredPosition = new Vector2(leftRect.anchoredPosition.x + offset, leftRect.anchoredPosition.y);
 			rightRect.anchoredPosition = new Vector2(rightRect.anchoredPosition.x - offset, rightRect.anchoredPosition.y);
-			time += Time.deltaTime;
-			yield return new WaitForEndOfFrame();
+			time += deltaTime;
 		}
+		else
+		{
+			//slide up contents
 
-		//slide up contents
+			//fade out overlay
 
-		//fade out overlay
-
-		Destroy(gameObject);
+			GameObject.Find("GameManager").GetComponent<GameManager>().FinishOverlay();
+			Destroy(gameObject);
+		}
 	}
 
-	private float getTextMovement()
+	private float getTextMovement(float deltaTime)
 	{
 		float compression = 0;
 		float segTime = 0;
@@ -76,9 +83,8 @@ public class StarCollectOverlay : MonoBehaviour {
 		{
 			return 0;
 		}
-		//= (time > inTime) ? SPEED_COMPRESSION_OUT : SPEED_COMPRESSION_IN;
 		float speed = Mathf.Pow((time - segTime) * compression, 2) * SPEED_SCALE;
-		return speed * Time.deltaTime;
+		return speed * deltaTime;
 	}
 
 	public void SetStarName(string name)

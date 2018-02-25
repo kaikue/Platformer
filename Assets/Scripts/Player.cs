@@ -9,21 +9,24 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * Walljump adjustments
-	 *	weird on double wall
-	 *	too high
-	 * 
-	 * Don't cancel roll when hitting wall?
+	 * Pause when star collect overlay is up
 	 * 
 	 * Star pickup save in file
 	 *	Render stars of current level color in UI?
 	 * 
-	 * Snap to grid?
+	 * Spikes
+	 *	Health
+	 *	Hurt you, send you back to latest checkpoint
+	 *	If you die you restart at beginning of level but keep stars
 	 * 
-	 * Pause
-	 *	Pause when star collect overlay is up
+	 * Doors
+	 *	Star prefab
+	 *		Get color and type
+	 *	Number required
+	 *	Slide open
 	 * 
-	 * Health
+	 * Snap level objects to grid in editor?
+	 *	Player can jump ~3 units
 	 * 
 	 * Rolling down slopes increases speed/time
 	 * Rolling hurts enemies
@@ -33,6 +36,9 @@ public class Player : MonoBehaviour {
 	 *	Decreases move speed
 	 *	Allows offground jumps after swim animation is complete
 	 *		plays full swim animation then goes to swim-stand
+	 * 
+	 * Pause screen buttons
+	 *	resume, options?, quit
 	 * 
 	 * Fancy transitions for banner and overlay in star collect
 	 * 
@@ -60,11 +66,10 @@ public class Player : MonoBehaviour {
 	 * Cool moves:
 	 *	Jump-roll for height & distance
 	 *	Jump-roll-jump for controlled distance
-	 *	Walljump-roll to climb over a lip
+	 *	Jump-roll-jump (hold direction) for maximum distance
+	 *	Walljump-roll backwards to climb over a lip
 	 *	Roll-jump repeatedly to run fast
 	 */
-
-	public GameObject starCollectOverlay;
 	
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
@@ -73,7 +78,7 @@ public class Player : MonoBehaviour {
 	private const float JUMP_VEL = 14.0f; //jump y speed
 	private const float WALLJUMP_VEL = MAX_RUN_VEL; //speed applied at time of walljump
 	private const float WALLJUMP_MIN_FACTOR = 0.5f; //amount of walljump kept at minimum if no input
-	private const float WALLJUMP_TIME = 0.4f; //time it takes for walljump to wear off
+	private const float WALLJUMP_TIME = 0.5f; //time it takes for walljump to wear off
 
 	private const float ROLL_VEL = 2 * MAX_RUN_VEL; //speed of roll
 	private const float ROLL_TIME = 0.8f; //time it takes for roll to wear off naturally
@@ -93,8 +98,10 @@ public class Player : MonoBehaviour {
 	private float baseScaleY;
 	private float baseScaleZ;
 
+	private GameManager gm;
 	private BoxCollider2D bc;
 	private Rigidbody2D rb;
+
 	private float groundAngle;
 
 	private bool jumpQueued = false;
@@ -111,9 +118,7 @@ public class Player : MonoBehaviour {
 	private int rollDir = 1; //-1 for left, 1 for right
 	private float bcHeight;
 	private bool rollingCollider = false;
-
-	private int[] starsCollected;
-
+	
 	enum AnimState
 	{
 		STAND,
@@ -141,6 +146,7 @@ public class Player : MonoBehaviour {
 		baseScaleY = gameObject.transform.localScale.y;
 		baseScaleZ = gameObject.transform.localScale.z;
 
+		gm = GameObject.Find("GameManager").GetComponent<GameManager>();
 		rb = gameObject.GetComponent<Rigidbody2D>();
 		bc = gameObject.GetComponent<BoxCollider2D>();
 		bcHeight = bc.size.y;
@@ -149,8 +155,6 @@ public class Player : MonoBehaviour {
 
 		sr = gameObject.GetComponent<SpriteRenderer>();
 		LoadSprites();
-
-		LoadStars();
 	}
 
 	private void LoadSprites()
@@ -179,16 +183,14 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	private void LoadStars()
-	{
-		int numTypes = Enum.GetValues(typeof(Star.StarType)).Length;
-		starsCollected = new int[numTypes];
-		//TODO: load ...
-	}
-
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
+		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7)) //Start
+		{
+			gm.TogglePauseMenu();
+		}
+		
+		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0)) //A
 		{
 			jumpQueued = true;
 		}
@@ -219,14 +221,14 @@ public class Player : MonoBehaviour {
 		}
 		return standSprite;
 	}
-
+	
 	private void FixedUpdate() {
 		/*foreach (KeyCode kcode in Enum.GetValues(typeof(KeyCode)))
 		{
 			if (Input.GetKeyDown(kcode))
 				Debug.Log("KeyCode down: " + kcode);
 		}*/
-
+		
 		Vector2 velocity = rb.velocity;
 		shouldStand = false;
 		float xVel = Input.GetAxisRaw("Horizontal");
@@ -534,14 +536,7 @@ public class Player : MonoBehaviour {
 		Star star = collision.gameObject.GetComponent<Star>();
 		if (star != null)
 		{
-			//collect star if not collected
-			if (!star.WasCollected())
-			{
-				//TODO: save to file
-				GameObject o = Instantiate(starCollectOverlay);
-				o.GetComponent<StarCollectOverlay>().SetStarName(star.starText);
-				starsCollected[(int)star.starType]++;
-			}
+			gm.CollectStar(star);
 			Destroy(star.gameObject);
 		}
 	}
