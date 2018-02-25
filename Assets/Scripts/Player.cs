@@ -9,6 +9,12 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
+	 * Walljump adjustments
+	 *	weird on double wall
+	 *	too high
+	 * 
+	 * Don't cancel roll when hitting wall
+	 * 
 	 * Star pickup save in file
 	 *	Render stars of current level color in UI?
 	 * 
@@ -391,8 +397,8 @@ public class Player : MonoBehaviour {
 		//if it fits, otherwise keep anim state and rolling
 		bc.size = new Vector2(bc.size.x, bcHeight);
 		bc.offset = new Vector2(0, 0);
-		RaycastHit2D[] hits = Physics2D.BoxCastAll(gameObject.transform.position, bc.size, 0, Vector2.zero, 0);
-		if (hits.Length > 1) //collided with something else
+		RaycastHit2D[] hits = Physics2D.BoxCastAll(gameObject.transform.position, bc.size, 0, Vector2.zero, 0, LayerMask.GetMask("LevelGeometry"));
+		if (hits.Length > 0) //collided with something else
 		{
 			canRoll = false;
 			rollTime = 0.1f;
