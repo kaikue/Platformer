@@ -9,16 +9,16 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * Fancy transitions for banner and overlay in star collect
+	 * Star pickup save in file
+	 *	Render stars of current level color in UI?
 	 * 
 	 * Pause
 	 *	Pause when star collect overlay is up
 	 * 
-	 * Roll shrinks hitbox
+	 * Health
+	 * 
 	 * Rolling down slopes increases speed/time
 	 * Rolling hurts enemies
-	 * 
-	 * Star pickup save in file
 	 * 
 	 * Water
 	 *	Decreases gravity
@@ -26,10 +26,14 @@ public class Player : MonoBehaviour {
 	 *	Allows offground jumps after swim animation is complete
 	 *		plays full swim animation then goes to swim-stand
 	 * 
+	 * Fancy transitions for banner and overlay in star collect
+	 * 
 	 * sounds
 	 *	jump/walljump/roll cancel
 	 *	roll
 	 *	wall slide?
+	 *	star collect
+	 *	star twinkle
 	 * 
 	 * Team logo (with sound)
 	 * 
@@ -58,7 +62,7 @@ public class Player : MonoBehaviour {
 	private const float GRAVITY_ACCEL = -0.6f;
 	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
 
-	private const float JUMP_VEL = 12.0f; //jump y speed
+	private const float JUMP_VEL = 14.0f; //jump y speed
 	private const float WALLJUMP_VEL = MAX_RUN_VEL; //speed applied at time of walljump
 	private const float WALLJUMP_MIN_FACTOR = 0.5f; //amount of walljump kept at minimum if no input
 	private const float WALLJUMP_TIME = 0.4f; //time it takes for walljump to wear off
@@ -66,6 +70,7 @@ public class Player : MonoBehaviour {
 	private const float ROLL_VEL = 2 * MAX_RUN_VEL; //speed of roll
 	private const float ROLL_TIME = 0.8f; //time it takes for roll to wear off naturally
 	private const float ROLLJUMP_VEL = JUMP_VEL * 2 / 3; //roll cancel jump y speed
+	private const float ROLL_HEIGHT = 0.5f; //scale factor of height when rolling
 
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
@@ -79,6 +84,7 @@ public class Player : MonoBehaviour {
 	private float baseScaleY;
 	private float baseScaleZ;
 
+	private BoxCollider2D bc;
 	private Rigidbody2D rb;
 	private float groundAngle;
 
@@ -94,6 +100,9 @@ public class Player : MonoBehaviour {
 	private float rollTime = 0;
 	private bool canRoll = true;
 	private int rollDir = 1; //-1 for left, 1 for right
+	private float bcHeight;
+
+	private int[] starsCollected;
 
 	enum AnimState
 	{
@@ -123,11 +132,15 @@ public class Player : MonoBehaviour {
 		baseScaleZ = gameObject.transform.localScale.z;
 
 		rb = gameObject.GetComponent<Rigidbody2D>();
+		bc = gameObject.GetComponent<BoxCollider2D>();
+		bcHeight = bc.size.y;
 
 		SLIDE_THRESHOLD = -Mathf.Sqrt(2) / 2; //player will slide down 45 degree angle slopes
 
 		sr = gameObject.GetComponent<SpriteRenderer>();
 		LoadSprites();
+
+		LoadStars();
 	}
 
 	private void LoadSprites()
@@ -154,6 +167,13 @@ public class Player : MonoBehaviour {
 		{
 			sprites[i] = LoadSprite(name + "/frame" + (i + 1));
 		}
+	}
+
+	private void LoadStars()
+	{
+		int numTypes = Enum.GetValues(typeof(Star.StarType)).Length;
+		starsCollected = new int[numTypes];
+		//TODO: load ...
 	}
 
 	private void Update()
@@ -244,9 +264,10 @@ public class Player : MonoBehaviour {
 			{*/
 			ResetWalljump();
 			
-			if (rollTime <= 0)
+			if (rollTime <= 0 && !canRoll)
 			{
 				canRoll = true;
+				SetNormalCollider(); //will this always work?
 			}
 			
 			velocity.y = 0;
@@ -324,6 +345,7 @@ public class Player : MonoBehaviour {
 			{
 				canRoll = false;
 				rollTime = ROLL_TIME;
+				SetRollCollider();
 			}
 		}
 
@@ -342,6 +364,8 @@ public class Player : MonoBehaviour {
 			SetAnimState(AnimState.STAND);
 		}
 
+		AdvanceAnim();
+
 		if (velocity.x != 0)
 		{
 			facing = -Math.Sign(velocity.x); //make this positive if sprites face right
@@ -353,6 +377,27 @@ public class Player : MonoBehaviour {
 
 		jumpQueued = false;
 		rollQueued = false;
+	}
+
+	private void SetRollCollider()
+	{
+		float rollHeight = bcHeight * ROLL_HEIGHT;
+		bc.size = new Vector2(bc.size.x, rollHeight);
+		bc.offset = new Vector2(0, -rollHeight / 2);
+	}
+
+	private void SetNormalCollider()
+	{
+		//if it fits, otherwise keep anim state and rolling
+		bc.size = new Vector2(bc.size.x, bcHeight);
+		bc.offset = new Vector2(0, 0);
+		RaycastHit2D[] hits = Physics2D.BoxCastAll(gameObject.transform.position, bc.size, 0, Vector2.zero, 0);
+		if (hits.Length > 1) //collided with something else
+		{
+			canRoll = false;
+			rollTime = 0.1f;
+			SetRollCollider();
+		}
 	}
 
 	private void ResetWalljump()
@@ -374,12 +419,15 @@ public class Player : MonoBehaviour {
 		{
 			shouldStand = false;
 		}
+	}
 
-		if (state == AnimState.RUN)
+	private void AdvanceAnim()
+	{
+		if (animState == AnimState.RUN)
 		{
 			AdvanceFrame(NUM_RUN_FRAMES);
 		}
-		else if (state == AnimState.ROLL)
+		else if (animState == AnimState.ROLL)
 		{
 			AdvanceFrame(NUM_ROLL_FRAMES);
 		}
@@ -471,6 +519,7 @@ public class Player : MonoBehaviour {
 				//TODO: save to file
 				GameObject o = Instantiate(starCollectOverlay);
 				o.GetComponent<StarCollectOverlay>().SetStarName(star.starText);
+				starsCollected[(int)star.starType]++;
 			}
 			Destroy(star.gameObject);
 		}

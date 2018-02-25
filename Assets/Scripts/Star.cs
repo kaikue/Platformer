@@ -2,10 +2,20 @@
 
 public class Star : MonoBehaviour {
 	
+	public enum StarType
+	{
+		YELLOW = 0,
+		GREEN = 1,
+		BLUE = 2,
+		RED = 3,
+		WHITE = 4
+	}
+
 	public Color collectedColor;
 	public GameObject starImage;
 	public GameObject glow;
 	public string starText;
+	public StarType starType;
 
 	private const float STAR_DISTANCE = 0.1f;
 	private const float STAR_SPEED = 3.0f;

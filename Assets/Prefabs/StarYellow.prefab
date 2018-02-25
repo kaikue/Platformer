@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 114098630649771328}
   - component: {fileID: 82600503572855414}
   m_Layer: 0
-  m_Name: Star
+  m_Name: StarYellow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -258,7 +258,8 @@ MonoBehaviour:
   collectedColor: {r: 0.8784314, g: 0.8784314, b: 0.8784314, a: 0.7529412}
   starImage: {fileID: 1465823497840784}
   glow: {fileID: 1531481689843438}
-  starText: Test Star Please Ignore
+  starText: A Hop, A Skip, And A Jump
+  starType: 0
 --- !u!198 &198102985379982776
 ParticleSystem:
   m_ObjectHideFlags: 1
