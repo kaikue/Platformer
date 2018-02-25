@@ -10,16 +10,23 @@ public class Player : MonoBehaviour {
 	 * TODO:
 	 * 
 	 * Star pickup save in file
-	 *	Render # stars of current level color in UI?
+	 *
+	 * Render # stars in UI...
+	 *  of current level color, after collecting a star
+	 *	of door's required color, when near a door
+	 * 
+	 * Hub upper path
+	 * 3+ more hub stars
 	 * 
 	 * Doors
 	 *	Star prefab
 	 *		Get color and type
 	 *	Number required
-	 *	Left door requires yellow x 8
-	 *	Top door requires green x 8
-	 *	Bottom door requires green x 8
-	 *	Right door requires blue & red x8
+	 *		Left door requires yellow x 8
+	 *		Top door requires green x 8
+	 *		Bottom door requires green x 8
+	 *		Right door requires blue & red x8
+	 *		Boss doors require that level's color x5
 	 *	Glow and slide open
 	 *	Scene transition
 	 * 
