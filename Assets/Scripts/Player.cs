@@ -78,6 +78,7 @@ public class Player : MonoBehaviour {
 	 *	Default sprite facing is left (remove - in facing calculation if not)
 	 *	Wall slide sprite should face opposite of other sprites
 	 *	Star should be white, colored by material
+	 *	When changing player dimensions, update bounding box and fully retest level design
 	 * 
 	 * Cool moves:
 	 *	Jump-roll for extra air distance
