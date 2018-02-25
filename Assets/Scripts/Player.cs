@@ -13,10 +13,12 @@ public class Player : MonoBehaviour {
 	 *	weird on double wall
 	 *	too high
 	 * 
-	 * Don't cancel roll when hitting wall
+	 * Don't cancel roll when hitting wall?
 	 * 
 	 * Star pickup save in file
 	 *	Render stars of current level color in UI?
+	 * 
+	 * Snap to grid?
 	 * 
 	 * Pause
 	 *	Pause when star collect overlay is up
@@ -77,6 +79,7 @@ public class Player : MonoBehaviour {
 	private const float ROLL_TIME = 0.8f; //time it takes for roll to wear off naturally
 	private const float ROLLJUMP_VEL = JUMP_VEL * 2 / 3; //roll cancel jump y speed
 	private const float ROLL_HEIGHT = 0.5f; //scale factor of height when rolling
+	private const float ROLL_FORCE_AMOUNT = 0.1f; //how much to push the player when they can't unroll
 
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
@@ -107,6 +110,7 @@ public class Player : MonoBehaviour {
 	private bool canRoll = true;
 	private int rollDir = 1; //-1 for left, 1 for right
 	private float bcHeight;
+	private bool rollingCollider = false;
 
 	private int[] starsCollected;
 
@@ -273,7 +277,6 @@ public class Player : MonoBehaviour {
 			if (rollTime <= 0 && !canRoll)
 			{
 				canRoll = true;
-				SetNormalCollider(); //will this always work?
 			}
 			
 			velocity.y = 0;
@@ -362,7 +365,14 @@ public class Player : MonoBehaviour {
 			float rollVel = ROLL_VEL * timeFactor;
 			velocity.x = rollDir * rollVel;
 			rollTime -= Time.fixedDeltaTime;
-			SetAnimState(AnimState.ROLL);
+			if (rollTime <= 0)
+			{
+				StopRoll();
+			}
+			if (rollTime > 0) //both may be true if forced roll
+			{
+				SetAnimState(AnimState.ROLL);
+			}
 		}
 
 		if (shouldStand)
@@ -380,13 +390,14 @@ public class Player : MonoBehaviour {
 
 		rb.velocity = velocity;
 		rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
-
+		
 		jumpQueued = false;
 		rollQueued = false;
 	}
 
 	private void SetRollCollider()
 	{
+		rollingCollider = true;
 		float rollHeight = bcHeight * ROLL_HEIGHT;
 		bc.size = new Vector2(bc.size.x, rollHeight);
 		bc.offset = new Vector2(0, -rollHeight / 2);
@@ -394,6 +405,9 @@ public class Player : MonoBehaviour {
 
 	private void SetNormalCollider()
 	{
+		if (!rollingCollider) return;
+		
+		rollingCollider = false;
 		//if it fits, otherwise keep anim state and rolling
 		bc.size = new Vector2(bc.size.x, bcHeight);
 		bc.offset = new Vector2(0, 0);
@@ -401,7 +415,7 @@ public class Player : MonoBehaviour {
 		if (hits.Length > 0) //collided with something else
 		{
 			canRoll = false;
-			rollTime = 0.1f;
+			rollTime = ROLL_FORCE_AMOUNT;
 			SetRollCollider();
 		}
 	}
@@ -415,6 +429,7 @@ public class Player : MonoBehaviour {
 	private void StopRoll()
 	{
 		rollTime = 0;
+		SetNormalCollider();
 	}
 
 	private void SetAnimState(AnimState state)
