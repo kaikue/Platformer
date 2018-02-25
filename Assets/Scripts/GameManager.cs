@@ -69,6 +69,10 @@ public class GameManager : MonoBehaviour {
 			o.GetComponent<StarCollectOverlay>().SetStarName(star.starText);
 			starsCollected[(int)star.starType]++;
 		}
+		else
+		{
+			//TODO: play sound
+		}
 	}
 
 	public void FinishOverlay()

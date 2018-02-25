@@ -9,10 +9,8 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * Pause when star collect overlay is up
-	 * 
 	 * Star pickup save in file
-	 *	Render stars of current level color in UI?
+	 *	Render # stars of current level color in UI?
 	 * 
 	 * Spikes
 	 *	Health
@@ -24,6 +22,15 @@ public class Player : MonoBehaviour {
 	 *		Get color and type
 	 *	Number required
 	 *	Slide open
+	 * 
+	 * Enemies
+	 * Bosses
+	 *	SuperStars
+	 * Levels
+	 *	left: Water? Forest? Temple?
+	 *	up: Ice/mountain
+	 *	down: Rock
+	 *	right: Fire
 	 * 
 	 * Snap level objects to grid in editor?
 	 *	Player can jump ~3 units
@@ -42,12 +49,21 @@ public class Player : MonoBehaviour {
 	 * 
 	 * Fancy transitions for banner and overlay in star collect
 	 * 
-	 * sounds
+	 * Sounds
 	 *	jump/walljump/roll cancel
 	 *	roll
 	 *	wall slide?
-	 *	star collect
+	 *	star collect (level up)
 	 *	star twinkle
+	 *	collect star again (bloop)
+	 * 
+	 * Art
+	 *	Player animations
+	 *	Star
+	 *	Star collect image
+	 *	Spikes
+	 *	Door
+	 *	Levels, backgrounds
 	 * 
 	 * Team logo (with sound)
 	 * 
@@ -64,11 +80,11 @@ public class Player : MonoBehaviour {
 	 *	Star should be white, colored by material
 	 * 
 	 * Cool moves:
-	 *	Jump-roll for height & distance
+	 *	Jump-roll for extra air distance
 	 *	Jump-roll-jump for controlled distance
 	 *	Jump-roll-jump (hold direction) for maximum distance
 	 *	Walljump-roll backwards to climb over a lip
-	 *	Roll-jump repeatedly to run fast
+	 *	Roll-jump repeatedly to run fast?
 	 */
 	
 	private const float RUN_ACCEL = 0.4f;
@@ -76,7 +92,7 @@ public class Player : MonoBehaviour {
 	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
 
 	private const float JUMP_VEL = 14.0f; //jump y speed
-	private const float WALLJUMP_VEL = MAX_RUN_VEL; //speed applied at time of walljump
+	private const float WALLJUMP_VEL = 1.5f * MAX_RUN_VEL; //speed applied at time of walljump
 	private const float WALLJUMP_MIN_FACTOR = 0.5f; //amount of walljump kept at minimum if no input
 	private const float WALLJUMP_TIME = 0.5f; //time it takes for walljump to wear off
 
@@ -474,6 +490,9 @@ public class Player : MonoBehaviour {
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
 		//TODO: don't assume it's land, check that first
+
+		if (collision.contacts.Length == 0) return; //not sure what happened
+
 		if (IsGround(collision))
 		{
 			grounds.Add(collision.gameObject);
