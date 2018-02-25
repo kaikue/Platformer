@@ -47,6 +47,9 @@ TagManager:
   - name: Effects
     uniqueID: 264837467
     locked: 0
+  - name: Scenery
+    uniqueID: 131953865
+    locked: 0
   - name: Effects2
     uniqueID: 2266197163
     locked: 0

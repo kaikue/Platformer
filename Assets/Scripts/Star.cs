@@ -40,7 +40,8 @@ public class Star : MonoBehaviour {
 		{
 			color = collectedColor;
 			starImage.GetComponent<SpriteRenderer>().color = color;
-			ps.gameObject.SetActive(false); //maybe? or just set color
+			ps.gameObject.SetActive(false);
+			gameObject.GetComponent<AudioSource>().enabled = false;
 		}
 
 		glow.GetComponent<SpriteRenderer>().material.color = color;
