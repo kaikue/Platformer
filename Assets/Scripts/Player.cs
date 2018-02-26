@@ -9,8 +9,10 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
+	 * HUD is glitchy when collecting while it's up (e.g. spawn right on star)
+	 * 
 	 * Hub upper area
-	 * 3 more hub stars
+	 *	3 more hub stars
 	 * 
 	 * Doors
 	 *	Calls HUDOverlay update and show, don't hide until walk away
@@ -64,6 +66,8 @@ public class Player : MonoBehaviour {
 	 * Star collect overlay
 	 *	Different banner/star image color for different star type
 	 *	Fancy transitions for banner and overlay
+	 * 
+	 * HUD overlay- use quadratic slope for in/out movement?
 	 * 
 	 * Sounds (pitch randomization?)
 	 *	jump/walljump/roll cancel

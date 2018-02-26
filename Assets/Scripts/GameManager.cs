@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
 
 	public GameObject pausePrefab;
-	public GameObject starCollectOverlay;
+	public GameObject starCollectOverlayPrefab;
+	public GameObject hudOverlayPrefab;
 	public GameObject levelStarPrefab;
 
 	public bool paused = false;
@@ -25,7 +26,8 @@ public class GameManager : MonoBehaviour {
 	
 	private void Awake()
 	{
-		hudOverlay = gameObject.GetComponentInChildren<HUDOverlay>();
+		GameObject hudObject = Instantiate(hudOverlayPrefab);
+		hudOverlay = hudObject.GetComponent<HUDOverlay>();
 		player = GameObject.Find("Player");
 		LoadSave();
 	}
@@ -121,7 +123,7 @@ public class GameManager : MonoBehaviour {
 			starCollectedNames.Add(star.starText);
 			TogglePause();
 			overlayActive = true;
-			GameObject o = Instantiate(starCollectOverlay);
+			GameObject o = Instantiate(starCollectOverlayPrefab);
 			o.GetComponent<StarCollectOverlay>().SetStarName(star.starText);
 			starsCollected[(int)star.starType] += star.starValue;
 			SetHUDLevelStar();
