@@ -415,7 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 1978428552562054}
-  stars:
+  contents:
   - {fileID: 1773767790909440}
   - {fileID: 1243983143063040}
   - {fileID: 1645053930971908}
@@ -452,7 +452,8 @@ MonoBehaviour:
     type: 2}
   starCollectOverlay: {fileID: 1305064771743206, guid: 2d725f17608912745ba40d95f53849b2,
     type: 2}
-  levelStarPrefab: {fileID: 0}
+  levelStarPrefab: {fileID: 1880704681889390, guid: 22d5d17fd5c517645a1380ff24dbac41,
+    type: 2}
   paused: 0
 --- !u!114 &114456989670544864
 MonoBehaviour:

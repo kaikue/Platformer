@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class HUDOverlay : MonoBehaviour {
 
 	public GameObject canvas;
-	public GameObject[] stars;
+	public GameObject[] contents;
 
 	private const float SLIDE_TIME = 0.5f;
 	private const float HEIGHT_OFFSCREEN = 250;
@@ -16,27 +16,27 @@ public class HUDOverlay : MonoBehaviour {
 
 	private void Start()
 	{
-		contentRects = new RectTransform[stars.Length];
-		contentGoalsY = new float[stars.Length];
-		for (int i = 0; i < stars.Length; i++)
+		contentRects = new RectTransform[contents.Length];
+		contentGoalsY = new float[contents.Length];
+		for (int i = 0; i < contents.Length; i++)
 		{
-			contentRects[i] = stars[i].GetComponent<RectTransform>();
+			contentRects[i] = contents[i].GetComponent<RectTransform>();
 			contentGoalsY[i] = contentRects[i].anchoredPosition.y;
 		}
 	}
 
 	public void SetStars(Color[] starColors, int[] starCounts)
 	{
-		foreach (GameObject star in stars)
+		foreach (GameObject star in contents)
 		{
 			star.SetActive(false);
 		}
 
 		for (int i = 0; i < starCounts.Length; i++)
 		{
-			stars[i].SetActive(true);
-			stars[i].GetComponentInChildren<Image>().color = starColors[i];
-			stars[i].GetComponentInChildren<Text>().text = "" + starCounts[i];
+			contents[i].SetActive(true);
+			contents[i].GetComponentInChildren<Image>().color = starColors[i];
+			contents[i].GetComponentInChildren<Text>().text = "" + starCounts[i];
 		}
 	}
 

@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
 	 * TODO:
 	 * 
 	 * Hub upper area
-	 * 5 more hub stars
+	 * 3 more hub stars
 	 * 
 	 * Doors
 	 *	Calls HUDOverlay update and show, don't hide until walk away
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour {
 	 *		Boss doors require that level's color x5
 	 *		Secret final door requires all 11 of all colors
 	 *	Glow and slide open
-	 *	Scene transition
+	 *	Scene transition (to particular point in scene)
 	 * 
 	 * Main menu
 	 *	new game button
@@ -37,7 +37,7 @@ public class Player : MonoBehaviour {
 	 *	Player can jump ~3 units
 	 * 
 	 * Spikes
-	 *	Health
+	 *	Health- add to HUD
 	 *	Hurt you, send you back to latest checkpoint
 	 *	If you die you restart the scene
 	 * 
@@ -103,6 +103,10 @@ public class Player : MonoBehaviour {
 	 *	Wall slide sprite should face opposite of other sprites
 	 *	Star should be white, colored by material
 	 *	When changing player dimensions, update bounding box and fully retest level design
+	 * 
+	 * Level design notes:
+	 *	Player should visit doors before being able to open them
+	 *	Use scenery to draw attention to offscreen stuff
 	 * 
 	 * Cool moves:
 	 *	Jump-roll for extra air distance

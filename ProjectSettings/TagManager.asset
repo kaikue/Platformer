@@ -44,11 +44,14 @@ TagManager:
   - name: Background
     uniqueID: 2106582531
     locked: 0
+  - name: Scenery
+    uniqueID: 131953865
+    locked: 0
   - name: Effects
     uniqueID: 264837467
     locked: 0
-  - name: Scenery
-    uniqueID: 131953865
+  - name: Doors
+    uniqueID: 1289655777
     locked: 0
   - name: Effects2
     uniqueID: 2266197163
