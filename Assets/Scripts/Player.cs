@@ -9,8 +9,8 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * Hub upper path
-	 * 6 more hub stars
+	 * Hub upper area
+	 * 5 more hub stars
 	 * 
 	 * Doors
 	 *	Calls HUDOverlay update and show, don't hide until walk away
@@ -33,6 +33,7 @@ public class Player : MonoBehaviour {
 	 *		loads scene corresponding to save index (first line in save)
 	 * 
 	 * Snap level objects to grid in editor?
+	 *	tilemap?
 	 *	Player can jump ~3 units
 	 * 
 	 * Spikes
