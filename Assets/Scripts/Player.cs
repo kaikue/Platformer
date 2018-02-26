@@ -9,8 +9,6 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * HUD is glitchy when collecting while it's up (e.g. spawn right on star)
-	 * 
 	 * Hub upper area
 	 *	3 more hub stars
 	 * 
@@ -25,8 +23,15 @@ public class Player : MonoBehaviour {
 	 *		Right door requires blue & red x8
 	 *		Boss doors require that level's color x5
 	 *		Secret final door requires all 11 of all colors
-	 *	Glow and slide open
+	 *	Open if you have required stars
+	 *		Trigger volume
+	 *		Wait a bit
+	 *		Light up stars & numbers one by one, playing ascending tones
+	 *		Rumble & slide open
 	 *	Scene transition (to particular point in scene)
+	 *	Save & load whether opened (door name)
+	 * 
+	 * Increase roll time?
 	 * 
 	 * Main menu
 	 *	new game button
@@ -85,7 +90,7 @@ public class Player : MonoBehaviour {
 	 *	Star
 	 *	Star collect image
 	 *	Door
-	 *	Button prompts
+	 *	Signposts with button prompts
 	 *	Menus
 	 *	Levels
 	 *		Scenery

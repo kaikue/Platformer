@@ -14,6 +14,8 @@ public class HUDOverlay : MonoBehaviour {
 	private RectTransform[] contentRects;
 	private float[] contentGoalsY;
 
+	private bool showing = true;
+
 	private void Start()
 	{
 		contentRects = new RectTransform[contents.Length];
@@ -42,6 +44,7 @@ public class HUDOverlay : MonoBehaviour {
 
 	public void Hold()
 	{
+		showing = true;
 		StartCoroutine(HoldContents());
 	}
 
@@ -53,7 +56,11 @@ public class HUDOverlay : MonoBehaviour {
 
 	public void SlideIn()
 	{
-		StartCoroutine(SlideContents(true));
+		if (!showing)
+		{
+			showing = true;
+			StartCoroutine(SlideContents(true));
+		}
 	}
 
 	private IEnumerator SlideContents(bool isIn)
@@ -71,6 +78,10 @@ public class HUDOverlay : MonoBehaviour {
 		if (isIn)
 		{
 			Hold();
+		}
+		else
+		{
+			showing = false;
 		}
 	}
 
