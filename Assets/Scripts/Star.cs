@@ -23,17 +23,15 @@ public class Star : MonoBehaviour {
 
 	private bool wasCollected = false;
 	private Color color;
-
+	
 	private void Start()
 	{
-		color = starImage.GetComponent<SpriteRenderer>().color;
-		
+		color = GetColor();
+
 		ParticleSystem ps = gameObject.GetComponentInChildren<ParticleSystem>();
 		ParticleSystem.MainModule main = ps.main;
 		main.startColor = color;
-		//main.startColor = new Color(color.r, color.g, color.b, ;
-
-		//TODO: set wasCollected (read from file)
+		
 		wasCollected = GameObject.Find("GameManager").GetComponent<GameManager>().WasStarCollected(this);
 
 		if (wasCollected)
@@ -45,6 +43,11 @@ public class Star : MonoBehaviour {
 		}
 
 		glow.GetComponent<SpriteRenderer>().material.color = color;
+	}
+
+	public Color GetColor()
+	{
+		return starImage.GetComponent<SpriteRenderer>().color;
 	}
 
 	private void Update()

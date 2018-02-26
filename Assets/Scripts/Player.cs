@@ -9,22 +9,20 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
-	 * Render # stars in UI...
-	 *  of current level color, after collecting a star or when starting level
-	 *	of door's required color, when near a door
-	 * 
 	 * Hub upper path
-	 * 3+ more hub stars
+	 * 6 more hub stars
 	 * 
 	 * Doors
-	 *	Star prefab
+	 *	Calls HUDOverlay update and show, don't hide until walk away
+	 *	Star prefabs
 	 *		Get color and type
-	 *	Number required
+	 *	Numbers required
 	 *		Left door requires yellow x 8
 	 *		Top door requires green x 8
 	 *		Bottom door requires green x 8
 	 *		Right door requires blue & red x8
 	 *		Boss doors require that level's color x5
+	 *		Secret final door requires all 11 of all colors
 	 *	Glow and slide open
 	 *	Scene transition
 	 * 
@@ -40,12 +38,12 @@ public class Player : MonoBehaviour {
 	 * Spikes
 	 *	Health
 	 *	Hurt you, send you back to latest checkpoint
-	 *	If you die you restart at beginning of level but keep stars
+	 *	If you die you restart the scene
 	 * 
 	 * Enemies
 	 *	Rolling hurts enemies
 	 * Bosses
-	 *	SuperStars
+	 *	Super Stars (x3, different overlay text & image)
 	 *	Don't spawn if superstar was collected
 	 * Levels
 	 *	left: Water? Rainy forest? Temple?
@@ -62,9 +60,11 @@ public class Player : MonoBehaviour {
 	 * Pause screen buttons
 	 *	resume, options?, quit
 	 * 
-	 * Fancy transitions for banner and overlay in star collect
+	 * Star collect overlay
+	 *	Different banner/star image color for different star type
+	 *	Fancy transitions for banner and overlay
 	 * 
-	 * Sounds
+	 * Sounds (pitch randomization?)
 	 *	jump/walljump/roll cancel
 	 *	roll
 	 *	wall slide?
@@ -72,16 +72,20 @@ public class Player : MonoBehaviour {
 	 *	star twinkle
 	 *	collect star again (bloop)
 	 *	Landing from high fall
-	 *	Music (mute during star overlay)
+	 *	Door open
+	 *	Level music (mute during star overlay)
 	 * 
 	 * Art
 	 *	Player animations
 	 *	Star
 	 *	Star collect image
-	 *	Spikes
 	 *	Door
-	 *	Levels, backgrounds
 	 *	Button prompts
+	 *	Menus
+	 *	Levels
+	 *		Scenery
+	 *		Backgrounds
+	 *	Spikes
 	 * 
 	 * Team logo (with sound)
 	 * 

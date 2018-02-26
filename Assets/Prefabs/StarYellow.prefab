@@ -260,6 +260,7 @@ MonoBehaviour:
   glow: {fileID: 1531481689843438}
   starText: Test Star Please Ignore
   starType: 0
+  starValue: 1
 --- !u!198 &198102985379982776
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -3655,7 +3656,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2028770133
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_RenderMode: 0
   m_SortMode: 0
@@ -3707,7 +3708,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1544870823
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1fd6f60a7186b6b48b3720b3d2fdfa58, type: 3}
   m_Color: {r: 1, g: 0.81960785, b: 0, a: 1}

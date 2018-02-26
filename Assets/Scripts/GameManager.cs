@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject pausePrefab;
 	public GameObject starCollectOverlay;
+	public GameObject levelStarPrefab;
 
 	public bool paused = false;
 	private bool overlayActive = false;
@@ -16,16 +17,19 @@ public class GameManager : MonoBehaviour {
 
 	private GameObject player;
 	private GameObject pauseOverlay;
+	private HUDOverlay hudOverlay;
+	private Star levelStar;
 
 	private int[] starsCollected;
 	private List<string> starCollectedNames;
 	
 	private void Awake()
 	{
+		hudOverlay = gameObject.GetComponentInChildren<HUDOverlay>();
 		player = GameObject.Find("Player");
 		LoadSave();
 	}
-
+	
 	private void LoadSave()
 	{
 		int numTypes = Enum.GetValues(typeof(Star.StarType)).Length;
@@ -59,6 +63,20 @@ public class GameManager : MonoBehaviour {
 	private void AppendToSave(string line)
 	{
 		File.AppendAllText(SAVE_PATH, line + Environment.NewLine);
+	}
+
+	private void Start()
+	{
+		SetHUDLevelStar();
+		hudOverlay.Hold();
+	}
+
+	private void SetHUDLevelStar()
+	{
+		levelStar = levelStarPrefab.GetComponent<Star>();
+		Color[] starColors = new Color[] { levelStar.GetColor() };
+		int[] starCounts = new int[] { starsCollected[(int)levelStar.starType] };
+		hudOverlay.SetStars(starColors, starCounts);
 	}
 
 	private void TogglePause()
@@ -106,6 +124,8 @@ public class GameManager : MonoBehaviour {
 			GameObject o = Instantiate(starCollectOverlay);
 			o.GetComponent<StarCollectOverlay>().SetStarName(star.starText);
 			starsCollected[(int)star.starType] += star.starValue;
+			SetHUDLevelStar();
+			hudOverlay.SlideIn();
 		}
 		else
 		{
