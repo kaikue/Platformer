@@ -12,17 +12,6 @@ public class Player : MonoBehaviour {
 	 * Hub upper area
 	 *	3 more hub stars
 	 * 
-	 * Horizontal doors
-	 * Doors save/load
-	 * Doors don't hide HUD until you walk away
-	 * 
-	 * Left door requires yellow x 8
-	 * Top door requires green x 8
-	 * Bottom door requires green x 8
-	 * Right door requires blue & red x8
-	 * Boss doors require that level's color x5
-	 * Secret final door requires all 11 of all colors
-	 * 
 	 * Scene transition (to particular point in scene)
 	 * 
 	 * Increase roll time?
@@ -52,6 +41,8 @@ public class Player : MonoBehaviour {
 	 *	up: Ice/mountain
 	 *	down: Rock
 	 *	right: Fire
+	 *	Boss doors require that level's color x5
+	 *	Secret final door requires all 11 of all colors
 	 * 
 	 * Water
 	 *	Decreases gravity
@@ -67,6 +58,8 @@ public class Player : MonoBehaviour {
 	 *	Fancy transitions for banner and overlay
 	 * 
 	 * HUD overlay- use quadratic slope for in/out movement?
+	 * 
+	 * Doors don't hide HUD until you walk away
 	 * 
 	 * Sounds (pitch randomization?)
 	 *	jump/walljump/roll cancel
@@ -595,7 +588,7 @@ public class Player : MonoBehaviour {
 		Door door = collision.gameObject.GetComponent<Door>();
 		if (door != null)
 		{
-			gm.hudOverlay.SlideIn(); //TODO: hold until leaving?
+			gm.ShowHUDDoorStars(door);
 			door.TryOpen();
 		}
 	}

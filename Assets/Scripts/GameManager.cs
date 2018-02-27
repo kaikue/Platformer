@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour {
 
 	private GameObject player;
 	private GameObject pauseOverlay;
-	public HUDOverlay hudOverlay;
+	private HUDOverlay hudOverlay;
 	private Star levelStar;
 
 	public int[] starsCollected;
@@ -88,6 +88,22 @@ public class GameManager : MonoBehaviour {
 		Color[] starColors = new Color[] { levelStar.GetColor() };
 		int[] starCounts = new int[] { starsCollected[(int)levelStar.starType] };
 		hudOverlay.SetStars(starColors, starCounts);
+	}
+
+	public void ShowHUDDoorStars(Door door)
+	{
+		GameObject[] doorStars = door.starsRequiredPrefabs;
+		Color[] starColors = new Color[doorStars.Length];
+		int[] starCounts = new int[doorStars.Length];
+		for (int i = 0; i < doorStars.Length; i++)
+		{
+			Star star = doorStars[i].GetComponent<Star>();
+			starColors[i] = star.GetColor();
+			starCounts[i] = starsCollected[(int)star.starType];
+		}
+		
+		hudOverlay.SetStars(starColors, starCounts);
+		hudOverlay.SlideIn();
 	}
 
 	private void TogglePause()

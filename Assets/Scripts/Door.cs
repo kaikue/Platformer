@@ -31,6 +31,9 @@ public class Door : MonoBehaviour {
 		{
 			requirements[i].GetComponentInChildren<SpriteRenderer>().color = starsRequiredPrefabs[i].GetComponent<Star>().GetColor();
 			requirements[i].GetComponentInChildren<Text>().text = "" + starsRequiredCounts[i];
+			//rotate to look normal
+			requirements[i].GetComponentInChildren<SpriteRenderer>().gameObject.transform.rotation = Quaternion.identity;
+			requirements[i].GetComponentInChildren<Text>().gameObject.transform.rotation = Quaternion.identity;
 		}
 		for (int i = starsRequiredCounts.Length; i < requirements.Length; i++)
 		{
@@ -43,7 +46,7 @@ public class Door : MonoBehaviour {
 		closedPos = gameObject.transform.position;
 		openPos = new Vector3(closedPos.x + openOffsetX, closedPos.y + openOffsetY, closedPos.z);
 
-		//TODO destroy if was previously opened
+		//destroy if was previously opened
 		if (gm.WasDoorOpened(doorName))
 		{
 			Destroy(gameObject);
