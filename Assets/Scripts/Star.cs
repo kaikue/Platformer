@@ -8,7 +8,7 @@ public class Star : MonoBehaviour {
 		GREEN = 1,
 		BLUE = 2,
 		RED = 3,
-		WHITE = 4
+		ORANGE = 4
 	}
 
 	public Color collectedColor;

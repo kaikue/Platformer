@@ -2913,6 +2913,11 @@ Prefab:
       propertyPath: m_LocalScale.x
       value: 1.1593453
       objectReference: {fileID: 0}
+    - target: {fileID: 114357649406773892, guid: 6c1e007034d81d24a890792df2ab353f,
+        type: 2}
+      propertyPath: doorName
+      value: HubDown
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c1e007034d81d24a890792df2ab353f, type: 2}
   m_IsPrefabParent: 0
@@ -4541,6 +4546,11 @@ Prefab:
       propertyPath: m_Name
       value: Door Right
       objectReference: {fileID: 0}
+    - target: {fileID: 114357649406773892, guid: 6c1e007034d81d24a890792df2ab353f,
+        type: 2}
+      propertyPath: doorName
+      value: HubRight
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c1e007034d81d24a890792df2ab353f, type: 2}
   m_IsPrefabParent: 0
@@ -4853,7 +4863,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4139660648004024, guid: 6c1e007034d81d24a890792df2ab353f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.89
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 4139660648004024, guid: 6c1e007034d81d24a890792df2ab353f, type: 2}
       propertyPath: m_LocalPosition.y
@@ -4886,6 +4896,11 @@ Prefab:
     - target: {fileID: 1346817833254724, guid: 6c1e007034d81d24a890792df2ab353f, type: 2}
       propertyPath: m_Name
       value: Door Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 114357649406773892, guid: 6c1e007034d81d24a890792df2ab353f,
+        type: 2}
+      propertyPath: doorName
+      value: HubLeft
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c1e007034d81d24a890792df2ab353f, type: 2}
@@ -6149,6 +6164,11 @@ Prefab:
       propertyPath: m_LocalScale.x
       value: 0.88336545
       objectReference: {fileID: 0}
+    - target: {fileID: 114357649406773892, guid: 6c1e007034d81d24a890792df2ab353f,
+        type: 2}
+      propertyPath: doorName
+      value: HubUp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c1e007034d81d24a890792df2ab353f, type: 2}
   m_IsPrefabParent: 0
@@ -6166,11 +6186,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4571929498965154, guid: 9f2224f7406ba364d93f33521bdd165c, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.02
+      value: 6.3
       objectReference: {fileID: 0}
     - target: {fileID: 4571929498965154, guid: 9f2224f7406ba364d93f33521bdd165c, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1.52
+      value: 23.38
       objectReference: {fileID: 0}
     - target: {fileID: 4571929498965154, guid: 9f2224f7406ba364d93f33521bdd165c, type: 2}
       propertyPath: m_LocalPosition.z

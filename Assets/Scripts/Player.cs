@@ -12,24 +12,18 @@ public class Player : MonoBehaviour {
 	 * Hub upper area
 	 *	3 more hub stars
 	 * 
-	 * Doors
-	 *	Calls HUDOverlay update and show, don't hide until walk away
-	 *	Star prefabs
-	 *		Get color and type
-	 *	Numbers required
-	 *		Left door requires yellow x 8
-	 *		Top door requires green x 8
-	 *		Bottom door requires green x 8
-	 *		Right door requires blue & red x8
-	 *		Boss doors require that level's color x5
-	 *		Secret final door requires all 11 of all colors
-	 *	Open if you have required stars
-	 *		Trigger volume
-	 *		Wait a bit
-	 *		Light up stars & numbers one by one, playing ascending tones
-	 *		Rumble & slide open
-	 *	Scene transition (to particular point in scene)
-	 *	Save & load whether opened (door name)
+	 * Horizontal doors
+	 * Doors save/load
+	 * Doors don't hide HUD until you walk away
+	 * 
+	 * Left door requires yellow x 8
+	 * Top door requires green x 8
+	 * Bottom door requires green x 8
+	 * Right door requires blue & red x8
+	 * Boss doors require that level's color x5
+	 * Secret final door requires all 11 of all colors
+	 * 
+	 * Scene transition (to particular point in scene)
 	 * 
 	 * Increase roll time?
 	 * 
@@ -82,7 +76,8 @@ public class Player : MonoBehaviour {
 	 *	star twinkle
 	 *	collect star again (bloop)
 	 *	Landing from high fall
-	 *	Door open
+	 *	Door sliding open
+	 *	Door ascending tones
 	 *	Level music (mute during star overlay)
 	 * 
 	 * Art
@@ -595,6 +590,13 @@ public class Player : MonoBehaviour {
 		{
 			gm.CollectStar(star);
 			Destroy(star.gameObject);
+		}
+
+		Door door = collision.gameObject.GetComponent<Door>();
+		if (door != null)
+		{
+			gm.hudOverlay.SlideIn(); //TODO: hold until leaving?
+			door.TryOpen();
 		}
 	}
 }

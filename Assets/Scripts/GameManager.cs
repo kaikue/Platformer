@@ -18,12 +18,13 @@ public class GameManager : MonoBehaviour {
 
 	private GameObject player;
 	private GameObject pauseOverlay;
-	private HUDOverlay hudOverlay;
+	public HUDOverlay hudOverlay;
 	private Star levelStar;
 
-	private int[] starsCollected;
+	public int[] starsCollected;
 	private List<string> starCollectedNames;
-	
+	private List<string> doorsOpenedNames;
+
 	private void Awake()
 	{
 		GameObject hudObject = Instantiate(hudOverlayPrefab);
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour {
 		int numTypes = Enum.GetValues(typeof(Star.StarType)).Length;
 		starsCollected = new int[numTypes];
 		starCollectedNames = new List<string>();
+		doorsOpenedNames = new List<string>();
 
 		//create file (temporary here, move to newgame later)
 		if (!File.Exists(SAVE_PATH))
@@ -52,10 +54,17 @@ public class GameManager : MonoBehaviour {
 		{
 			string line = lines[l];
 			string[] split = line.Split('|');
-			starCollectedNames.Add(split[0]);
-			int type = int.Parse(split[1]);
-			int num = int.Parse(split[2]);
-			starsCollected[type] += num;
+			if (split[0] == "S")
+			{
+				starCollectedNames.Add(split[1]);
+				int type = int.Parse(split[2]);
+				int num = int.Parse(split[3]);
+				starsCollected[type] += num;
+			}
+			else if (split[0] == "D")
+			{
+				doorsOpenedNames.Add(split[1]);
+			}
 		}
 
 		lines[0] = "" + SceneManager.GetActiveScene().buildIndex;
@@ -119,7 +128,7 @@ public class GameManager : MonoBehaviour {
 	{
 		if (!star.WasCollected())
 		{
-			AppendToSave(star.starText + "|" + ((int)star.starType) + "|" + star.starValue);
+			AppendToSave("S|" + star.starText + "|" + ((int)star.starType) + "|" + star.starValue);
 			starCollectedNames.Add(star.starText);
 			TogglePause();
 			overlayActive = true;
@@ -139,5 +148,16 @@ public class GameManager : MonoBehaviour {
 	{
 		TogglePause();
 		overlayActive = false;
+	}
+
+	public void SaveDoor(string doorName)
+	{
+		doorsOpenedNames.Add(doorName);
+		AppendToSave("D|" + doorName);
+	}
+
+	public bool WasDoorOpened(string doorName)
+	{
+		return doorsOpenedNames.Contains(doorName);
 	}
 }
