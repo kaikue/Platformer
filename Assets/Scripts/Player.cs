@@ -14,8 +14,6 @@ public class Player : MonoBehaviour {
 	 * 
 	 * Scene transition (to particular point in scene)
 	 * 
-	 * Increase roll time?
-	 * 
 	 * Main menu
 	 *	new game button
 	 *		deletes save file if exists, creates a new one and goes to hub
@@ -123,7 +121,7 @@ public class Player : MonoBehaviour {
 	private const float WALLJUMP_TIME = 0.5f; //time it takes for walljump to wear off
 
 	private const float ROLL_VEL = 2 * MAX_RUN_VEL; //speed of roll
-	private const float ROLL_TIME = 0.8f; //time it takes for roll to wear off naturally
+	private const float ROLL_TIME = 1.0f; //time it takes for roll to wear off naturally
 	private const float ROLLJUMP_VEL = JUMP_VEL * 2 / 3; //roll cancel jump y speed
 	private const float ROLL_HEIGHT = 0.5f; //scale factor of height when rolling
 	private const float ROLL_FORCE_AMOUNT = 0.1f; //how much to push the player when they can't unroll
