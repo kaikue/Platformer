@@ -2844,7 +2844,12 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1373162820166338, guid: 9a9adfcc3bee9cc488d7d4d9663231e1, type: 2}
       propertyPath: m_Name
-      value: DoorDown
+      value: Door Down
+      objectReference: {fileID: 0}
+    - target: {fileID: 114738358453138788, guid: 9a9adfcc3bee9cc488d7d4d9663231e1,
+        type: 2}
+      propertyPath: doorName
+      value: HubDown
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9a9adfcc3bee9cc488d7d4d9663231e1, type: 2}
