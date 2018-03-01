@@ -938,11 +938,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 36.424
+      value: 36.08
       objectReference: {fileID: 0}
     - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -4.93
+      value: -2.72
       objectReference: {fileID: 0}
     - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
       propertyPath: m_LocalPosition.z
@@ -950,19 +950,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.26799613
       objectReference: {fileID: 0}
     - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.96342
       objectReference: {fileID: 0}
     - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
       propertyPath: m_RootOrder
@@ -971,6 +971,10 @@ Prefab:
     - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
       propertyPath: m_LocalScale.x
       value: 5.592945
+      objectReference: {fileID: 0}
+    - target: {fileID: 4881897488655226, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 31.090002
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4ebc9ff4d0c1c3d4ea453c555537a4c2, type: 2}

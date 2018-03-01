@@ -10,11 +10,9 @@ public class Player : MonoBehaviour {
 	 * TODO:
 	 * 
 	 * Slopes
-	 *  stick to slopes while walking down
-	 *		could try to snap- jerky & looks weird
-	 *		could try to make movement vector based on ground normal- math is wrong?
-	 *	Rolling down slopes increases roll speed/time
-	 *  slide down >= 45 degree slopes weirdness
+	 *	Rolling down slopes increases roll speed/time, snaps to slope properly
+	 *	Rolling on slope applies velocity in direction of slope (not just horizontal)
+	 *  slide down >= 45 degree slopes, can't move/jump
 	 * 
 	 * Hub upper area
 	 *	3 more hub stars
