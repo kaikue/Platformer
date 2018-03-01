@@ -323,15 +323,19 @@ public class Player : MonoBehaviour {
 		}
 		
 		bool onGround = grounds.Count > 0;
+		Vector2 offset = Vector2.zero;
 		if (!onGround && velocity.y == 0) //not on ground but not moving up/down- try to snap to ground
 		{
 			RaycastHit2D[] hits = BoxCast(GRAVITY_NORMAL, SNAP_DIST);
 			if (hits.Length > 0)
 			{
-				float hitDist = hits[0].distance;
+				float hitDist = hits[0].distance; //no no, this isn't right at all
+				//hitDist = hits[0].point;
 				//print("Snapping " + hitDist);
 				//velocity.y -= hitDist / Time.fixedDeltaTime;
-				transform.Translate(0, -hitDist, 0);
+				//transform.Translate(0, -hitDist, 0);
+				//rb.position = new Vector2(rb.position.x, rb.position.y - hitDist);
+				offset.y -= hitDist;
 				onGround = true;
 			}
 		}
@@ -462,7 +466,7 @@ public class Player : MonoBehaviour {
 		gameObject.transform.localScale = new Vector3(facing * baseScaleX, baseScaleY, baseScaleZ);
 
 		rb.velocity = velocity;
-		rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+		rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime + offset);
 		
 		jumpQueued = false;
 		rollQueued = false;
