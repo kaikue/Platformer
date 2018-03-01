@@ -9,6 +9,13 @@ public class Player : MonoBehaviour {
 	 * 
 	 * TODO:
 	 * 
+	 * Slopes
+	 *  stick to slopes while walking down
+	 *		could try to snap- jerky & looks weird
+	 *		could try to make movement vector based on ground normal- math is wrong?
+	 *	Rolling down slopes increases roll speed/time
+	 *  slide down >= 45 degree slopes weirdness
+	 * 
 	 * Hub upper area
 	 *	3 more hub stars
 	 * 
@@ -85,11 +92,6 @@ public class Player : MonoBehaviour {
 	 * 
 	 * Team logo (with sound)
 	 * 
-	 * slopes?
-	 *	Rolling down slopes increases roll speed/time
-	 *  slide down >= 45 degree slopes weirdness
-	 *  stick to slopes while walking down
-	 * 
 	 * pick up/throw?
 	 * 
 	 * Art notes:
@@ -114,6 +116,7 @@ public class Player : MonoBehaviour {
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
 	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
+	private const float SNAP_DIST = 0.5f;
 
 	private const float JUMP_VEL = 14.0f; //jump y speed
 	private const float WALLJUMP_VEL = 1.5f * MAX_RUN_VEL; //speed applied at time of walljump
@@ -142,7 +145,7 @@ public class Player : MonoBehaviour {
 	private BoxCollider2D bc;
 	private Rigidbody2D rb;
 
-	private float groundAngle;
+	private Vector2 groundNormal;
 
 	private bool jumpQueued = false;
 	private List<GameObject> grounds = new List<GameObject>();
@@ -286,6 +289,21 @@ public class Player : MonoBehaviour {
 			}
 			else
 			{
+				//TODO: make this along ground_angle instead of x?
+				/*Vector2 groundVec = Vector3.Cross(groundNormal, Vector3.forward); //left handed
+				groundVec.Normalize();
+				float baseVel = Vector2.Dot(velocity, groundVec);
+				baseVel += RUN_ACCEL * xVel;
+				float speedCap = Mathf.Abs(xVel * MAX_RUN_VEL); //use input to clamp max speed so half tilted joystick is slower
+				//baseVel = Mathf.Clamp(baseVel, -speedCap, speedCap);
+				velocity += baseVel * groundVec;
+				Vector2 speedCapVec = speedCap * groundVec;
+				float speedCapX = Mathf.Abs(speedCapVec.x);
+				float speedCapY = Mathf.Abs(speedCapVec.y);
+				velocity.x = Mathf.Clamp(velocity.x, -speedCapX, speedCapX);
+				velocity.y = Mathf.Clamp(velocity.y, -speedCapY, speedCapY);
+				print(groundVec + " " + baseVel);*/
+
 				velocity.x += RUN_ACCEL * xVel;
 				float speedCap = Mathf.Abs(xVel * MAX_RUN_VEL); //use input to clamp max speed so half tilted joystick is slower
 				velocity.x = Mathf.Clamp(velocity.x, -speedCap, speedCap);
@@ -303,9 +321,22 @@ public class Player : MonoBehaviour {
 				rollDir = Math.Sign(xVel);
 			}
 		}
-
+		
 		bool onGround = grounds.Count > 0;
-		if (onGround && velocity.y <= 0)
+		if (!onGround && velocity.y == 0) //not on ground but not moving up/down- try to snap to ground
+		{
+			RaycastHit2D[] hits = BoxCast(GRAVITY_NORMAL, SNAP_DIST);
+			if (hits.Length > 0)
+			{
+				float hitDist = hits[0].distance;
+				//print("Snapping " + hitDist);
+				//velocity.y -= hitDist / Time.fixedDeltaTime;
+				transform.Translate(0, -hitDist, 0);
+				onGround = true;
+			}
+		}
+
+		if (onGround && velocity.y <= 0) //on the ground, didn't just jump
 		{
 			/*if (groundAngle >= SLIDE_THRESHOLD)
 			{
@@ -453,7 +484,7 @@ public class Player : MonoBehaviour {
 		//if it fits, otherwise keep anim state and rolling
 		bc.size = new Vector2(bc.size.x, bcHeight);
 		bc.offset = new Vector2(0, 0);
-		RaycastHit2D[] hits = Physics2D.BoxCastAll(gameObject.transform.position, bc.size, 0, Vector2.zero, 0, LayerMask.GetMask("LevelGeometry"));
+		RaycastHit2D[] hits = BoxCast(Vector2.zero, 0);
 		if (hits.Length > 0) //collided with something else
 		{
 			canRoll = false;
@@ -462,6 +493,11 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	private RaycastHit2D[] BoxCast(Vector2 direction, float distance)
+	{
+		return Physics2D.BoxCastAll(gameObject.transform.position, bc.size, 0, direction, distance, LayerMask.GetMask("LevelGeometry"));
+	}
+	
 	private void ResetWalljump()
 	{
 		walljumpPush = false;
@@ -513,15 +549,20 @@ public class Player : MonoBehaviour {
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		//TODO: don't assume it's land, check that first
-
 		if (collision.contacts.Length == 0) return; //not sure what happened
 
+		//TODO: don't assume it's land, check that first
+
+		if (collision.gameObject.tag == "Slime")
+		{
+			rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
+			return;
+		}
+		
 		if (IsGround(collision))
 		{
 			grounds.Add(collision.gameObject);
-			groundAngle = NormalDot(collision);
-			//print(groundAngle);
+			groundNormal = collision.contacts[0].normal;
 		}
 		else if (IsCeiling(collision))
 		{
