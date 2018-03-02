@@ -10,8 +10,7 @@ public class Player : MonoBehaviour {
 	 * TODO:
 	 * 
 	 * Slopes
-	 *	Rolling down slopes increases roll speed/time, snaps to slope properly
-	 *	Rolling on slope applies velocity in direction of slope (not just horizontal)
+	 *	Rolling down slopes increases roll speed/time
 	 *  slide down >= 45 degree slopes, can't move/jump
 	 * 
 	 * Hub upper area
@@ -74,6 +73,7 @@ public class Player : MonoBehaviour {
 	 *	Landing from high fall
 	 *	Door sliding open
 	 *	Door ascending tones
+	 *	Slime bounce
 	 *	Level music (mute during star overlay)
 	 * 
 	 * Art
@@ -133,7 +133,7 @@ public class Player : MonoBehaviour {
 	private const int NUM_RUN_FRAMES = 2;
 	private const int NUM_ROLL_FRAMES = 2;
 
-	private const float FRAME_TIME = 0.1f; //time per frame of animation
+	private const float FRAME_TIME = 0.1f; //time in seconds per frame of animation
 
 	private float baseScaleX;
 	private float baseScaleY;
@@ -263,14 +263,10 @@ public class Player : MonoBehaviour {
 		return standSprite;
 	}
 	
-	private void FixedUpdate() {
-		/*foreach (KeyCode kcode in Enum.GetValues(typeof(KeyCode)))
-		{
-			if (Input.GetKeyDown(kcode))
-				Debug.Log("KeyCode down: " + kcode);
-		}*/
-		
-		Vector2 velocity = rb.velocity;
+	private void FixedUpdate()
+	{
+		Vector2 velocity = rb.velocity; //for changing the player's actual velocity
+		Vector2 offset = Vector2.zero; //for any additional movement nudges
 		shouldStand = false;
 		float xVel = Input.GetAxisRaw("Horizontal");
 		if (xVel == 0)
@@ -287,21 +283,6 @@ public class Player : MonoBehaviour {
 			}
 			else
 			{
-				//TODO: make this along ground_angle instead of x?
-				/*Vector2 groundVec = Vector3.Cross(groundNormal, Vector3.forward); //left handed
-				groundVec.Normalize();
-				float baseVel = Vector2.Dot(velocity, groundVec);
-				baseVel += RUN_ACCEL * xVel;
-				float speedCap = Mathf.Abs(xVel * MAX_RUN_VEL); //use input to clamp max speed so half tilted joystick is slower
-				//baseVel = Mathf.Clamp(baseVel, -speedCap, speedCap);
-				velocity += baseVel * groundVec;
-				Vector2 speedCapVec = speedCap * groundVec;
-				float speedCapX = Mathf.Abs(speedCapVec.x);
-				float speedCapY = Mathf.Abs(speedCapVec.y);
-				velocity.x = Mathf.Clamp(velocity.x, -speedCapX, speedCapX);
-				velocity.y = Mathf.Clamp(velocity.y, -speedCapY, speedCapY);
-				print(groundVec + " " + baseVel);*/
-
 				velocity.x += RUN_ACCEL * xVel;
 				float speedCap = Mathf.Abs(xVel * MAX_RUN_VEL); //use input to clamp max speed so half tilted joystick is slower
 				velocity.x = Mathf.Clamp(velocity.x, -speedCap, speedCap);
@@ -321,18 +302,14 @@ public class Player : MonoBehaviour {
 		}
 		
 		bool onGround = grounds.Count > 0;
-		Vector2 offset = Vector2.zero;
-		if (!onGround && velocity.y == 0) //not on ground but not moving up/down- try to snap to ground
+		if (!onGround && velocity.y == 0)
 		{
+			//not on ground but not moving up/down- try to snap to ground
 			RaycastHit2D[] hits = BoxCast(GRAVITY_NORMAL, SNAP_DIST);
 			if (hits.Length > 0)
 			{
-				float hitDist = hits[0].distance; //no no, this isn't right at all
-				//hitDist = hits[0].point;
-				//print("Snapping " + hitDist);
-				//velocity.y -= hitDist / Time.fixedDeltaTime;
-				//transform.Translate(0, -hitDist, 0);
-				//rb.position = new Vector2(rb.position.x, rb.position.y - hitDist);
+				float hitDist = hits[0].distance;
+				//not quite the right distance (it's from center of bbox), but moveposition will handle that
 				offset.y -= hitDist;
 				onGround = true;
 			}
@@ -377,10 +354,6 @@ public class Player : MonoBehaviour {
 			}
 
 			velocity.y += GRAVITY_ACCEL;
-			/*if (!jumping)
-			{
-				//clamp to ground a bit
-			}*/
 		}
 		
 		if (rollTime > 0 && jumpQueued)
@@ -438,7 +411,24 @@ public class Player : MonoBehaviour {
 			//apply roll velocity
 			float timeFactor = rollTime / ROLL_TIME;
 			float rollVel = ROLL_VEL * timeFactor;
-			velocity.x = rollDir * rollVel;
+			
+			//roll in direction of ground
+			Vector2 groundVec;
+			if (onGround)
+			{
+				groundVec = Vector3.Cross(groundNormal, Vector3.forward); //left handed
+				groundVec.Normalize();
+			}
+			else
+			{
+				groundVec = Vector2.right;
+			}
+			Vector2 rollVec = rollDir * rollVel * groundVec;
+			velocity.x += rollVec.x;
+			float speedCapX = Mathf.Abs(rollVec.x);
+			velocity.x = Mathf.Clamp(velocity.x, -speedCapX, speedCapX);
+			offset.y += rollVec.y * Time.fixedDeltaTime; //do this with offset so it doesn't persist when rolling up
+
 			rollTime -= Time.fixedDeltaTime;
 			if (rollTime <= 0)
 			{
