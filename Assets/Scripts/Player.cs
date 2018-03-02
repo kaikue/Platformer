@@ -10,8 +10,11 @@ public class Player : MonoBehaviour {
 	 * TODO:
 	 * 
 	 * Slopes
-	 *	Rolling down slopes increases roll speed/time
-	 *  slide down >= 45 degree slopes, can't move/jump
+	 *	Rolling up slopes decreases roll time
+	 *  slide down >= 45 degree slopes, can't move/jump/roll
+	 *		not if already rolling?
+	 * 
+	 * Rolling into slime reverses roll direction (when exactly?)
 	 * 
 	 * Hub upper area
 	 *	3 more hub stars
@@ -123,6 +126,7 @@ public class Player : MonoBehaviour {
 
 	private const float ROLL_VEL = 2 * MAX_RUN_VEL; //speed of roll
 	private const float ROLL_TIME = 1.0f; //time it takes for roll to wear off naturally
+	private const float MAX_ROLL_TIME = 2.0f; //time it takes for roll to wear off at the bottom of a long slope
 	private const float ROLLJUMP_VEL = JUMP_VEL * 2 / 3; //roll cancel jump y speed
 	private const float ROLL_HEIGHT = 0.5f; //scale factor of height when rolling
 	private const float ROLL_FORCE_AMOUNT = 0.1f; //how much to push the player when they can't unroll
@@ -429,7 +433,17 @@ public class Player : MonoBehaviour {
 			velocity.x = Mathf.Clamp(velocity.x, -speedCapX, speedCapX);
 			offset.y += rollVec.y * Time.fixedDeltaTime; //do this with offset so it doesn't persist when rolling up
 
+			//roll for longer on slope
+			if (rollVec.y < 0) //TODO: make this lessen roll-up time too
+			{
+				float maxAddition = 2 * Time.fixedDeltaTime;
+				float groundAngle = Mathf.Abs(Vector2.Dot(groundNormal.normalized, Vector2.right));
+				float rollTimeAddition = groundAngle * maxAddition;
+				rollTime = Mathf.Min(rollTime + rollTimeAddition, ROLL_TIME);
+			}
+
 			rollTime -= Time.fixedDeltaTime;
+
 			if (rollTime <= 0)
 			{
 				StopRoll();
