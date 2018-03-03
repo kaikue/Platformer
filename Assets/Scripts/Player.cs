@@ -13,8 +13,6 @@ public class Player : MonoBehaviour {
 	 *  slide down >= 45 degree slopes, can't move/jump/roll
 	 *		not if already rolling?
 	 * 
-	 * Rolling into slime reverses roll direction (when exactly?)
-	 * 
 	 * Hub upper area
 	 *	3 more hub stars
 	 * 
@@ -126,6 +124,7 @@ public class Player : MonoBehaviour {
 	private const float ROLL_VEL = 2 * MAX_RUN_VEL; //speed of roll
 	private const float ROLL_TIME = 1.0f; //time it takes for roll to wear off naturally
 	private const float MAX_ROLL_TIME = 2.0f; //time it takes for roll to wear off at the bottom of a long slope
+	private const float ROLL_MAX_ADDITION = 5.0f; //amount of roll added on high slopes
 	private const float ROLLJUMP_VEL = JUMP_VEL * 2 / 3; //roll cancel jump y speed
 	private const float ROLL_HEIGHT = 0.5f; //scale factor of height when rolling
 	private const float ROLL_FORCE_AMOUNT = 0.1f; //how much to push the player when they can't unroll
@@ -175,7 +174,7 @@ public class Player : MonoBehaviour {
 	private AnimState animState = AnimState.STAND;
 	private int animFrame = 0;
 	private float frameTime = FRAME_TIME;
-	private int facing = 1; //for animation: -1 for left, 1 for right
+	private int facing = -1; //for animation: -1 for right, 1 for left (images face left)
 	private bool shouldStand = false;
 
 	private Sprite standSprite;
@@ -435,7 +434,7 @@ public class Player : MonoBehaviour {
 			//roll for longer on slope
 			if (rollVec.y < 0)
 			{
-				float maxAddition = 2 * Time.fixedDeltaTime;
+				float maxAddition = ROLL_MAX_ADDITION * Time.fixedDeltaTime;
 				float groundAngle = Vector2.Dot(groundNormal.normalized, Vector2.right * rollDir);
 				float rollTimeAddition = groundAngle * maxAddition;
 				rollTime = Mathf.Min(rollTime + rollTimeAddition, ROLL_TIME);
@@ -560,7 +559,14 @@ public class Player : MonoBehaviour {
 
 		if (collision.gameObject.tag == "Slime")
 		{
+			float prevXVel = rb.velocity.x;
 			rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
+			
+			//reverse if rolling into slime
+			if (rollTime > 0 && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
+			{
+				rollDir *= -1;
+			}
 			return;
 		}
 		
