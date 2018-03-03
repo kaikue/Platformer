@@ -10,7 +10,6 @@ public class Player : MonoBehaviour {
 	 * TODO:
 	 * 
 	 * Slopes
-	 *	Rolling up slopes decreases roll time
 	 *  slide down >= 45 degree slopes, can't move/jump/roll
 	 *		not if already rolling?
 	 * 
@@ -434,10 +433,10 @@ public class Player : MonoBehaviour {
 			offset.y += rollVec.y * Time.fixedDeltaTime; //do this with offset so it doesn't persist when rolling up
 
 			//roll for longer on slope
-			if (rollVec.y < 0) //TODO: make this lessen roll-up time too
+			if (rollVec.y < 0)
 			{
 				float maxAddition = 2 * Time.fixedDeltaTime;
-				float groundAngle = Mathf.Abs(Vector2.Dot(groundNormal.normalized, Vector2.right));
+				float groundAngle = Vector2.Dot(groundNormal.normalized, Vector2.right * rollDir);
 				float rollTimeAddition = groundAngle * maxAddition;
 				rollTime = Mathf.Min(rollTime + rollTimeAddition, ROLL_TIME);
 			}
