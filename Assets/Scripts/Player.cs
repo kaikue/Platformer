@@ -12,6 +12,8 @@ public class Player : MonoBehaviour {
 	 * Slopes
 	 *  slide down >= 45 degree slopes, can't move/jump/roll
 	 *		not if already rolling?
+	 *	
+	 * jumping onto slime jumps up to minimum velocity? (high jump)
 	 * 
 	 * Hub upper area
 	 *	3 more hub stars
