@@ -5,9 +5,12 @@ using UnityEngine;
 public class SlimeManager : MonoBehaviour {
 
     public int MAX_SLIMES = 3;
+    public GameObject slimeRetrieverPrefab;
 
+    private GameObject slimeRetriever;
     private SlimeObject selectedBridge;
     private SlimeObject selectedStairs;
+    private bool canRetrieveSlime;
 
     private readonly HashSet<SlimeObject> placedSlimeObjects = new HashSet<SlimeObject>();
 
@@ -18,25 +21,39 @@ public class SlimeManager : MonoBehaviour {
 	void Update () {
 	    if (Input.GetKeyDown(KeyCode.B))
         {
-            if (selectedBridge != null)
+            if (selectedBridge != null  && placedSlimeObjects.Count < MAX_SLIMES)
             {
                 selectedBridge.Activate();
                 placedSlimeObjects.Add(selectedBridge);
+
+                if (placedSlimeObjects.Count == 1)
+                {
+                    slimeRetriever = Instantiate(slimeRetrieverPrefab);
+                    slimeRetriever.transform.position = transform.position;
+                    print("Created slime retriever");
+                }
             }
         }
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            if (selectedStairs != null)
+            if (selectedStairs != null && placedSlimeObjects.Count < MAX_SLIMES)
             {
                 selectedStairs.Activate();
                 placedSlimeObjects.Add(selectedStairs);
+
+                if (placedSlimeObjects.Count == 1)
+                {
+                    slimeRetriever = Instantiate(slimeRetrieverPrefab);
+                    slimeRetriever.transform.position = transform.position;
+                    print("Created slime retriever");
+                }
             }
         }
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            if (placedSlimeObjects.Count == MAX_SLIMES)
+            if (canRetrieveSlime) 
             {
                 foreach (SlimeObject slime in placedSlimeObjects)
                 {
@@ -44,6 +61,7 @@ public class SlimeManager : MonoBehaviour {
                 }
 
                 placedSlimeObjects.Clear();
+                Destroy(slimeRetriever);
             }
         }
 	}
@@ -53,7 +71,7 @@ public class SlimeManager : MonoBehaviour {
         if (collision.CompareTag("BridgeCollider"))
         {
             SlimeObject bridge = collision.GetComponentInParent<SlimeObject>();
-            if (!bridge.activated)
+            if (!bridge.activated && placedSlimeObjects.Count < MAX_SLIMES)
             {
                 bridge.Hint();
                 selectedBridge = bridge;
@@ -63,12 +81,17 @@ public class SlimeManager : MonoBehaviour {
         if (collision.CompareTag("StairsCollider"))
         {
             SlimeObject stairs = collision.GetComponentInParent<SlimeObject>();
-            if (!stairs.activated)
+            if (!stairs.activated && placedSlimeObjects.Count < MAX_SLIMES)
             {
                 stairs.Hint();
                 selectedStairs = stairs;
             }
         } 
+
+        if (collision.CompareTag("SlimeRetriever"))
+        {
+            canRetrieveSlime = true; 
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -86,5 +109,10 @@ public class SlimeManager : MonoBehaviour {
             stairs.DeHint();
             selectedStairs = null;
         } 
+
+        if (collision.CompareTag("SlimeRetriever"))
+        {
+            canRetrieveSlime = false; 
+        }
     }
 }
