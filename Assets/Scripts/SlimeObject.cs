@@ -22,7 +22,7 @@ public class SlimeObject : MonoBehaviour {
 
     public void Activate()
     {
-        sr.color = Color.green;
+        sr.color = Color.white;
         col.enabled = true;
         activated = true;
         

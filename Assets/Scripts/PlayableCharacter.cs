@@ -14,12 +14,11 @@ public class PlayableCharacter : MonoBehaviour {
     enum CollisionType
     {
         GROUND,
-        STAIRS,
         CEILING,
         WALL
     }
 
-    enum StateHorizontal
+    public enum StateHorizontal
     {
         MOVING_RIGHT,
         MOVING_RIGHT_DECELERATING,
@@ -32,12 +31,11 @@ public class PlayableCharacter : MonoBehaviour {
         MOVING_LEFT_ACCELERATING_RIGHT
     }
 
-    enum StateVertical
+    public enum StateVertical
     {
         JUMPING,
         FALLING,
         GROUNDED,
-        STAIRS,
     }
 
     public Manager manager;
@@ -60,13 +58,31 @@ public class PlayableCharacter : MonoBehaviour {
     private readonly HashSet<Action> queuedActions = new HashSet<Action>();
     private readonly Dictionary<Collider2D, CollisionType> activeCollisions = new Dictionary<Collider2D, CollisionType>();
 
+    private Vector3 startPosition;
+
     // State
-    private StateHorizontal stateHorizontal;
-    private StateVertical stateVertical;
+    public StateHorizontal stateHorizontal;
+    public StateVertical stateVertical;
 
     // Components
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+
+    public void ChangeVerticalState(StateVertical state)
+    {
+        stateVertical = state;
+    }
+
+    public void Kill()
+    {
+        rb.position = startPosition;
+        rb.velocity = Vector2.zero;
+
+        stateVertical = StateVertical.FALLING;
+        stateHorizontal = StateHorizontal.STILL;
+        activeCollisions.Clear();
+        queuedActions.Clear();
+    }
 
 	void Start ()
     {
@@ -74,6 +90,7 @@ public class PlayableCharacter : MonoBehaviour {
         sr = GetComponent<SpriteRenderer>();
         stateVertical = StateVertical.FALLING;
         stateHorizontal = StateHorizontal.STILL;
+        startPosition = rb.position;
     } 
 
 	void Update ()
@@ -85,7 +102,6 @@ public class PlayableCharacter : MonoBehaviour {
     void FixedUpdate()
     {
         ProcessQueuedActions();
-        ProcessCollisions();
         ApplyState();
     }
 
@@ -97,34 +113,18 @@ public class PlayableCharacter : MonoBehaviour {
             activeCollisions.Remove(collision.collider);
         }
         activeCollisions.Add(collision.collider, type);
+        ProcessCollisions();
     }
-
 
     void OnCollisionExit2D(Collision2D collision)
     {
         activeCollisions.Remove(collision.collider);
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Stairs"))
-        {
-            activeCollisions.Add(collision, CollisionType.STAIRS); 
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Stairs"))
-        {
-            activeCollisions.Remove(collision);
-        }
+        ProcessCollisions();
     }
 
     private void ProcessCollisions()
     {
         bool ground = activeCollisions.ContainsValue(CollisionType.GROUND);
-        bool stairs = activeCollisions.ContainsValue(CollisionType.STAIRS);
         bool ceiling = activeCollisions.ContainsValue(CollisionType.CEILING);
         bool wall = activeCollisions.ContainsValue(CollisionType.WALL);
 
@@ -134,19 +134,12 @@ public class PlayableCharacter : MonoBehaviour {
             rb.velocity = new Vector2(0.0f, rb.velocity.y);
         }
 
-        if (stairs)
-        {
-            stateVertical = StateVertical.STAIRS;
-            return;
-        }
-
         if (ground && ceiling)
         {
             switch (stateVertical)
             {
                 case StateVertical.JUMPING:
                 case StateVertical.FALLING:
-                case StateVertical.STAIRS:
                     stateVertical = StateVertical.GROUNDED;
                     rb.velocity = new Vector2(rb.velocity.x, 0.0f);
                     break;
@@ -159,7 +152,6 @@ public class PlayableCharacter : MonoBehaviour {
             switch (stateVertical)
             {
                 case StateVertical.FALLING:
-                case StateVertical.STAIRS:
                     stateVertical = StateVertical.GROUNDED;
                     rb.velocity = new Vector2(rb.velocity.x, 0.0f);
                     break;
@@ -173,7 +165,6 @@ public class PlayableCharacter : MonoBehaviour {
             {
                 case StateVertical.JUMPING:
                 case StateVertical.GROUNDED:
-                case StateVertical.STAIRS:
                     stateVertical = StateVertical.FALLING;
                     rb.velocity = new Vector2(rb.velocity.x, 0.0f);
                     break;
@@ -186,7 +177,6 @@ public class PlayableCharacter : MonoBehaviour {
             switch (stateVertical)
             {
                 case StateVertical.GROUNDED:
-                case StateVertical.STAIRS:
                     stateVertical = StateVertical.FALLING;
                     break;
                 default:
@@ -304,16 +294,6 @@ public class PlayableCharacter : MonoBehaviour {
     // Apply physics updates based on the current state. Update state if necessary
     private void ApplyState()
     {
-        if (stateVertical == StateVertical.STAIRS)
-        {
-            rb.isKinematic = true;
-            sr.color = Color.red;
-        } else
-        {
-            rb.isKinematic = false;
-            sr.color = Color.blue;
-        }
-
         switch (stateHorizontal)
         {
             case StateHorizontal.MOVING_RIGHT_ACCELERATING_RIGHT:
@@ -387,9 +367,6 @@ public class PlayableCharacter : MonoBehaviour {
                 break;
             case StateVertical.FALLING:
                 rb.velocity += GRAVITY * Time.fixedDeltaTime; 
-                break;
-            case StateVertical.STAIRS:
-                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.x * 3.0f / 5.0f);
                 break;
             default:
                 break;
