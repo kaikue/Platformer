@@ -58,6 +58,8 @@ public class PlayableCharacter : MonoBehaviour {
     private readonly HashSet<Action> queuedActions = new HashSet<Action>();
     private readonly Dictionary<Collider2D, CollisionType> activeCollisions = new Dictionary<Collider2D, CollisionType>();
 
+    private Vector3 startPosition;
+
     // State
     public StateHorizontal stateHorizontal;
     public StateVertical stateVertical;
@@ -71,12 +73,24 @@ public class PlayableCharacter : MonoBehaviour {
         stateVertical = state;
     }
 
+    public void Kill()
+    {
+        rb.position = startPosition;
+        rb.velocity = Vector2.zero;
+
+        stateVertical = StateVertical.FALLING;
+        stateHorizontal = StateHorizontal.STILL;
+        activeCollisions.Clear();
+        queuedActions.Clear();
+    }
+
 	void Start ()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         stateVertical = StateVertical.FALLING;
         stateHorizontal = StateHorizontal.STILL;
+        startPosition = rb.position;
     } 
 
 	void Update ()

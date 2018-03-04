@@ -17,7 +17,7 @@ public class Obstacle : MonoBehaviour {
     {
         if (collision.collider.CompareTag("Player"))
         {
-            Destroy(collision.collider.gameObject);
+            collision.collider.gameObject.GetComponent<PlayableCharacter>().Kill();
         }
 
         Destroy(gameObject);

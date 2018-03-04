@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour {
 
-    public int SPAWN_RATE;
+    public float SPAWN_RATE;
     public GameObject obstaclePrefab;
 
     private float timeToSpawn;
