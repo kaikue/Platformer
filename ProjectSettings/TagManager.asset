@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Slime
+  - SlimeComponent
+  - BridgeActivator
   layers:
   - Default
   - TransparentFX
@@ -15,7 +17,7 @@ TagManager:
   - 
   - 
   - LevelGeometry
-  - 
+  - BridgeActivator
   - 
   - 
   - 
