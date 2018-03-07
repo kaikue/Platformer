@@ -246,7 +246,7 @@ public class Player : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.N))
         {
-            SceneManager.LoadScene("TileSlimeTest");
+            SceneManager.LoadScene("Scenes/TileSlimeTest");
         }
 
 		bool triggerPressed = Input.GetAxis("RTrigger") > 0;
