@@ -566,20 +566,17 @@ public class Player : MonoBehaviour {
 		{
 			float prevXVel = rb.velocity.x;
 			rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
-<<<<<<< HEAD
-
-			//set magnitude if lower than minimum
-			float magnitude = rb.velocity.magnitude;
-			print(magnitude);
-			if (magnitude < MIN_SLIME_BOUNCE)
-			{
-				rb.velocity *= MIN_SLIME_BOUNCE / magnitude;
-			}
-
-=======
-            rb.velocity = new Vector2(rb.velocity.x, 2.0f * JUMP_VEL);
 			
->>>>>>> f769308f6fc4757ac8b6e20c64af170d907ed418
+			//set magnitude if lower than minimum
+			//float magnitude = rb.velocity.magnitude;
+			//print(magnitude);
+			if (rb.velocity.y < MIN_SLIME_BOUNCE)
+			{
+				rb.velocity = new Vector2(rb.velocity.x, MIN_SLIME_BOUNCE);
+			}
+			
+            //rb.velocity = new Vector2(rb.velocity.x, 2.0f * JUMP_VEL);
+			
 			//reverse if rolling into slime
 			if (rollTime > 0 && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
 			{
