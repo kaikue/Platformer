@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour {
+public class PlayerDemo : MonoBehaviour {
 
 	/*
 	 * https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
@@ -13,6 +12,8 @@ public class Player : MonoBehaviour {
 	 * Slopes
 	 *  slide down >= 45 degree slopes, can't move/jump/roll
 	 *		not if already rolling?
+	 *	
+	 * jumping onto slime jumps up to minimum velocity? (high jump)
 	 * 
 	 * Hub upper area
 	 *	3 more hub stars
@@ -43,9 +44,6 @@ public class Player : MonoBehaviour {
 	 *	left: Water? Rainy forest? Temple?
 	 *	up: Ice/mountain
 	 *	down: Rock
-	 *		Tumbler
-	 *		Get on top of the elevator puzzle
-	 *		Spinny platforms
 	 *	right: Fire
 	 *	Boss doors require that level's color x5
 	 *	Secret final door requires all 11 of all colors
@@ -136,8 +134,6 @@ public class Player : MonoBehaviour {
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
 
-	private const float MIN_SLIME_BOUNCE = 20.0f;
-
 	private const int NUM_RUN_FRAMES = 2;
 	private const int NUM_ROLL_FRAMES = 2;
 
@@ -148,10 +144,13 @@ public class Player : MonoBehaviour {
 	private float baseScaleZ;
 
 	private GameManager gm;
-	private BoxCollider2D bc;
+	private EdgeCollider2D ec;
+    private BoxCollider2D bc;
 	private Rigidbody2D rb;
 
 	private Vector2 groundNormal;
+
+    private Collision2D lastCollision;
 
 	private bool jumpQueued = false;
 	private List<GameObject> grounds = new List<GameObject>();
@@ -165,7 +164,7 @@ public class Player : MonoBehaviour {
 	private float rollTime = 0;
 	private bool canRoll = true;
 	private int rollDir = 1; //-1 for left, 1 for right
-	private float bcHeight;
+	private float ecHeight;
 	private bool rollingCollider = false;
 	
 	enum AnimState
@@ -197,8 +196,15 @@ public class Player : MonoBehaviour {
 
 		gm = GameObject.Find("GameManager").GetComponent<GameManager>();
 		rb = gameObject.GetComponent<Rigidbody2D>();
+		ec = gameObject.GetComponent<EdgeCollider2D>();
 		bc = gameObject.GetComponent<BoxCollider2D>();
-		bcHeight = bc.size.y;
+        if (ec.enabled)
+        {
+            ecHeight = ec.points[1].y - ec.points[0].y;
+        } else if (bc.enabled)
+        {
+            ecHeight = bc.size.y;
+        }
 
 		SLIDE_THRESHOLD = -Mathf.Sqrt(2) / 2; //player will slide down 45 degree angle slopes
 
@@ -243,11 +249,6 @@ public class Player : MonoBehaviour {
 		{
 			jumpQueued = true;
 		}
-
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            SceneManager.LoadScene("TileSlimeTest");
-        }
 
 		bool triggerPressed = Input.GetAxis("RTrigger") > 0;
 		if (Input.GetKeyDown(KeyCode.LeftShift) || triggerPressed)
@@ -486,9 +487,16 @@ public class Player : MonoBehaviour {
 	private void SetRollCollider()
 	{
 		rollingCollider = true;
-		float rollHeight = bcHeight * ROLL_HEIGHT;
-		bc.size = new Vector2(bc.size.x, rollHeight);
-		bc.offset = new Vector2(0, -rollHeight / 2);
+		float rollHeight = ecHeight * ROLL_HEIGHT;
+        ec.points[1].y = rollHeight / 2;
+        ec.points[2].y = rollHeight / 2;
+        ec.points[0].y = -rollHeight / 2;
+        ec.points[5].y = -rollHeight / 2;
+        ec.points[3].y = -rollHeight / 2;
+		ec.offset = new Vector2(0, -rollHeight / 2);
+
+        bc.size = new Vector2(bc.size.x, rollHeight);
+        bc.offset = new Vector2(0, -rollHeight / 2);
 	}
 
 	private void SetNormalCollider()
@@ -496,9 +504,17 @@ public class Player : MonoBehaviour {
 		if (!rollingCollider) return;
 		
 		rollingCollider = false;
-		//if it fits, otherwise keep anim state and rolling
-		bc.size = new Vector2(bc.size.x, bcHeight);
-		bc.offset = new Vector2(0, 0);
+        //if it fits, otherwise keep anim state and rolling
+        ec.points[1].y = ecHeight / 2;
+        ec.points[2].y = ecHeight / 2;
+        ec.points[0].y = -ecHeight / 2;
+        ec.points[5].y = -ecHeight / 2;
+        ec.points[3].y = -ecHeight / 2;
+		ec.offset = new Vector2(0, 0);
+
+        bc.size = new Vector2(bc.size.x, ecHeight);
+        bc.offset = new Vector2(0, 0);
+
 		RaycastHit2D[] hits = BoxCast(Vector2.zero, 0);
 		if (hits.Length > 0) //collided with something else
 		{
@@ -510,7 +526,15 @@ public class Player : MonoBehaviour {
 
 	private RaycastHit2D[] BoxCast(Vector2 direction, float distance)
 	{
-		return Physics2D.BoxCastAll(gameObject.transform.position, bc.size, 0, direction, distance, LayerMask.GetMask("LevelGeometry"));
+        Vector2 size;
+        if (ec.enabled)
+        {
+            size = ec.points[2] - ec.points[0];
+        } else 
+        {
+            size = bc.size;
+        }
+		return Physics2D.BoxCastAll(gameObject.transform.position, size, 0, direction, distance, LayerMask.GetMask("LevelGeometry"));
 	}
 	
 	private void ResetWalljump()
@@ -562,26 +586,13 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	private void OnCollisionEnter2D(Collision2D collision)
-	{
-		if (collision.contacts.Length == 0) return; //not sure what happened
-
-		//TODO: don't assume it's land, check that first
-
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
 		if (collision.gameObject.tag == "Slime")
 		{
 			float prevXVel = rb.velocity.x;
-			rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
-			
-			//set magnitude if lower than minimum
-			//float magnitude = rb.velocity.magnitude;
-			//print(magnitude);
-			if (rb.velocity.y < MIN_SLIME_BOUNCE)
-			{
-				rb.velocity = new Vector2(rb.velocity.x, MIN_SLIME_BOUNCE);
-			}
-			
-            //rb.velocity = new Vector2(rb.velocity.x, 2.0f * JUMP_VEL);
+			rb.velocity = Vector2.Reflect(rb.velocity, GetGround(collision).normal);
+            rb.velocity = new Vector2(rb.velocity.x, 1.0f * JUMP_VEL);
 			
 			//reverse if rolling into slime
 			if (rollTime > 0 && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
@@ -590,31 +601,65 @@ public class Player : MonoBehaviour {
 			}
 			return;
 		}
+    }
+
+	private void OnCollisionStay2D(Collision2D collision)
+	{
+		if (collision.contacts.Length == 0) return; //not sure what happened
+
+        //TODO: don't assume it's land, check that first
+        if (collision.gameObject.tag == "Slime")
+        {
+            return;
+        }
 		
-		if (IsGround(collision))
+        bool changed = false;
+
+		if (HasGround(collision) && !HasGround(lastCollision))
 		{
+            print("ground");
+            changed = true;
 			grounds.Add(collision.gameObject);
-			groundNormal = collision.contacts[0].normal;
+			groundNormal = GetGround(collision).normal;
 		}
-		else if (IsCeiling(collision))
+		else if (HasCeiling(collision) && !HasCeiling(lastCollision))
 		{
+            print("ceiling");
+            changed = true;
 			Vector2 velocity = rb.velocity;
 			velocity.y = 0;
 			rb.velocity = velocity;
 		}
-		else if (IsWall(collision))
+		else if (HasWall(collision) && !HasWall(lastCollision))
 		{
-			float x = Vector2.Dot(Vector2.right, collision.contacts[0].normal);
+            print("wall");
+            changed = true;
+			float x = Vector2.Dot(Vector2.right, GetWall(collision).normal);
 			wallSide = Mathf.RoundToInt(x);
 			wall = collision.gameObject;
 
 			ResetWalljump();
 			StopRoll();
 		}
+
+        if (!HasGround(collision) && HasGround(lastCollision))
+        {
+		    grounds.Remove(collision.gameObject);
+        }
+
+        if (!HasWall(collision) && HasWall(lastCollision))
+        {
+			wall = null;
+			wallSide = 0;
+        }
+
+        lastCollision = collision;
+
 	}
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
+        lastCollision = null;
 		grounds.Remove(collision.gameObject);
 		if (collision.gameObject == wall)
 		{
@@ -622,29 +667,97 @@ public class Player : MonoBehaviour {
 			wallSide = 0;
 		}
 	}
-	
-	private float NormalDot(Collision2D collision)
+
+    private float NormalDot(ContactPoint2D contact)
+    {
+        Vector2 normal = contact.normal;
+        return Vector2.Dot(normal, GRAVITY_NORMAL);
+    }
+
+	private float[] NormalDotList(Collision2D collision)
 	{
-		//   0 for horizontal (walls)
-		// < 0 for floor
-		// > 0 for ceiling
-		Vector2 normal = collision.contacts[0].normal;
-		return Vector2.Dot(normal, GRAVITY_NORMAL);
+        //   0 for horizontal (walls)
+        // < 0 for floor
+        // > 0 for ceiling
+        float[] dots = new float[collision.contacts.Length];
+        for (int i = 0; i < collision.contacts.Length; i++)
+        {
+		    Vector2 normal = collision.contacts[i].normal;
+            dots[i] = Vector2.Dot(normal, GRAVITY_NORMAL);
+        }
+
+        return dots;
 	}
 
-	private bool IsGround(Collision2D collision)
+	private bool HasGround(Collision2D collision)
 	{
-		return NormalDot(collision) < 0;
+        if (collision == null) return false;
+        float[] dots = NormalDotList(collision);
+        foreach (float dot in dots)
+        {
+            if (dot < -.0001f)
+            {
+                return true;
+            }
+        }
+        return false;
 	}
 
-	private bool IsCeiling(Collision2D collision)
+    private ContactPoint2D GetGround(Collision2D collision)
+    {
+        for (int i = 0; i < collision.contacts.Length; i++)
+        {
+            float dot = NormalDot(collision.contacts[i]);
+            if (dot < -.0001f)
+            {
+                return collision.contacts[i];
+            }
+        }
+
+        return collision.contacts[0]; // should never happen
+    }
+
+    private ContactPoint2D GetWall(Collision2D collision)
+    {
+        for (int i = 0; i < collision.contacts.Length; i++)
+        {
+            float dot = NormalDot(collision.contacts[i]);
+            if (Mathf.Abs(dot) < 0.001f)
+            {
+                return collision.contacts[i];
+            }
+        }
+
+        return collision.contacts[0]; // should never happen
+    }
+
+
+	private bool HasCeiling(Collision2D collision)
 	{
-		return NormalDot(collision) > 0;
+        if (collision == null) return false;
+        float[] dots = NormalDotList(collision);
+        foreach (float dot in dots)
+        {
+            if (dot > .0001f)
+            {
+                return true;
+            }
+        }
+        return false;
 	}
 
-	private bool IsWall(Collision2D collision)
+	private bool HasWall(Collision2D collision)
 	{
-		return NormalDot(collision) == 0;
+        if (collision == null) return false;
+        float[] dots = NormalDotList(collision);
+        foreach (float dot in dots)
+        {
+            if (Mathf.Abs(dot) < 0.0001f)
+            {
+                return true;
+            }
+        }
+        return false;
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
@@ -663,4 +776,5 @@ public class Player : MonoBehaviour {
 			door.TryOpen();
 		}
 	}
+
 }

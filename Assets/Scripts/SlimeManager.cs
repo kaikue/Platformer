@@ -38,7 +38,7 @@ public class SlimeManager : MonoBehaviour {
         {
             if (selectedBridge.Count > 0 && !activated)
             {
-                print("activating");
+                //print("activating");
                 ActivateSlimeTiles();
             }
             queuePlaceBridge = false;
@@ -46,7 +46,7 @@ public class SlimeManager : MonoBehaviour {
         {
             if (selectedBridge.Count > 0 && activated)
             {
-                print("destroying");
+                //print("destroying");
                 DestroySlimeTiles();
             }
             queueDestroyBridge = false;
@@ -54,14 +54,14 @@ public class SlimeManager : MonoBehaviour {
         {
             if (colliding && selectedBridge.Count == 0)
             {
-                print("generating");
+                //print("generating");
                 GenerateSlimeTiles();
             } else if (!colliding && selectedBridge.Count > 0)
             {
-                //print("leaving");
+                ////print("leaving");
                 if (!activated)
                 {
-                    print("leaving/destroying");
+                    //print("leaving/destroying");
                     DestroySlimeTiles();
                 }
             }
@@ -88,7 +88,7 @@ public class SlimeManager : MonoBehaviour {
     private void GenerateSlimeTiles()
     {
         HashSet<Vector3> connectedTilePositions = GetConnectedTilePositions(queuedCollisionPoint);
-        print(connectedTilePositions.Count);
+        //print(connectedTilePositions.Count);
         foreach (Vector3 pos in connectedTilePositions)
         {
             GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
@@ -105,6 +105,7 @@ public class SlimeManager : MonoBehaviour {
         }
         selectedBridge.Clear();
         activated = false;
+        sr.enabled = true;
     }
 
     private void ActivateSlimeTiles()
@@ -114,6 +115,7 @@ public class SlimeManager : MonoBehaviour {
             slimeObject.activated = true;
         }
         activated = true;
+        sr.enabled = false;
     }
 
     private HashSet<Vector3> GetConnectedTilePositions(Vector2 worldPosition)
