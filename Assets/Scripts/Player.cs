@@ -12,8 +12,6 @@ public class Player : MonoBehaviour {
 	 * Slopes
 	 *  slide down >= 45 degree slopes, can't move/jump/roll
 	 *		not if already rolling?
-	 *	
-	 * jumping onto slime jumps up to minimum velocity? (high jump)
 	 * 
 	 * Hub upper area
 	 *	3 more hub stars
@@ -44,6 +42,9 @@ public class Player : MonoBehaviour {
 	 *	left: Water? Rainy forest? Temple?
 	 *	up: Ice/mountain
 	 *	down: Rock
+	 *		Tumbler
+	 *		Get on top of the elevator puzzle
+	 *		Spinny platforms
 	 *	right: Fire
 	 *	Boss doors require that level's color x5
 	 *	Secret final door requires all 11 of all colors
@@ -133,6 +134,8 @@ public class Player : MonoBehaviour {
 
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
+
+	private const float MIN_SLIME_BOUNCE = 20.0f;
 
 	private const int NUM_RUN_FRAMES = 2;
 	private const int NUM_ROLL_FRAMES = 2;
@@ -563,7 +566,15 @@ public class Player : MonoBehaviour {
 		{
 			float prevXVel = rb.velocity.x;
 			rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
-			
+
+			//set magnitude if lower than minimum
+			float magnitude = rb.velocity.magnitude;
+			print(magnitude);
+			if (magnitude < MIN_SLIME_BOUNCE)
+			{
+				rb.velocity *= MIN_SLIME_BOUNCE / magnitude;
+			}
+
 			//reverse if rolling into slime
 			if (rollTime > 0 && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
 			{
