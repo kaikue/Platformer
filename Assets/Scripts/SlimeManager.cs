@@ -70,19 +70,13 @@ public class SlimeManager : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("BridgeActivator"))
-        {
-            colliding = true;
-            queuedCollisionPoint = collision.contacts[0].point;
-        } 
+        colliding = true;
+        queuedCollisionPoint = collision.contacts[0].point;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("BridgeActivator"))
-        {
-            colliding = false;
-        } 
+        colliding = false;
     }
 
     private void GenerateSlimeTiles()
@@ -95,6 +89,8 @@ public class SlimeManager : MonoBehaviour {
             newSlimeObject.transform.position = pos;
             selectedBridge.Add(newSlimeObject.GetComponent<SlimeObject>()); 
         }
+
+        print(connectedTilePositions.Count);
     }
 
     private void DestroySlimeTiles()

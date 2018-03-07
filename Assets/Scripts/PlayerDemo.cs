@@ -120,6 +120,7 @@ public class PlayerDemo : MonoBehaviour {
 
 	private const float JUMP_VEL = 14.0f; //jump y speed
 	private const float WALLJUMP_VEL = 1.5f * MAX_RUN_VEL; //speed applied at time of walljump
+
 	private const float WALLJUMP_MIN_FACTOR = 0.5f; //amount of walljump kept at minimum if no input
 	private const float WALLJUMP_TIME = 0.5f; //time it takes for walljump to wear off
 
@@ -130,6 +131,8 @@ public class PlayerDemo : MonoBehaviour {
 	private const float ROLLJUMP_VEL = JUMP_VEL * 2 / 3; //roll cancel jump y speed
 	private const float ROLL_HEIGHT = 0.5f; //scale factor of height when rolling
 	private const float ROLL_FORCE_AMOUNT = 0.1f; //how much to push the player when they can't unroll
+
+    private const float SLIME_BOUNCE_MULTIPLIER = 1.5f; // minimum bounce given by slime as a multiple of JUMP_VEL
 
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
@@ -145,7 +148,6 @@ public class PlayerDemo : MonoBehaviour {
 
 	private GameManager gm;
 	private EdgeCollider2D ec;
-    private BoxCollider2D bc;
 	private Rigidbody2D rb;
 
 	private Vector2 groundNormal;
@@ -197,14 +199,7 @@ public class PlayerDemo : MonoBehaviour {
 		gm = GameObject.Find("GameManager").GetComponent<GameManager>();
 		rb = gameObject.GetComponent<Rigidbody2D>();
 		ec = gameObject.GetComponent<EdgeCollider2D>();
-		bc = gameObject.GetComponent<BoxCollider2D>();
-        if (ec.enabled)
-        {
-            ecHeight = ec.points[1].y - ec.points[0].y;
-        } else if (bc.enabled)
-        {
-            ecHeight = bc.size.y;
-        }
+        ecHeight = ec.points[1].y - ec.points[0].y;
 
 		SLIDE_THRESHOLD = -Mathf.Sqrt(2) / 2; //player will slide down 45 degree angle slopes
 
@@ -491,12 +486,9 @@ public class PlayerDemo : MonoBehaviour {
         ec.points[1].y = rollHeight / 2;
         ec.points[2].y = rollHeight / 2;
         ec.points[0].y = -rollHeight / 2;
-        ec.points[5].y = -rollHeight / 2;
+        ec.points[4].y = -rollHeight / 2;
         ec.points[3].y = -rollHeight / 2;
 		ec.offset = new Vector2(0, -rollHeight / 2);
-
-        bc.size = new Vector2(bc.size.x, rollHeight);
-        bc.offset = new Vector2(0, -rollHeight / 2);
 	}
 
 	private void SetNormalCollider()
@@ -508,12 +500,9 @@ public class PlayerDemo : MonoBehaviour {
         ec.points[1].y = ecHeight / 2;
         ec.points[2].y = ecHeight / 2;
         ec.points[0].y = -ecHeight / 2;
-        ec.points[5].y = -ecHeight / 2;
+        ec.points[4].y = -ecHeight / 2;
         ec.points[3].y = -ecHeight / 2;
 		ec.offset = new Vector2(0, 0);
-
-        bc.size = new Vector2(bc.size.x, ecHeight);
-        bc.offset = new Vector2(0, 0);
 
 		RaycastHit2D[] hits = BoxCast(Vector2.zero, 0);
 		if (hits.Length > 0) //collided with something else
@@ -526,14 +515,7 @@ public class PlayerDemo : MonoBehaviour {
 
 	private RaycastHit2D[] BoxCast(Vector2 direction, float distance)
 	{
-        Vector2 size;
-        if (ec.enabled)
-        {
-            size = ec.points[2] - ec.points[0];
-        } else 
-        {
-            size = bc.size;
-        }
+        Vector2 size = ec.points[2] - ec.points[0];
 		return Physics2D.BoxCastAll(gameObject.transform.position, size, 0, direction, distance, LayerMask.GetMask("LevelGeometry"));
 	}
 	
@@ -591,8 +573,8 @@ public class PlayerDemo : MonoBehaviour {
 		if (collision.gameObject.tag == "Slime")
 		{
 			float prevXVel = rb.velocity.x;
-			rb.velocity = Vector2.Reflect(rb.velocity, GetGround(collision).normal);
-            rb.velocity = new Vector2(rb.velocity.x, 1.0f * JUMP_VEL);
+            //rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
+            rb.velocity = new Vector2(rb.velocity.x, SLIME_BOUNCE_MULTIPLIER * JUMP_VEL);
 			
 			//reverse if rolling into slime
 			if (rollTime > 0 && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
@@ -613,27 +595,19 @@ public class PlayerDemo : MonoBehaviour {
             return;
         }
 		
-        bool changed = false;
-
 		if (HasGround(collision) && !HasGround(lastCollision))
 		{
-            print("ground");
-            changed = true;
 			grounds.Add(collision.gameObject);
 			groundNormal = GetGround(collision).normal;
 		}
 		else if (HasCeiling(collision) && !HasCeiling(lastCollision))
 		{
-            print("ceiling");
-            changed = true;
 			Vector2 velocity = rb.velocity;
 			velocity.y = 0;
 			rb.velocity = velocity;
 		}
 		else if (HasWall(collision) && !HasWall(lastCollision))
 		{
-            print("wall");
-            changed = true;
 			float x = Vector2.Dot(Vector2.right, GetWall(collision).normal);
 			wallSide = Mathf.RoundToInt(x);
 			wall = collision.gameObject;
@@ -659,6 +633,11 @@ public class PlayerDemo : MonoBehaviour {
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
+        if (collision.collider.CompareTag("Slime"))
+        {
+            return;
+        }
+
         lastCollision = null;
 		grounds.Remove(collision.gameObject);
 		if (collision.gameObject == wall)
@@ -676,14 +655,10 @@ public class PlayerDemo : MonoBehaviour {
 
 	private float[] NormalDotList(Collision2D collision)
 	{
-        //   0 for horizontal (walls)
-        // < 0 for floor
-        // > 0 for ceiling
         float[] dots = new float[collision.contacts.Length];
         for (int i = 0; i < collision.contacts.Length; i++)
         {
-		    Vector2 normal = collision.contacts[i].normal;
-            dots[i] = Vector2.Dot(normal, GRAVITY_NORMAL);
+            dots[i] = NormalDot(collision.contacts[i]);
         }
 
         return dots;
