@@ -13,38 +13,21 @@ public class SlimeObject : MonoBehaviour {
 	void Start () {
         sr = GetComponent<SpriteRenderer>();
         col = GetComponent<BoxCollider2D>();
-	}  
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
-    public void Activate()
+    private void FixedUpdate()
     {
-        sr.color = Color.white;
-        col.enabled = true;
-        activated = true;
-        
+        col.enabled = activated;
     }
 
-    public void Hint()
-    {
-        sr.color = Color.gray;
-    }
-
-    public void DeHint()
-    {
-        if (!activated)
+    // Update is called once per frame
+    void Update () {
+        if (activated)
         {
-            sr.color = Color.clear;
+            sr.color = Color.white;
+        } else
+        {
+            sr.color = Color.gray;
         }
-    }
-
-    public void Deactivate()
-    {
-        sr.color = Color.clear;
-        col.enabled = false;
-        activated = false;
-    }
+	}
 }
