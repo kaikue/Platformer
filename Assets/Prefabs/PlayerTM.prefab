@@ -55,8 +55,8 @@ GameObject:
   - component: {fileID: 4452942178241750}
   - component: {fileID: 50681192212971358}
   - component: {fileID: 81611523582207112}
-  - component: {fileID: 68530602142321060}
   - component: {fileID: 114498295343137898}
+  - component: {fileID: 68221201086096780}
   m_Layer: 0
   m_Name: PlayerTM
   m_TagString: Untagged
@@ -91,7 +91,7 @@ Transform:
   m_GameObject: {fileID: 1291091361296004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_Children: []
   m_Father: {fileID: 4452942178241750}
   m_RootOrder: 2
@@ -239,7 +239,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 16, y: 16}
   m_EdgeRadius: 0
---- !u!68 &68530602142321060
+--- !u!68 &68221201086096780
 EdgeCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -254,11 +254,11 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -0.3, y: -0.645}
-  - {x: -0.3, y: 0.645}
-  - {x: 0.3, y: 0.645}
-  - {x: 0.3, y: -0.645}
-  - {x: -0.3, y: -0.645}
+  - {x: -0.45, y: -0.9675}
+  - {x: -0.45, y: 0.9675}
+  - {x: 0.45, y: 0.9675}
+  - {x: 0.45, y: -0.9675}
+  - {x: -0.45, y: -0.9675}
 --- !u!81 &81083164228527092
 AudioListener:
   m_ObjectHideFlags: 1
