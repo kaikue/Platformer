@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerDemo : MonoBehaviour {
-	
+
+	public GameObject SpriteObject;
+
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
 	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
@@ -29,7 +31,7 @@ public class PlayerDemo : MonoBehaviour {
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
 
-	private const int NUM_RUN_FRAMES = 2;
+	private const int NUM_RUN_FRAMES = 10;
 	private const int NUM_ROLL_FRAMES = 2;
 
 	private const float FRAME_TIME = 0.1f; //time in seconds per frame of animation
@@ -95,7 +97,7 @@ public class PlayerDemo : MonoBehaviour {
 
 		SLIDE_THRESHOLD = -Mathf.Sqrt(2) / 2; //player will slide down 45 degree angle slopes
 
-		sr = gameObject.GetComponent<SpriteRenderer>();
+		sr = SpriteObject.GetComponent<SpriteRenderer>();
 		LoadSprites();
 	}
 
