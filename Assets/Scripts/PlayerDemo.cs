@@ -3,116 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerDemo : MonoBehaviour {
-
-	/*
-	 * https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
-	 * 
-	 * TODO:
-	 * 
-	 * Slopes
-	 *  slide down >= 45 degree slopes, can't move/jump/roll
-	 *		not if already rolling?
-	 *	
-	 * jumping onto slime jumps up to minimum velocity? (high jump)
-	 * 
-	 * Hub upper area
-	 *	3 more hub stars
-	 * 
-	 * Scene transition (to particular point in scene)
-	 * 
-	 * Main menu
-	 *	new game button
-	 *		deletes save file if exists, creates a new one and goes to hub
-	 *	continue button (if save exists)
-	 *		loads scene corresponding to save index (first line in save)
-	 * 
-	 * Snap level objects to grid in editor?
-	 *	tilemap?
-	 *	Player can jump ~3 units
-	 * 
-	 * Spikes
-	 *	Health- add to HUD
-	 *	Hurt you, send you back to latest checkpoint
-	 *	If you die you restart the scene
-	 * 
-	 * Enemies
-	 *	Rolling hurts enemies
-	 * Bosses
-	 *	Super Stars (x3, different overlay text & image)
-	 *	Don't spawn if superstar was collected
-	 * Levels
-	 *	left: Water? Rainy forest? Temple?
-	 *	up: Ice/mountain
-	 *	down: Rock
-	 *	right: Fire
-	 *	Boss doors require that level's color x5
-	 *	Secret final door requires all 11 of all colors
-	 * 
-	 * Water
-	 *	Decreases gravity
-	 *	Decreases move speed
-	 *	Allows offground jumps after swim animation is complete
-	 *		plays full swim animation then goes to swim-stand
-	 * 
-	 * Pause screen buttons
-	 *	resume, options?, quit
-	 * 
-	 * Star collect overlay
-	 *	Different banner/star image color for different star type
-	 *	Fancy transitions for banner and overlay
-	 * 
-	 * HUD overlay- use quadratic slope for in/out movement?
-	 * 
-	 * Doors don't hide HUD until you walk away
-	 * 
-	 * Sounds (pitch randomization?)
-	 *	jump/walljump/roll cancel
-	 *	roll
-	 *	wall slide?
-	 *	star collect (level up)
-	 *	star twinkle
-	 *	collect star again (bloop)
-	 *	Landing from high fall
-	 *	Door sliding open
-	 *	Door ascending tones
-	 *	Slime bounce
-	 *	Level music (mute during star overlay)
-	 * 
-	 * Art
-	 *	Player animations
-	 *	Star
-	 *	Star collect image
-	 *	Door
-	 *	Signposts with button prompts
-	 *	Menus
-	 *	Levels
-	 *		Scenery
-	 *		Backgrounds
-	 *	Spikes
-	 * 
-	 * Team logo (with sound)
-	 * 
-	 * pick up/throw?
-	 * 
-	 * Art notes:
-	 *	Be sure to set NUM_RUN_FRAMES and NUM_ROLL_FRAMES to the correct values
-	 *	Default sprite facing is left (remove - in facing calculation if not)
-	 *	Wall slide sprite should face opposite of other sprites
-	 *	Star should be white, colored by material
-	 *	When changing player dimensions, update bounding box and fully retest level design
-	 * 
-	 * Level design notes:
-	 *	Player should visit doors before being able to open them
-	 *	Use scenery to draw attention to offscreen stuff
-	 * 
-	 * Cool moves:
-	 *	Jump-roll for extra air distance
-	 *	Jump-roll-jump for controlled distance
-	 *	Jump-roll-jump (hold direction) for maximum distance
-	 *	Walljump-roll backwards to climb over a lip
-	 *	Roll-jump repeatedly to run fast?
-	 */
-
+	
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
 	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
@@ -133,6 +24,7 @@ public class PlayerDemo : MonoBehaviour {
 	private const float ROLL_FORCE_AMOUNT = 0.1f; //how much to push the player when they can't unroll
 
     private const float SLIME_BOUNCE_MULTIPLIER = 1.5f; // minimum bounce given by slime as a multiple of JUMP_VEL
+	private const float MIN_SLIME_BOUNCE = SLIME_BOUNCE_MULTIPLIER * JUMP_VEL;
 
 	private static float SLIDE_THRESHOLD;
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
@@ -152,7 +44,7 @@ public class PlayerDemo : MonoBehaviour {
 
 	private Vector2 groundNormal;
 
-    private Collision2D lastCollision;
+	private Collision2D lastCollision;
 
 	private bool jumpQueued = false;
 	private List<GameObject> grounds = new List<GameObject>();
@@ -199,7 +91,7 @@ public class PlayerDemo : MonoBehaviour {
 		gm = GameObject.Find("GameManager").GetComponent<GameManager>();
 		rb = gameObject.GetComponent<Rigidbody2D>();
 		ec = gameObject.GetComponent<EdgeCollider2D>();
-        ecHeight = ec.points[1].y - ec.points[0].y;
+		ecHeight = ec.points[1].y - ec.points[0].y;
 
 		SLIDE_THRESHOLD = -Mathf.Sqrt(2) / 2; //player will slide down 45 degree angle slopes
 
@@ -482,27 +374,22 @@ public class PlayerDemo : MonoBehaviour {
 	private void SetRollCollider()
 	{
 		rollingCollider = true;
-		float rollHeight = ecHeight * ROLL_HEIGHT;
-        ec.points[1].y = rollHeight / 2;
-        ec.points[2].y = rollHeight / 2;
-        ec.points[0].y = -rollHeight / 2;
-        ec.points[4].y = -rollHeight / 2;
-        ec.points[3].y = -rollHeight / 2;
-		ec.offset = new Vector2(0, -rollHeight / 2);
+		float ecBottom = ec.points[0].y;
+		float rollTop = ecBottom + ecHeight * ROLL_HEIGHT;
+		ec.points[1].y = rollTop;
+        ec.points[2].y = rollTop;
 	}
 
 	private void SetNormalCollider()
 	{
+		//if it fits, otherwise keep anim state and rolling
 		if (!rollingCollider) return;
 		
 		rollingCollider = false;
-        //if it fits, otherwise keep anim state and rolling
-        ec.points[1].y = ecHeight / 2;
-        ec.points[2].y = ecHeight / 2;
-        ec.points[0].y = -ecHeight / 2;
-        ec.points[4].y = -ecHeight / 2;
-        ec.points[3].y = -ecHeight / 2;
-		ec.offset = new Vector2(0, 0);
+		float ecBottom = ec.points[0].y;
+		float normalTop = ecBottom + ecHeight;
+		ec.points[1].y = normalTop;
+        ec.points[2].y = normalTop;
 
 		RaycastHit2D[] hits = BoxCast(Vector2.zero, 0);
 		if (hits.Length > 0) //collided with something else
@@ -515,7 +402,7 @@ public class PlayerDemo : MonoBehaviour {
 
 	private RaycastHit2D[] BoxCast(Vector2 direction, float distance)
 	{
-        Vector2 size = ec.points[2] - ec.points[0];
+		Vector2 size = ec.points[2] - ec.points[0];
 		return Physics2D.BoxCastAll(gameObject.transform.position, size, 0, direction, distance, LayerMask.GetMask("LevelGeometry"));
 	}
 	
@@ -568,14 +455,18 @@ public class PlayerDemo : MonoBehaviour {
 		}
 	}
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
 		if (collision.gameObject.tag == "Slime")
 		{
 			float prevXVel = rb.velocity.x;
-            //rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
-            rb.velocity = new Vector2(rb.velocity.x, SLIME_BOUNCE_MULTIPLIER * JUMP_VEL);
-			
+			rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
+			if (rb.velocity.y < MIN_SLIME_BOUNCE)
+			{
+				rb.velocity = new Vector2(rb.velocity.x, MIN_SLIME_BOUNCE);
+			}
+			//rb.velocity = new Vector2(rb.velocity.x, SLIME_BOUNCE_MULTIPLIER * JUMP_VEL);
+
 			//reverse if rolling into slime
 			if (rollTime > 0 && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
 			{
@@ -751,5 +642,5 @@ public class PlayerDemo : MonoBehaviour {
 			door.TryOpen();
 		}
 	}
-
+	
 }
