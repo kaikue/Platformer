@@ -1,10 +1,12 @@
 https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
 camera 2/3 down
-rolling doesn't stop on wall hit
-finish going through playerdemo physics
+finish going through playerdemo physics- why on stay?
+	player can't always wallslide
+	rolling doesn't stop on wall hit
 fix slime high jump
-player can't always wallslide
+
+Roll direction- towards held key if key down, otherwise towards facing direction
 
 Hub upper area
 3 more hub stars

@@ -15,42 +15,40 @@ public class SlimeManager : MonoBehaviour {
     private Vector3 queuedCollisionPoint;
     private bool colliding;
     private bool activated;
-    private bool queuePlaceBridge;
-    private bool queueDestroyBridge;
+    private bool bridgeSwapQueued;
 
 	void Start () {
         sr = GetComponent<SpriteRenderer>();
 	}
 	
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton1) || Input.GetKeyDown(KeyCode.JoystickButton2))
         {
-            queuePlaceBridge = true;
-        } else if (Input.GetKeyDown(KeyCode.C))
-        {
-            queueDestroyBridge = true;
+            bridgeSwapQueued = true;
         }
 	}
 
     private void FixedUpdate()
     {
-        if (queuePlaceBridge)
-        {
-            if (selectedBridge.Count > 0 && !activated)
-            {
-                //print("activating");
-                ActivateSlimeTiles();
-            }
-            queuePlaceBridge = false;
-        } else if (queueDestroyBridge)
-        {
-            if (selectedBridge.Count > 0 && activated)
-            {
-                //print("destroying");
-                DestroySlimeTiles();
-            }
-            queueDestroyBridge = false;
-        } else
+		if (bridgeSwapQueued)
+		{
+			if (activated)
+			{
+				if (selectedBridge.Count > 0)
+				{
+					DestroySlimeTiles();
+				}
+			}
+			else
+			{
+				if (selectedBridge.Count > 0)
+				{
+					ActivateSlimeTiles();
+				}
+			}
+			bridgeSwapQueued = false;
+		}
+		else
         {
             if (colliding && selectedBridge.Count == 0)
             {
@@ -81,6 +79,7 @@ public class SlimeManager : MonoBehaviour {
 
     private void GenerateSlimeTiles()
     {
+		print("generate");
         HashSet<Vector3> connectedTilePositions = GetConnectedTilePositions(queuedCollisionPoint);
         //print(connectedTilePositions.Count);
         foreach (Vector3 pos in connectedTilePositions)
@@ -94,8 +93,9 @@ public class SlimeManager : MonoBehaviour {
     }
 
     private void DestroySlimeTiles()
-    {
-        foreach (SlimeObject slimeObject in selectedBridge)
+	{
+		print("destroy");
+		foreach (SlimeObject slimeObject in selectedBridge)
         {
             Destroy(slimeObject.gameObject);
         }
@@ -105,8 +105,9 @@ public class SlimeManager : MonoBehaviour {
     }
 
     private void ActivateSlimeTiles()
-    {
-        foreach (SlimeObject slimeObject in selectedBridge)
+	{
+		print("activate");
+		foreach (SlimeObject slimeObject in selectedBridge)
         {
             slimeObject.activated = true;
         }
