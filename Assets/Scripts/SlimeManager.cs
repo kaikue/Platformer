@@ -7,8 +7,11 @@ public class SlimeManager : MonoBehaviour {
 
     public Tilemap bridgeActivatorTiles;
     public GameObject slimeObjectPrefab;
+    public GameObject player;
+    public float followDistance;
 
     private SpriteRenderer sr;
+    private BoxCollider2D bc;
 
     private readonly HashSet<SlimeObject> selectedBridge = new HashSet<SlimeObject>();
 
@@ -19,6 +22,7 @@ public class SlimeManager : MonoBehaviour {
 
 	void Start () {
         sr = GetComponent<SpriteRenderer>();
+        bc = GetComponent<BoxCollider2D>();
 	}
 	
 	void Update () {
@@ -30,6 +34,10 @@ public class SlimeManager : MonoBehaviour {
 
     private void FixedUpdate()
     {
+        bc.offset = player.transform.position - transform.position;
+        Vector2 radialVelocity = GetRadialVelocity();
+        transform.position += Time.fixedDeltaTime * (new Vector3(radialVelocity.x, radialVelocity.y, 0.0f));
+
 		if (bridgeSwapQueued)
 		{
 			if (activated)
@@ -48,33 +56,65 @@ public class SlimeManager : MonoBehaviour {
 			}
 			bridgeSwapQueued = false;
 		}
-		else
+    }
+
+    private void UpdateBridgeState(bool colliding)
+    {
+        if (colliding && selectedBridge.Count == 0)
         {
-            if (colliding && selectedBridge.Count == 0)
+            //print("generating");
+            GenerateSlimeTiles();
+        } else if (!colliding && selectedBridge.Count > 0)
+        {
+            ////print("leaving");
+            if (!activated)
             {
-                //print("generating");
-                GenerateSlimeTiles();
-            } else if (!colliding && selectedBridge.Count > 0)
-            {
-                ////print("leaving");
-                if (!activated)
-                {
-                    //print("leaving/destroying");
-                    DestroySlimeTiles();
-                }
+                //print("leaving/destroying");
+                DestroySlimeTiles();
             }
         }
+
+    }
+
+
+    private Vector2 GetRadialVelocity()
+    {
+        Vector2 parentPos = new Vector2(player.transform.position.x, player.transform.position.y);
+        Vector2 currentPos = new Vector2(transform.position.x, transform.position.y);
+
+        Vector2 playerVel = player.GetComponent<Rigidbody2D>().velocity;
+        Vector2 playerDirection = player.GetComponent<PlayerDemo>().GetFacing() * Vector2.left;
+        Vector2 followPos = parentPos + -1.0f * followDistance * playerDirection;
+
+        Vector2 targetVel = 3.0f * (followPos - currentPos) + 0.5f * playerVel;
+        return targetVel;
+    }
+
+    private Vector2 GetRotatedPosition(float newAngle, Vector2 parentPos, Vector2 currentPos)
+    {
+        float dist = Vector2.Distance(parentPos, currentPos);
+        return new Vector2(parentPos.x + dist * Mathf.Cos(newAngle), parentPos.y + dist * Mathf.Sin(newAngle));
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        print("collision enter");
         colliding = true;
         queuedCollisionPoint = collision.contacts[0].point;
+        if (!bridgeSwapQueued)
+        {
+            UpdateBridgeState(colliding);
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
+        print("collision exit");
         colliding = false;
+        if (!bridgeSwapQueued)
+        {
+            UpdateBridgeState(colliding);
+        }
     }
 
     private void GenerateSlimeTiles()

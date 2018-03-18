@@ -373,6 +373,11 @@ public class PlayerDemo : MonoBehaviour {
 		rollQueued = false;
 	}
 
+    public int GetFacing()
+    {
+        return facing;
+    }
+
 	private void SetRollCollider()
 	{
 		rollingCollider = true;
