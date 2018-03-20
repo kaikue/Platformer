@@ -52,4 +52,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SPAWN_RATE: 1
-  obstaclePrefab: {fileID: 0}
+  obstaclePrefab: {fileID: 1901350282709408, guid: 904d97043dbfa864b9f727bc691e1fa8,
+    type: 2}
