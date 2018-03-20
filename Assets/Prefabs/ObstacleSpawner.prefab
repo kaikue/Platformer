@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1407375932728530}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.95, y: 18.04, z: -0.62303364}
+  m_LocalPosition: {x: -2.34, y: 18.63, z: -0.62303364}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -48,9 +48,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1407375932728530}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a342058abd5786040a92157dd7bf6024, type: 3}
+  m_Script: {fileID: 11500000, guid: 4256c066b8af22e4789139b6e1076f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SPAWN_RATE: 2
-  obstaclePrefab: {fileID: 1901350282709408, guid: 904d97043dbfa864b9f727bc691e1fa8,
-    type: 2}
+  SPAWN_RATE: 1
+  obstaclePrefab: {fileID: 0}
