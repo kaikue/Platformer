@@ -261,14 +261,14 @@ public class PlayerDemo : MonoBehaviour {
 			velocity.y += GRAVITY_ACCEL;
 		}
 		
-		if (rollTime > 0 && jumpQueued)
+		/*if (rollTime > 0 && jumpQueued)
 		{
 			//roll cancel
 			StopRoll();
 			ResetWalljump();
 			velocity.y = ROLLJUMP_VEL;
 			jumpQueued = false;
-		}
+		}*/
 
 		if (walljumpTime > 0 || walljumpPush)
 		{

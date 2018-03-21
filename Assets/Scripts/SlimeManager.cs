@@ -119,7 +119,6 @@ public class SlimeManager : MonoBehaviour {
 
     private void GenerateSlimeTiles()
     {
-		print("generate");
         HashSet<Vector3> connectedTilePositions = GetConnectedTilePositions(queuedCollisionPoint);
         //print(connectedTilePositions.Count);
         foreach (Vector3 pos in connectedTilePositions)
@@ -134,7 +133,6 @@ public class SlimeManager : MonoBehaviour {
 
     private void DestroySlimeTiles()
 	{
-		print("destroy");
 		foreach (SlimeObject slimeObject in selectedBridge)
         {
             Destroy(slimeObject.gameObject);
@@ -146,7 +144,6 @@ public class SlimeManager : MonoBehaviour {
 
     private void ActivateSlimeTiles()
 	{
-		print("activate");
 		foreach (SlimeObject slimeObject in selectedBridge)
         {
             slimeObject.activated = true;
