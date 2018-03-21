@@ -62,7 +62,9 @@ public class PlayerDemo : MonoBehaviour {
 	private int rollDir = 1; //-1 for left, 1 for right
 	private float ecHeight;
 	private bool rollingCollider = false;
-	
+
+    private Vector3 respawnPoint;
+
 	enum AnimState
 	{
 		STAND,
@@ -99,6 +101,8 @@ public class PlayerDemo : MonoBehaviour {
 
 		sr = SpriteObject.GetComponent<SpriteRenderer>();
 		LoadSprites();
+
+        respawnPoint = transform.position;
 	}
 
 	private void LoadSprites()
@@ -375,6 +379,16 @@ public class PlayerDemo : MonoBehaviour {
 		rollQueued = false;
 	}
 
+    public void Kill()
+    {
+        transform.position = respawnPoint;
+        // TODO: Make sure this actually clears all current state
+        lastCollision = null;
+        grounds.Clear();
+        wall = null;
+        rb.velocity = Vector3.zero;
+    }
+
     public int GetFacing()
     {
         return facing;
@@ -637,8 +651,13 @@ public class PlayerDemo : MonoBehaviour {
         return false;
 	}
 
-	private void OnTriggerEnter2D(Collider2D collision)
-	{
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Respawn"))
+        {
+            respawnPoint = transform.position; 
+        }
+
 		Star star = collision.gameObject.GetComponent<Star>();
 		if (star != null)
 		{
@@ -653,5 +672,13 @@ public class PlayerDemo : MonoBehaviour {
 			door.TryOpen();
 		}
 	}
-	
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Respawn"))
+        {
+            respawnPoint = transform.position; 
+        }
+    }
+
 }
