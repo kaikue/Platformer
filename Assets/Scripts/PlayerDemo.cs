@@ -240,6 +240,7 @@ public class PlayerDemo : MonoBehaviour {
 			if (jumpQueued)
 			{
 				//regular jump
+				print("normal jump- on ground");
 				StopRoll();
 				velocity.y += JUMP_VEL;
 				jumpQueued = false;
@@ -251,6 +252,7 @@ public class PlayerDemo : MonoBehaviour {
 			if (!onGround && jumpQueued && wallSide != 0)
 			{
 				//walljump
+				print("walljump");
 				walljumpTime = WALLJUMP_TIME;
 				lastWallSide = wallSide;
 				velocity.y = JUMP_VEL;
@@ -487,8 +489,8 @@ public class PlayerDemo : MonoBehaviour {
 	{
 		if (collision.contacts.Length == 0) return; //not sure what happened
 
-        //TODO: don't assume it's land, check that first
-        if (collision.gameObject.tag == "Slime")
+		//TODO: don't assume it's land, check that first
+		if (collision.gameObject.tag == "Slime" || collision.gameObject.tag == "Obstacle")
         {
             return;
         }
@@ -508,7 +510,6 @@ public class PlayerDemo : MonoBehaviour {
 
 		if (HasWall(collision) && !HasWall(lastCollision))
 		{
-			print("SET WALL");
 			float x = Vector2.Dot(Vector2.right, GetWall(collision).normal);
 			wallSide = Mathf.RoundToInt(x);
 			wall = collision.gameObject;
@@ -534,10 +535,10 @@ public class PlayerDemo : MonoBehaviour {
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
-        if (collision.collider.CompareTag("Slime"))
-        {
-            return;
-        }
+		if (collision.collider.CompareTag("Slime") || collision.gameObject.tag == "Obstacle")
+		{
+			return;
+		}
 
         lastCollision = null;
 		grounds.Remove(collision.gameObject);
