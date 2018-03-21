@@ -244,7 +244,6 @@ public class PlayerDemo : MonoBehaviour {
 			if (jumpQueued)
 			{
 				//regular jump
-				print("normal jump- on ground");
 				StopRoll();
 				velocity.y += JUMP_VEL;
 				jumpQueued = false;
@@ -256,7 +255,6 @@ public class PlayerDemo : MonoBehaviour {
 			if (!onGround && jumpQueued && wallSide != 0)
 			{
 				//walljump
-				print("walljump");
 				walljumpTime = WALLJUMP_TIME;
 				lastWallSide = wallSide;
 				velocity.y = JUMP_VEL;
@@ -399,8 +397,7 @@ public class PlayerDemo : MonoBehaviour {
 		rollingCollider = true;
 		float ecBottom = ec.points[0].y;
 		float rollTop = ecBottom + ecHeight * ROLL_HEIGHT;
-		ec.points[1].y = rollTop;
-        ec.points[2].y = rollTop;
+		SetColliderHeight(rollTop);
 	}
 
 	private void SetNormalCollider()
@@ -411,8 +408,7 @@ public class PlayerDemo : MonoBehaviour {
 		rollingCollider = false;
 		float ecBottom = ec.points[0].y;
 		float normalTop = ecBottom + ecHeight;
-		ec.points[1].y = normalTop;
-        ec.points[2].y = normalTop;
+		SetColliderHeight(normalTop);
 
 		RaycastHit2D[] hits = BoxCast(Vector2.zero, 0);
 		if (hits.Length > 0) //collided with something else
@@ -421,6 +417,14 @@ public class PlayerDemo : MonoBehaviour {
 			rollTime = ROLL_FORCE_AMOUNT;
 			SetRollCollider();
 		}
+	}
+
+	private void SetColliderHeight(float height)
+	{
+		Vector2[] points = ec.points;
+		points[1].y = height;
+		points[2].y = height;
+		ec.points = points;
 	}
 
 	private RaycastHit2D[] BoxCast(Vector2 direction, float distance)
