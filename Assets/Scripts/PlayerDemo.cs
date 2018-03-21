@@ -145,6 +145,8 @@ public class PlayerDemo : MonoBehaviour {
 			rollQueued = true;
 		}
 
+
+		AdvanceAnim();
 		sr.sprite = GetAnimSprite();
 	}
 
@@ -358,8 +360,6 @@ public class PlayerDemo : MonoBehaviour {
 			SetAnimState(AnimState.STAND);
 		}
 
-		AdvanceAnim();
-
 		if (velocity.x != 0)
 		{
 			facing = -Math.Sign(velocity.x); //make this positive if sprites face right
@@ -454,7 +454,7 @@ public class PlayerDemo : MonoBehaviour {
 
 	private void AdvanceFrame(int maxFrames)
 	{
-		frameTime -= Time.fixedDeltaTime; //physics based animations but whatever
+		frameTime -= Time.deltaTime;
 		if (frameTime <= 0)
 		{
 			frameTime = FRAME_TIME;
