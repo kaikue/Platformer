@@ -4,7 +4,6 @@ camera 2/3 down
 finish going through playerdemo physics- why on stay?
 	player can't always wallslide
 	rolling doesn't stop on wall hit
-fix slime high jump
 
 Roll direction- towards held key if key down, otherwise towards facing direction
 

@@ -498,14 +498,17 @@ public class PlayerDemo : MonoBehaviour {
 			grounds.Add(collision.gameObject);
 			groundNormal = GetGround(collision).normal;
 		}
-		else if (HasCeiling(collision) && !HasCeiling(lastCollision))
+
+		if (HasCeiling(collision) && !HasCeiling(lastCollision))
 		{
 			Vector2 velocity = rb.velocity;
 			velocity.y = 0;
 			rb.velocity = velocity;
 		}
-		else if (HasWall(collision) && !HasWall(lastCollision))
+
+		if (HasWall(collision) && !HasWall(lastCollision))
 		{
+			print("SET WALL");
 			float x = Vector2.Dot(Vector2.right, GetWall(collision).normal);
 			wallSide = Mathf.RoundToInt(x);
 			wall = collision.gameObject;
