@@ -176,23 +176,23 @@ public class PlayerDemo : MonoBehaviour {
 		Vector2 velocity = rb.velocity; //for changing the player's actual velocity
 		Vector2 offset = Vector2.zero; //for any additional movement nudges
 		shouldStand = false;
-		float xVel = Input.GetAxisRaw("Horizontal");
-		if (xVel == 0)
+		float inputXVel = Input.GetAxisRaw("Horizontal");
+		if (inputXVel == 0)
 		{
 			velocity.x = 0;
 			shouldStand = true;
 		}
 		else
 		{
-			if (velocity.x != 0 && Mathf.Sign(xVel) != Mathf.Sign(velocity.x)) //don't slide if switching directions on same frame
+			if (velocity.x != 0 && Mathf.Sign(inputXVel) != Mathf.Sign(velocity.x)) //don't slide if switching directions on same frame
 			{
 				velocity.x = 0;
 				shouldStand = true;
 			}
 			else
 			{
-				velocity.x += RUN_ACCEL * xVel;
-				float speedCap = Mathf.Abs(xVel * MAX_RUN_VEL); //use input to clamp max speed so half tilted joystick is slower
+				velocity.x += RUN_ACCEL * inputXVel;
+				float speedCap = Mathf.Abs(inputXVel * MAX_RUN_VEL); //use input to clamp max speed so half tilted joystick is slower
 				velocity.x = Mathf.Clamp(velocity.x, -speedCap, speedCap);
 				SetAnimState(AnimState.RUN);
 			}
@@ -205,7 +205,7 @@ public class PlayerDemo : MonoBehaviour {
 
 			if (!isRolling())
 			{
-				rollDir = Math.Sign(xVel);
+				rollDir = Math.Sign(inputXVel);
 			}
 		}
 		
@@ -366,6 +366,10 @@ public class PlayerDemo : MonoBehaviour {
 		if (velocity.x != 0)
 		{
 			facing = -Math.Sign(velocity.x); //make this positive if sprites face right
+			if (inputXVel == 0)
+			{
+				rollDir = Math.Sign(velocity.x);
+			}
 		}
 		gameObject.transform.localScale = new Vector3(facing * baseScaleX, baseScaleY, baseScaleZ);
 
