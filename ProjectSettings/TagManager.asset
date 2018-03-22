@@ -7,6 +7,9 @@ TagManager:
   - Slime
   - SlimeComponent
   - BridgeActivator
+  - BridgeCollider
+  - SlimeRetriever
+  - Obstacle
   layers:
   - Default
   - TransparentFX
