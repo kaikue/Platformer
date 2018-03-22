@@ -3,7 +3,6 @@ https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 camera 2/3 down?
 
 Roll direction- towards held key if key down, otherwise towards facing direction
-Frame index issue when rolling out of run
 
 Hub upper area
 3 more hub stars

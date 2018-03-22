@@ -148,8 +148,7 @@ public class PlayerDemo : MonoBehaviour {
 		{
 			rollQueued = true;
 		}
-
-
+		
 		AdvanceAnim();
 		sr.sprite = GetAnimSprite();
 	}
@@ -477,13 +476,18 @@ public class PlayerDemo : MonoBehaviour {
 		}
 	}
 
-	private void AdvanceFrame(int maxFrames)
+	private void AdvanceFrame(int numFrames)
 	{
+		if (animFrame >= numFrames)
+		{
+			animFrame = 0;
+		}
+
 		frameTime -= Time.deltaTime;
 		if (frameTime <= 0)
 		{
 			frameTime = FRAME_TIME;
-			animFrame = (animFrame + 1) % maxFrames;
+			animFrame = (animFrame + 1) % numFrames;
 		}
 	}
 
