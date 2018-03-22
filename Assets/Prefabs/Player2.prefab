@@ -123,7 +123,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1937045308031960}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.6, y: 0.2, z: -0.14576934}
+  m_LocalPosition: {x: -6.7, y: 1, z: -0.14576934}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4737551508986542}
@@ -273,7 +273,7 @@ Rigidbody2D:
   m_Material: {fileID: 6200000, guid: 95f38416580a3064e8a611d8705443c5, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &61934324235523088
 BoxCollider2D:
@@ -377,8 +377,8 @@ MonoBehaviour:
     type: 2}
   slimeObjectIndicatorPrefab: {fileID: 1059608177783428, guid: c3a37e830f99c584ab3f3ee26c444b31,
     type: 2}
-  player: {fileID: 0}
-  followDistance: 0
+  player: {fileID: 1118050431539186}
+  followDistance: 1
 --- !u!114 &114990066971120080
 MonoBehaviour:
   m_ObjectHideFlags: 1
