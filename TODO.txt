@@ -1,9 +1,6 @@
 https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
-camera 2/3 down
-finish going through playerdemo physics- why on stay?
-	player can't always wallslide
-	rolling doesn't stop on wall hit
+camera 2/3 down?
 
 Roll direction- towards held key if key down, otherwise towards facing direction
 
@@ -18,8 +15,6 @@ new game button
 continue button (if save exists)
 	loads scene corresponding to save index (first line in save)
 
-Snap level objects to grid in editor?
-tilemap?
 Player can jump ~3 units
 
 Spikes
@@ -27,19 +22,24 @@ Health- add to HUD
 Hurt you, send you back to latest checkpoint
 If you die you restart the scene
 
+Add back roll cancel
 Enemies
 Rolling hurts enemies
 Bosses
 Super Stars (x3, different overlay text & image)
 Don't spawn if superstar was collected
 Levels
-left: Water? Rainy forest? Temple?
-up: Ice/mountain
-down: Rock
-	Tumbler
-	Get on top of the elevator puzzle
-	Spinny platforms
-right: Fire
+	left: Water? Rainy forest? Temple?
+	up: Ice/mountain
+	down: Rock
+		Tumbler
+		Get on top of the elevator puzzle
+		Spinny platforms
+	right: Charred forest
+	other levels:
+		Beehive
+		Lava
+		
 Boss doors require that level's color x5
 Secret final door requires all 11 of all colors
 
