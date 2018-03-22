@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+
 public class SlimeManager : MonoBehaviour {
 
     public Tilemap bridgeActivatorTiles;
     public GameObject slimeObjectPrefab;
+    public GameObject slimeObjectIndicatorPrefab;
     public GameObject player;
     public float followDistance;
 
     private SpriteRenderer sr;
     private BoxCollider2D bc;
 
-    private readonly HashSet<SlimeObject> selectedBridge = new HashSet<SlimeObject>();
+    private SlimeObjectIndicator selectedBridge;
+    private GameObject activeBridge;
 
-    private Vector3 queuedCollisionPoint;
-    private bool colliding;
-    private bool activated;
+    private readonly Dictionary<Vector3Int, SlimeObjectIndicator> closeBridges = 
+        new Dictionary<Vector3Int, SlimeObjectIndicator>();
     private bool bridgeSwapQueued;
 
 	void Start () {
@@ -40,42 +42,23 @@ public class SlimeManager : MonoBehaviour {
 
 		if (bridgeSwapQueued)
 		{
-			if (activated)
+			if (activeBridge != null)
 			{
-				if (selectedBridge.Count > 0)
-				{
-					DestroySlimeTiles();
-				}
+                Destroy(activeBridge.gameObject);
+                activeBridge = null;
+                sr.enabled = true;
 			}
-			else
+			else if (selectedBridge != null && selectedBridge.canActivate) 
 			{
-				if (selectedBridge.Count > 0)
-				{
-					ActivateSlimeTiles();
-				}
+                GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
+                newSlimeObject.transform.position = selectedBridge.transform.position;
+                activeBridge = newSlimeObject;
+                sr.enabled = false;
 			}
+
 			bridgeSwapQueued = false;
 		}
     }
-
-    private void UpdateBridgeState(bool colliding)
-    {
-        if (colliding && selectedBridge.Count == 0)
-        {
-            //print("generating");
-            GenerateSlimeTiles();
-        } else if (!colliding && selectedBridge.Count > 0)
-        {
-            ////print("leaving");
-            if (!activated)
-            {
-                //print("leaving/destroying");
-                DestroySlimeTiles();
-            }
-        }
-
-    }
-
 
     private Vector2 GetRadialVelocity()
     {
@@ -96,63 +79,77 @@ public class SlimeManager : MonoBehaviour {
         return new Vector2(parentPos.x + dist * Mathf.Cos(newAngle), parentPos.y + dist * Mathf.Sin(newAngle));
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        print("collision enter");
-        colliding = true;
-        queuedCollisionPoint = collision.contacts[0].point;
-        if (!bridgeSwapQueued)
+        HashSet<Vector3Int> contactCells = new HashSet<Vector3Int>();
+        foreach (ContactPoint2D contact in collision.contacts)
         {
-            UpdateBridgeState(colliding);
+            Vector3 centerTilePosition = GetConnectedTileCenter(contact.point);
+            Vector3Int centerTileCell = bridgeActivatorTiles.WorldToCell(centerTilePosition);
+
+            if (!closeBridges.ContainsKey(centerTileCell))
+            {
+                GameObject newSlime = Instantiate(slimeObjectIndicatorPrefab);
+                newSlime.transform.position = centerTilePosition;
+
+                closeBridges[centerTileCell] = newSlime.GetComponent<SlimeObjectIndicator>();
+            }
+
+            contactCells.Add(centerTileCell);
         }
+
+        HashSet<Vector3Int> keys = new HashSet<Vector3Int>(closeBridges.Keys);
+        foreach (Vector3Int contactCell in keys)
+        {
+            if (!contactCells.Contains(contactCell))
+            {
+                closeBridges[contactCell].hint = false;
+                closeBridges.Remove(contactCell);
+            }
+
+        }
+
+        UpdateClosestSlimeObject();
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        print("collision exit");
-        colliding = false;
-        if (!bridgeSwapQueued)
+        HashSet<Vector3Int> keys = new HashSet<Vector3Int>(closeBridges.Keys);
+        foreach (Vector3Int contactCell in keys)
         {
-            UpdateBridgeState(colliding);
+            closeBridges[contactCell].hint = false;
+            closeBridges.Remove(contactCell);
         }
+
+        UpdateClosestSlimeObject();
     }
 
-    private void GenerateSlimeTiles()
+    private void UpdateClosestSlimeObject()
     {
-        HashSet<Vector3> connectedTilePositions = GetConnectedTilePositions(queuedCollisionPoint);
-        //print(connectedTilePositions.Count);
-        foreach (Vector3 pos in connectedTilePositions)
+        float minDist = float.MaxValue;
+        SlimeObjectIndicator closestBridge = null;
+        foreach (Vector3Int cellPos in closeBridges.Keys)
         {
-            GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
-            newSlimeObject.transform.position = pos;
-            selectedBridge.Add(newSlimeObject.GetComponent<SlimeObject>()); 
+            float dist = Vector3.Distance(bridgeActivatorTiles.CellToWorld(cellPos), player.transform.position); 
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closestBridge = closeBridges[cellPos];
+            }
         }
 
-        print(connectedTilePositions.Count);
-    }
-
-    private void DestroySlimeTiles()
-	{
-		foreach (SlimeObject slimeObject in selectedBridge)
+        if (closestBridge != null)
         {
-            Destroy(slimeObject.gameObject);
+            foreach (SlimeObjectIndicator bridge in closeBridges.Values)
+            {
+                bridge.hint = bridge == closestBridge;
+            }
         }
-        selectedBridge.Clear();
-        activated = false;
-        sr.enabled = true;
+
+        selectedBridge = closestBridge;
     }
 
-    private void ActivateSlimeTiles()
-	{
-		foreach (SlimeObject slimeObject in selectedBridge)
-        {
-            slimeObject.activated = true;
-        }
-        activated = true;
-        sr.enabled = false;
-    }
-
-    private HashSet<Vector3> GetConnectedTilePositions(Vector2 worldPosition)
+    private Vector3 GetConnectedTileCenter(Vector2 worldPosition)
     {
         HashSet<Vector3> connectedTilePositions = new HashSet<Vector3>();
 
@@ -190,6 +187,13 @@ public class SlimeManager : MonoBehaviour {
             }
         }
 
-        return connectedTilePositions;
+        Vector3 avgPos = Vector3.zero;
+
+        foreach (Vector3 tilePos in connectedTilePositions)
+        {
+            avgPos += tilePos;
+        }
+
+        return (1.0f / connectedTilePositions.Count) * avgPos;
     }
 }

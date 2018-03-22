@@ -373,10 +373,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bridgeActivatorTiles: {fileID: 0}
-  slimeObjectPrefab: {fileID: 1450990807660284, guid: 9c2d195f560e87a47800be4b369d867c,
+  slimeObjectPrefab: {fileID: 1818013010895252, guid: 4eade84185e28954f83380e81f0902b9,
     type: 2}
-  player: {fileID: 1118050431539186}
-  followDistance: 1
+  slimeObjectIndicatorPrefab: {fileID: 1059608177783428, guid: c3a37e830f99c584ab3f3ee26c444b31,
+    type: 2}
+  player: {fileID: 0}
+  followDistance: 0
 --- !u!114 &114990066971120080
 MonoBehaviour:
   m_ObjectHideFlags: 1
