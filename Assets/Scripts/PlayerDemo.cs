@@ -32,7 +32,7 @@ public class PlayerDemo : MonoBehaviour {
 	private static Vector2 GRAVITY_NORMAL = new Vector2(0, GRAVITY_ACCEL).normalized;
 
 	private const int NUM_RUN_FRAMES = 10;
-	private const int NUM_ROLL_FRAMES = 2;
+	private const int NUM_ROLL_FRAMES = 4;
 
 	private const float FRAME_TIME = 0.1f; //time in seconds per frame of animation
 
