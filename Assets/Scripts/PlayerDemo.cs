@@ -266,7 +266,7 @@ public class PlayerDemo : MonoBehaviour {
 		
 		/*if (isRolling() && jumpQueued)
 		{
-			//roll cancel
+			//midair roll cancel
 			StopRoll();
 			ResetWalljump();
 			velocity.y = ROLLJUMP_VEL;
