@@ -204,7 +204,7 @@ public class PlayerDemo : MonoBehaviour {
 				walljumpPush = false;
 			}
 
-			if (rollTime <= 0)
+			if (!isRolling())
 			{
 				rollDir = Math.Sign(xVel);
 			}
@@ -235,7 +235,7 @@ public class PlayerDemo : MonoBehaviour {
 			{*/
 			ResetWalljump();
 			
-			if (rollTime <= 0 && !canRoll)
+			if (!isRolling() && !canRoll)
 			{
 				canRoll = true;
 			}
@@ -252,7 +252,7 @@ public class PlayerDemo : MonoBehaviour {
 		}
 		else
 		{
-			if (!onGround && jumpQueued && wallSide != 0)
+			if (!onGround && jumpQueued && wallSide != 0 && !isRolling())
 			{
 				//walljump
 				walljumpTime = WALLJUMP_TIME;
@@ -265,7 +265,7 @@ public class PlayerDemo : MonoBehaviour {
 			velocity.y += GRAVITY_ACCEL;
 		}
 		
-		/*if (rollTime > 0 && jumpQueued)
+		/*if (isRolling() && jumpQueued)
 		{
 			//roll cancel
 			StopRoll();
@@ -293,7 +293,7 @@ public class PlayerDemo : MonoBehaviour {
 			}
 		}
 
-		if (velocity.y != 0 && rollTime <= 0)
+		if (velocity.y != 0 && !isRolling())
 		{
 			if (wallSide != 0 && Math.Sign(velocity.x) != wallSide)
 			{
@@ -315,7 +315,7 @@ public class PlayerDemo : MonoBehaviour {
 			}
 		}
 
-		if (rollTime > 0)
+		if (isRolling())
 		{
 			//apply roll velocity
 			float timeFactor = rollTime / ROLL_TIME;
@@ -349,11 +349,11 @@ public class PlayerDemo : MonoBehaviour {
 
 			rollTime -= Time.fixedDeltaTime;
 
-			if (rollTime <= 0)
+			if (!isRolling())
 			{
 				StopRoll();
 			}
-			if (rollTime > 0) //both may be true if forced roll
+			if (isRolling()) //both may be true if forced roll
 			{
 				SetAnimState(AnimState.ROLL);
 			}
@@ -377,7 +377,12 @@ public class PlayerDemo : MonoBehaviour {
 		rollQueued = false;
 	}
 
-    public void Kill()
+	private bool isRolling()
+	{
+		return rollTime > 0;
+	}
+
+	public void Kill()
     {
         transform.position = respawnPoint;
         // TODO: Make sure this actually clears all current state
@@ -495,7 +500,7 @@ public class PlayerDemo : MonoBehaviour {
 			//rb.velocity = new Vector2(rb.velocity.x, SLIME_BOUNCE_MULTIPLIER * JUMP_VEL);
 
 			//reverse if rolling into slime
-			if (rollTime > 0 && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
+			if (isRolling() && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
 			{
 				rollDir *= -1;
 			}
