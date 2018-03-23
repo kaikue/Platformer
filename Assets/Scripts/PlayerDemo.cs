@@ -700,7 +700,15 @@ public class PlayerDemo : MonoBehaviour {
 			//TODO
 			if (gm.starsCollected[0] >= 6)
 			{
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                lastCollision = null;
+                rb.velocity = Vector2.zero;
+                if (SceneManager.GetActiveScene().name.Equals("Hub"))
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                } else
+                {
+                    SceneManager.LoadScene(0);
+                }
 			}
 		}
 

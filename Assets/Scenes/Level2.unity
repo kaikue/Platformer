@@ -71578,26 +71578,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114884848580479934, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
-        type: 2}
-      propertyPath: bridgeActivatorTiles
-      value: 
-      objectReference: {fileID: 1658329098}
-    - target: {fileID: 82595899094216830, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
-        type: 2}
-      propertyPath: m_audioClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 1cf337aec83b203409edbf74141c1c55, type: 3}
-    - target: {fileID: 82595899094216830, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
-        type: 2}
-      propertyPath: spreadCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114535383282937534, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
-        type: 2}
-      propertyPath: SkidSound
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
   m_IsPrefabParent: 0
@@ -71908,11 +71888,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d6dd0499f2070214189b573f0d7a46a3, type: 2}
   m_IsPrefabParent: 0
---- !u!1839735485 &1658329098 stripped
-Tilemap:
-  m_PrefabParentObject: {fileID: 8195094279792760250, guid: aee6c188cbd40d04d83c8455eeb6589b,
-    type: 2}
-  m_PrefabInternal: {fileID: 783040693}
 --- !u!1001 &1666419643
 Prefab:
   m_ObjectHideFlags: 0
