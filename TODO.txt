@@ -68,9 +68,9 @@ Doors don't hide HUD until you walk away
 Sounds (pitch randomization?)
 	jump/walljump/roll cancel
 	roll
-	wall slide?
-	star collect (level up)
-	star twinkle
+	wall slide
+	star collect (level up) https://freesound.org/people/elmasmalo1/sounds/350841/
+	star twinkle https://freesound.org/people/MrCisum/sounds/336664/
 	collect star again (bloop)
 	Landing from high fall
 	Door sliding open
