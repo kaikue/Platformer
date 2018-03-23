@@ -71126,48 +71126,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4425322885749638, guid: 118cdaf1b9c767f4c8e8fb2a3435d3d3,
     type: 2}
   m_PrefabInternal: {fileID: 1132844174}
---- !u!1001 &1136578213
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4761575557785790, guid: 3c4bef0bf917f5a42b89fb7d5ba5fae6, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4761575557785790, guid: 3c4bef0bf917f5a42b89fb7d5ba5fae6, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4761575557785790, guid: 3c4bef0bf917f5a42b89fb7d5ba5fae6, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4761575557785790, guid: 3c4bef0bf917f5a42b89fb7d5ba5fae6, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4761575557785790, guid: 3c4bef0bf917f5a42b89fb7d5ba5fae6, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4761575557785790, guid: 3c4bef0bf917f5a42b89fb7d5ba5fae6, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4761575557785790, guid: 3c4bef0bf917f5a42b89fb7d5ba5fae6, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4761575557785790, guid: 3c4bef0bf917f5a42b89fb7d5ba5fae6, type: 2}
-      propertyPath: m_RootOrder
-      value: 7
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 3c4bef0bf917f5a42b89fb7d5ba5fae6, type: 2}
-  m_IsPrefabParent: 0
 --- !u!4 &1138405298 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4425322885749638, guid: 118cdaf1b9c767f4c8e8fb2a3435d3d3,
@@ -73806,49 +73764,6 @@ Prefab:
     - target: {fileID: 4218515528501112, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 212918440474830176, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
-        type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 8b3fcc1009d8e6b4b999e7eb03b57bd0,
-        type: 3}
-    - target: {fileID: 4597316668545922, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4597316668545922, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4597316668545922, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4597316668545922, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4597316668545922, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4597316668545922, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 4597316668545922, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4597316668545922, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114990066971120080, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
-        type: 2}
-      propertyPath: SCROLL_FACTOR
-      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 1380294296337434, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
       propertyPath: m_IsActive
