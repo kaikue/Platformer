@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerDemo : MonoBehaviour {
 
@@ -693,6 +694,15 @@ public class PlayerDemo : MonoBehaviour {
         {
             respawnPoint = transform.position; 
         }
+
+		if (collision.CompareTag("Portal"))
+		{
+			//TODO
+			if (gm.starsCollected[0] >= 6)
+			{
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+			}
+		}
 
 		Star star = collision.gameObject.GetComponent<Star>();
 		if (star != null)

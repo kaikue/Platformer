@@ -2,9 +2,8 @@ https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
 camera 2/3 down?
 
-Hitting side/ceiling of tiles is weird
 Jumping while rolling under low ceiling gets player stuck
-Grass tilemap colliders are wonky
+Doesn't keep rolling when stopping in short area
 
 Hub upper area
 3 more hub stars
