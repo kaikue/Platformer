@@ -12,6 +12,7 @@ public class PlayerDemo : MonoBehaviour {
     public AudioSource SkidSound;
     public AudioSource BounceSound;
     public AudioSource StarCollectSound;
+    public AudioSource DeathSound;
 
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
@@ -411,6 +412,8 @@ public class PlayerDemo : MonoBehaviour {
         grounds.Clear();
         wall = null;
         rb.velocity = Vector3.zero;
+
+        DeathSound.Play();
     }
 
     public int GetFacing()
@@ -702,19 +705,14 @@ public class PlayerDemo : MonoBehaviour {
 
 		if (collision.CompareTag("Portal"))
 		{
-			//TODO
-			if (gm.starsCollected[0] >= 6)
-			{
-                lastCollision = null;
-                rb.velocity = Vector2.zero;
-                if (SceneManager.GetActiveScene().name.Equals("Hub"))
-                {
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-                } else
-                {
-                    SceneManager.LoadScene(0);
-                }
-			}
+            //TODO
+            if (gm.starsCollected[0] >= 6 && SceneManager.GetActiveScene().name.Equals("Hub"))
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            } else if (gm.starsCollected[1] >= 6 && SceneManager.GetActiveScene().name.Equals("Level2"))
+            {
+                SceneManager.LoadScene("Title");
+            }
 		}
 
 		Star star = collision.gameObject.GetComponent<Star>();
