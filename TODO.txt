@@ -4,6 +4,7 @@ camera 2/3 down?
 
 Hitting side/ceiling of tiles is weird
 Jumping while rolling under low ceiling gets player stuck
+Doesn't keep rolling when stopping in short area
 Grass tilemap colliders are wonky
 
 Hub upper area
