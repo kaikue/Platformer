@@ -150,6 +150,11 @@ public class PlayerDemo : MonoBehaviour {
 			jumpQueued = true;
 		}
 
+		if (Input.GetKeyDown(KeyCode.N))
+		{
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+		}
+
 		bool triggerPressed = Input.GetAxis("RTrigger") > 0;
 		if (Input.GetKeyDown(KeyCode.LeftShift) || triggerPressed)
 		{
