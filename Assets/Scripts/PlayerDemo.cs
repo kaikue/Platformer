@@ -6,6 +6,12 @@ public class PlayerDemo : MonoBehaviour {
 
 	public GameObject SpriteObject;
 
+    public AudioSource JumpSound;
+    public AudioSource RollSound;
+    public AudioSource SkidSound;
+    public AudioSource BounceSound;
+    public AudioSource StarCollectSound;
+
 	private const float RUN_ACCEL = 0.4f;
 	private const float GRAVITY_ACCEL = -0.6f;
 	private const float MAX_RUN_VEL = 7.0f; //maximum speed of horizontal movement
@@ -245,6 +251,8 @@ public class PlayerDemo : MonoBehaviour {
 				//regular jump
 				StopRoll();
 				velocity.y += JUMP_VEL;
+                JumpSound.Play();
+                print("jumping");
 				jumpQueued = false;
 			}
 			//}
@@ -259,6 +267,8 @@ public class PlayerDemo : MonoBehaviour {
 				velocity.y = JUMP_VEL;
 				walljumpPush = true;
 				jumpQueued = false;
+
+                SkidSound.Stop();
 			}
 
 			velocity.y += GRAVITY_ACCEL;
@@ -311,6 +321,8 @@ public class PlayerDemo : MonoBehaviour {
 				canRoll = false;
 				rollTime = ROLL_TIME;
 				SetRollCollider();
+
+                RollSound.Play();
 			}
 		}
 
@@ -445,6 +457,8 @@ public class PlayerDemo : MonoBehaviour {
 	{
 		walljumpPush = false;
 		walljumpTime = 0;
+
+        SkidSound.Stop();
 	}
 
 	private void StopRoll()
@@ -512,6 +526,9 @@ public class PlayerDemo : MonoBehaviour {
 			{
 				rollDir *= -1;
 			}
+
+            BounceSound.Play();
+
 			return;
 		}
     }
@@ -547,6 +564,8 @@ public class PlayerDemo : MonoBehaviour {
 
 			ResetWalljump();
 			StopRoll();
+
+            SkidSound.PlayScheduled(0.1);
 		}
 
         if (!HasGround(collision) && HasGround(lastCollision))
@@ -663,7 +682,7 @@ public class PlayerDemo : MonoBehaviour {
             if (Mathf.Abs(dot) < 0.0001f)
             {
                 return true;
-            }
+            }           
         }
         return false;
 	}
@@ -680,6 +699,8 @@ public class PlayerDemo : MonoBehaviour {
 		{
 			gm.CollectStar(star);
 			Destroy(star.gameObject);
+            StarCollectSound.Play();
+
 		}
 
 		Door door = collision.gameObject.GetComponent<Door>();

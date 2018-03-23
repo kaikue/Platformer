@@ -12,6 +12,9 @@ public class SlimeManager : MonoBehaviour {
     public GameObject player;
     public float followDistance;
 
+    public AudioSource SlimeSound;
+    public AudioSource WhistleSound;
+
     private SpriteRenderer sr;
     private BoxCollider2D bc;
 
@@ -44,9 +47,23 @@ public class SlimeManager : MonoBehaviour {
 		{
 			if (activeBridge != null)
 			{
-                Destroy(activeBridge.gameObject);
-                activeBridge = null;
-                sr.enabled = true;
+                if (selectedBridge != null &&
+                    Vector3.Distance(selectedBridge.gameObject.transform.position, activeBridge.transform.position) > 1.0f)
+                {
+                    // selected bridge is different from active bridge. Immediately switch to selected bridge
+                    Destroy(activeBridge.gameObject);
+                    GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
+                    newSlimeObject.transform.position = selectedBridge.transform.position;
+                    activeBridge = newSlimeObject;
+                } else
+                {
+                    transform.position = activeBridge.transform.position;
+                    Destroy(activeBridge.gameObject);
+                    activeBridge = null;
+                    sr.enabled = true;
+                    WhistleSound.Play();
+                }
+
 			}
 			else if (selectedBridge != null && selectedBridge.canActivate) 
 			{
@@ -54,6 +71,8 @@ public class SlimeManager : MonoBehaviour {
                 newSlimeObject.transform.position = selectedBridge.transform.position;
                 activeBridge = newSlimeObject;
                 sr.enabled = false;
+
+                SlimeSound.Play();
 			}
 
 			bridgeSwapQueued = false;
