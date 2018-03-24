@@ -157,7 +157,7 @@ public class PlayerDemo : MonoBehaviour {
 		}
 
 		bool triggerPressed = Input.GetAxis("RTrigger") > 0;
-		if (Input.GetKeyDown(KeyCode.LeftShift) || triggerPressed)
+		if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || triggerPressed)
 		{
 			rollQueued = true;
 		}
