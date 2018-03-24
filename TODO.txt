@@ -5,9 +5,6 @@ camera 2/3 down?
 Jumping while rolling under low ceiling gets player stuck
 Doesn't keep rolling when stopping in short area
 
-Hub upper area
-3 more hub stars
-
 Scene transition (to particular point in scene)
 
 Main menu
@@ -23,7 +20,8 @@ Health- add to HUD
 Hurt you, send you back to latest checkpoint
 If you die you restart the scene
 
-Add back roll cancel
+Add back roll cancel jump?
+Add back HUD sliding in/out?
 Enemies
 Rolling hurts enemies
 Bosses

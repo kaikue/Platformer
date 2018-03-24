@@ -45,7 +45,7 @@ public class HUDOverlay : MonoBehaviour {
 	public void Hold()
 	{
 		showing = true;
-		StartCoroutine(HoldContents());
+		//StartCoroutine(HoldContents());
 	}
 
 	public IEnumerator HoldContents()
