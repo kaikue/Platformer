@@ -407,7 +407,7 @@ public class PlayerDemo : MonoBehaviour {
 	public void Kill()
     {
         transform.position = respawnPoint;
-        // TODO: Make sure this actually clears all current state
+		StopRoll();
         lastCollision = null;
         grounds.Clear();
         wall = null;
