@@ -389,7 +389,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Get!
+  m_Text: Found!
 --- !u!114 &114267455059078004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -774,8 +774,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 220, y: -30}
-  m_SizeDelta: {x: 206.52, y: 75.73}
+  m_AnchoredPosition: {x: 228.81, y: -30}
+  m_SizeDelta: {x: 251.45, y: 75.73}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224939351496813898
 RectTransform:
