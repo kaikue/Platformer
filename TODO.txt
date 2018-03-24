@@ -2,9 +2,6 @@ https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
 camera 2/3 down?
 
-Jumping while rolling under low ceiling gets player stuck
-Doesn't keep rolling when stopping in short area
-
 Scene transition (to particular point in scene)
 
 Main menu
@@ -22,6 +19,7 @@ If you die you restart the scene
 
 Add back roll cancel jump?
 Add back HUD sliding in/out?
+Review collisions and any line with four spaces
 Enemies
 Rolling hurts enemies
 Bosses

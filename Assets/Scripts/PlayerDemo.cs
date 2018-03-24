@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,6 +25,7 @@ public class PlayerDemo : MonoBehaviour {
 
 	private const float WALLJUMP_MIN_FACTOR = 0.5f; //amount of walljump kept at minimum if no input
 	private const float WALLJUMP_TIME = 0.5f; //time it takes for walljump to wear off
+	private const float WALLJUMP_GRACE_TIME = 0.1f; //time after leaving wall player can still walljump
 
 	private const float ROLL_VEL = 2 * MAX_RUN_VEL; //speed of roll
 	private const float ROLL_TIME = 1.0f; //time it takes for roll to wear off naturally
@@ -410,7 +412,7 @@ public class PlayerDemo : MonoBehaviour {
 		StopRoll();
         lastCollision = null;
         grounds.Clear();
-        wall = null;
+		ClearWall();
         rb.velocity = Vector3.zero;
 
         DeathSound.Play();
@@ -567,6 +569,7 @@ public class PlayerDemo : MonoBehaviour {
 
 		if (HasWall(collision) && !HasWall(lastCollision))
 		{
+			StopCoroutine(LeaveWall());
 			float x = Vector2.Dot(Vector2.right, GetWall(collision).normal);
 			wallSide = Mathf.RoundToInt(x);
 			wall = collision.gameObject;
@@ -584,8 +587,7 @@ public class PlayerDemo : MonoBehaviour {
 
         if (!HasWall(collision) && HasWall(lastCollision))
         {
-			wall = null;
-			wallSide = 0;
+			StartCoroutine(LeaveWall());
         }
 
         lastCollision = collision;
@@ -603,8 +605,7 @@ public class PlayerDemo : MonoBehaviour {
 		grounds.Remove(collision.gameObject);
 		if (collision.gameObject == wall)
 		{
-			wall = null;
-			wallSide = 0;
+			StartCoroutine(LeaveWall());
 		}
 	}
 
@@ -694,6 +695,18 @@ public class PlayerDemo : MonoBehaviour {
             }           
         }
         return false;
+	}
+
+	private IEnumerator LeaveWall()
+	{
+		yield return new WaitForSeconds(WALLJUMP_GRACE_TIME);
+		ClearWall();
+	}
+
+	private void ClearWall()
+	{
+		wall = null;
+		wallSide = 0;
 	}
 
     private void OnTriggerEnter2D(Collider2D collision)
