@@ -248,6 +248,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StarFillSound: {fileID: 82342527088415694}
+  Image: {fileID: 1485280215735728}
+  Glow: {fileID: 1367726939530236}
   touched: 0
   filled: 0
 --- !u!212 &212093163592666076

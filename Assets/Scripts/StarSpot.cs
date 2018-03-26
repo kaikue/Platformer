@@ -5,6 +5,8 @@ using UnityEngine;
 public class StarSpot : MonoBehaviour {
 	
 	public AudioSource StarFillSound;
+	public GameObject Image;
+	public GameObject Glow;
 	public bool touched = false;
 	public bool filled = false;
 
@@ -34,12 +36,9 @@ public class StarSpot : MonoBehaviour {
 		gm.starsCollected[(int)currentStar.starType]--;
 
 		Color starColor = currentStar.GetColor();
-		SpriteRenderer[] srs = GetComponentsInChildren<SpriteRenderer>();
-		foreach (SpriteRenderer sr in srs)
-		{
-			sr.color = starColor;
-		}
-
+		Image.GetComponent<SpriteRenderer>().color = starColor;
+		Glow.GetComponent<SpriteRenderer>().material.color = starColor;
+		
 		StartCoroutine(Shrink());
 	}
 

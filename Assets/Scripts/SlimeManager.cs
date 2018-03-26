@@ -76,7 +76,7 @@ public class SlimeManager : MonoBehaviour {
 
                 SlimeSound.Play();
 			}
-
+			
 			bridgeSwapQueued = false;
 		}
     }
