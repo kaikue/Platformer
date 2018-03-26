@@ -127,6 +127,13 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void QuitToTitle()
+	{
+		TogglePauseMenu();
+		loadingOverlay.SetActive(true);
+		SceneManager.LoadScene(1);
+	}
+
 	public bool WasStarCollected(Star star)
 	{
 		return starCollectedNames.Contains(star.starText);
