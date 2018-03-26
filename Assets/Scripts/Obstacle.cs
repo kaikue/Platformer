@@ -10,6 +10,7 @@ public class Obstacle : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		CrashSound = GetComponent<AudioSource>();
+        CrashSound.pitch = Random.Range(0.7f * CrashSound.pitch, 1.3f * CrashSound.pitch);
 	}
 
 	// Update is called once per frame

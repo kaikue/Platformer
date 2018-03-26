@@ -1385,9 +1385,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portal: {fileID: 0}
   player: {fileID: 1118050431539186}
+  sprites:
+  - {fileID: 21300000, guid: 4de07ffbc529e8b49976daf47b29595e, type: 3}
+  - {fileID: 21300000, guid: e2503377b21920141b6c56ac9dc5e59b, type: 3}
+  - {fileID: 21300000, guid: d3ec77f941a66fc4b84d6456c06c163f, type: 3}
+  - {fileID: 21300000, guid: de0ae3c4f0b516846b019bb553e550a4, type: 3}
+  - {fileID: 21300000, guid: 15d9a2c95f93d2f43b00fa7c3dbf352b, type: 3}
   distance: 2
-  angleForPosition: 0
-  angleForRotation: 0
 --- !u!114 &114884848580479934
 MonoBehaviour:
   m_ObjectHideFlags: 1
