@@ -98,27 +98,8 @@ public class Boss : MonoBehaviour {
 
 	private void ActivateStarGroup()
 	{
-		/*StarSpotSets[phase].SetActive(true);
-		Star currentStar = starsRequiredPrefabs[phase].GetComponent<Star>();
-		int numCollected = gm.starsCollected[(int)currentStar.starType];
-		StarSpot[] starSpots = StarSpotSets[phase].GetComponentsInChildren<StarSpot>();
-		int numStarSpots = starSpots.Length;
-		int numToRemove = numStarSpots - numCollected;
-		for (int i = 0; i < numToRemove; i++)
-		{
-			//pick an active starspot and deactivate its gameobject
-			GameObject starObj = null;
-			while (starObj == null || starObj.activeSelf)
-			{
-				int r = Random.Range(0, numStarSpots);
-				starObj = starSpots[r].gameObject;
-			}
-			starObj.SetActive(false);
-		}*/
-
 		int numRemaining = StarsRemaining();
 		int starsToPlace = Mathf.Min(numRemaining, STAR_GROUP_SIZE);
-		print("Placing " + starsToPlace);
 		for (int i = 0; i < starsToPlace; i++)
 		{
 			//activate random inactive, unfilled star
