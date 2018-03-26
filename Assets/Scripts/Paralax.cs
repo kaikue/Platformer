@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Paralax : MonoBehaviour {
 
-    public float SCROLL_FACTOR = 0.5f;
+    public float SCROLL_FACTOR_X = 0.5f;
+    public float SCROLL_FACTOR_Y = 0.5f;
+    public Vector3 Offset; 
     public GameObject cam;
 
 	// Use this for initialization
@@ -15,6 +17,6 @@ public class Paralax : MonoBehaviour {
     // Update is called once per frame
     private void OnWillRenderObject()
     {
-        transform.position = SCROLL_FACTOR * cam.transform.position;
+        transform.position = new Vector3(SCROLL_FACTOR_X * cam.transform.position.x, SCROLL_FACTOR_Y * cam.transform.position.y, transform.position.z) + Offset;
     }
 }

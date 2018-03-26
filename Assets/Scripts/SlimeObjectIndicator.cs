@@ -23,6 +23,16 @@ public class SlimeObjectIndicator : MonoBehaviour {
     {
         if (collision.CompareTag("Player"))
         {
+            print("enter");
+            canActivate = false;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            print("stay");
             canActivate = false;
         }
     }
@@ -31,6 +41,7 @@ public class SlimeObjectIndicator : MonoBehaviour {
     {
         if (collision.CompareTag("Player"))
         {
+            print("exit");
             canActivate = true;
         }
     }
