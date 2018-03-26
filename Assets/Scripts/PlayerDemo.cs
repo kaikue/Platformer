@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 public class PlayerDemo : MonoBehaviour {
 
 	public GameObject SpriteObject;
+	public GameObject SlimeGuide;
+	public GameObject Slime;
+    public Portal portal;
 
     public AudioSource JumpSound;
     public AudioSource RollSound;
@@ -113,6 +116,8 @@ public class PlayerDemo : MonoBehaviour {
 		LoadSprites();
 
         respawnPoint = transform.position;
+
+        Slime.SetActive(!SceneManager.GetActiveScene().name.Equals("Hub"));
 	}
 
 	private void LoadSprites()
@@ -729,6 +734,13 @@ public class PlayerDemo : MonoBehaviour {
 			Destroy(star.gameObject);
             StarCollectSound.Play();
 
+			int starType = (int)gm.levelStarPrefab.GetComponent<Star>().starType;
+			if (gm.starsCollected[starType] >= portal.starsRequired)
+            {
+                SlimeGuide.SetActive(true);
+                Slime.SetActive(false);
+            }
+
 		}
 
 		Door door = collision.gameObject.GetComponent<Door>();
@@ -738,11 +750,11 @@ public class PlayerDemo : MonoBehaviour {
 			door.TryOpen();
 		}
 
-		Portal portal = collision.gameObject.GetComponent<Portal>();
-		if (portal != null)
+		Portal portalCollided = collision.gameObject.GetComponent<Portal>();
+		if (portalCollided != null)
 		{
 			int starType = (int)gm.levelStarPrefab.GetComponent<Star>().starType;
-			if (gm.starsCollected[starType] >= portal.starsRequired)
+			if (gm.starsCollected[starType] >= portalCollided.starsRequired)
 			{
 				NextLevel();
 			}

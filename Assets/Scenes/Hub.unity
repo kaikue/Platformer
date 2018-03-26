@@ -587,6 +587,17 @@ Transform:
   m_PrefabParentObject: {fileID: 4425322885749638, guid: 118cdaf1b9c767f4c8e8fb2a3435d3d3,
     type: 2}
   m_PrefabInternal: {fileID: 131318165}
+--- !u!1 &158754622 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1201116547847756, guid: f9a7abce4657cdb46949bdc0641551d7,
+    type: 2}
+  m_PrefabInternal: {fileID: 216640559}
+--- !u!114 &158754623 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114423365787878484, guid: f9a7abce4657cdb46949bdc0641551d7,
+    type: 2}
+  m_PrefabInternal: {fileID: 216640559}
+  m_Script: {fileID: 11500000, guid: 03fbbfae5a88f92418e83e6d088e9fe2, type: 3}
 --- !u!1 &176228480
 GameObject:
   m_ObjectHideFlags: 0
@@ -71167,6 +71178,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 82696191358144690, guid: 949eac2bd25ff354caf59a99c4451c22,
+        type: 2}
+      propertyPath: spreadCustomCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 949eac2bd25ff354caf59a99c4451c22, type: 2}
   m_IsPrefabParent: 0
@@ -73868,10 +73884,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1380294296337434, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 114760884717564700, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
+        type: 2}
+      propertyPath: portal
+      value: 
+      objectReference: {fileID: 158754622}
+    - target: {fileID: 114535383282937534, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
+        type: 2}
+      propertyPath: portal
+      value: 
+      objectReference: {fileID: 158754623}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
   m_IsPrefabParent: 0
