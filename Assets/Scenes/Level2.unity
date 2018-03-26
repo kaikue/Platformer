@@ -71578,21 +71578,6 @@ Prefab:
       propertyPath: bridgeActivatorTiles
       value: 
       objectReference: {fileID: 1843179295}
-    - target: {fileID: 82456790295626384, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
-        type: 2}
-      propertyPath: spreadCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 82456790295626384, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
-        type: 2}
-      propertyPath: m_Volume
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 82456790295626384, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
-        type: 2}
-      propertyPath: m_Pitch
-      value: 1.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
   m_IsPrefabParent: 0

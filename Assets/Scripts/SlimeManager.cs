@@ -10,7 +10,8 @@ public class SlimeManager : MonoBehaviour {
     public GameObject slimeObjectPrefab;
     public GameObject slimeObjectIndicatorPrefab;
     public GameObject player;
-    public float followDistance;
+	public GameObject sprite;
+	public float followDistance;
 
     public AudioSource SlimeSound;
     public AudioSource WhistleSound;
@@ -26,7 +27,7 @@ public class SlimeManager : MonoBehaviour {
     private bool bridgeSwapQueued;
 
 	void Start () {
-        sr = GetComponent<SpriteRenderer>();
+        sr = sprite.GetComponent<SpriteRenderer>();
         bc = GetComponent<BoxCollider2D>();
 	}
 	
