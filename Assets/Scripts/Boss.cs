@@ -82,7 +82,14 @@ public class Boss : MonoBehaviour {
 		int numToRemove = numStarSpots - numCollected;
 		for (int i = 0; i < numToRemove; i++)
 		{
-			//TODO: pick an active starspot and deactivate its gameobject
+			//pick an active starspot and deactivate its gameobject
+			GameObject starObj = null;
+			while (starObj == null || starObj.activeSelf)
+			{
+				int r = Random.Range(0, numStarSpots);
+				starObj = starSpots[r].gameObject;
+			}
+			starObj.SetActive(false);
 		}
 	}
 }
