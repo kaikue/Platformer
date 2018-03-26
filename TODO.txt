@@ -4,12 +4,6 @@ camera 2/3 down?
 
 Scene transition (to particular point in scene)
 
-Main menu
-new game button
-	deletes save file if exists, creates a new one and goes to hub
-continue button (if save exists)
-	loads scene corresponding to save index (first line in save)
-
 Player can jump ~3 units
 
 Spikes

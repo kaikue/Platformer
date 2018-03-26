@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 	public bool paused = false;
 	private bool overlayActive = false;
 
-	private const string SAVE_PATH = ".save";
+	public const string SAVE_PATH = ".save";
 
 	private GameObject player;
 	private GameObject pauseOverlay;
@@ -39,15 +39,6 @@ public class GameManager : MonoBehaviour {
 		starsCollected = new int[numTypes];
 		starCollectedNames = new List<string>();
 		doorsOpenedNames = new List<string>();
-
-		//create file (temporary here, move to newgame later)
-		if (!File.Exists(SAVE_PATH))
-		{
-			using (StreamWriter sw = File.CreateText(SAVE_PATH))
-			{
-				sw.WriteLine("0");
-			}
-		}
 		
 		string[] lines = File.ReadAllLines(SAVE_PATH);
 		for (int l = 1; l < lines.Length; l++) //skip first line (level index)
@@ -67,7 +58,7 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		lines[0] = "" + SceneManager.GetActiveScene().buildIndex;
+		lines[0] = SceneManager.GetActiveScene().name;
 		File.WriteAllLines(SAVE_PATH, lines);
 	}
 

@@ -261,7 +261,6 @@ public class PlayerDemo : MonoBehaviour {
 				StopRoll();
 				velocity.y += JUMP_VEL;
                 JumpSound.Play();
-                print("jumping");
 				jumpQueued = false;
 			}
 			//}
