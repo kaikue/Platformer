@@ -747,6 +747,12 @@ public class PlayerDemo : MonoBehaviour {
 				NextLevel();
 			}
 		}
+
+		StarSpot starSpot = collision.gameObject.GetComponent<StarSpot>();
+		if (starSpot != null && !starSpot.filled)
+		{
+			starSpot.Fill();
+		}
 	}
 
 	private void NextLevel()
