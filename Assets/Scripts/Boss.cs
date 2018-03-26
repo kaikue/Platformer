@@ -10,7 +10,11 @@ public class Boss : MonoBehaviour {
 	public GameObject[] StarSpotSets;
 	public int phase = 0;
 
+	private const int STAR_GROUP_SIZE = 3;
+
 	private GameManager gm;
+	private List<StarSpot> currentStarSpots;
+	private List<StarSpot> queuedStarSpots;
 	
 	private void Start()
 	{
@@ -21,10 +25,9 @@ public class Boss : MonoBehaviour {
 	private void Update()
 	{
 		bool allFilled = true;
-		StarSpot[] currentStarSpots = StarSpotSets[phase].GetComponentsInChildren<StarSpot>();
-        foreach (StarSpot starSpot in currentStarSpots)
+		foreach (StarSpot starSpot in currentStarSpots)
 		{
-			if (!starSpot.filled)
+			if (!starSpot.filled && starSpot.gameObject.activeSelf)
 			{
 				allFilled = false;
 			}
@@ -32,7 +35,14 @@ public class Boss : MonoBehaviour {
 
 		if (allFilled)
 		{
-			NextPhase();
+			if (StarsRemaining() == 0)
+			{
+				NextPhase();
+			}
+			else
+			{
+				ActivateStarGroup();
+			}
 		}
 	}
 	
@@ -54,27 +64,41 @@ public class Boss : MonoBehaviour {
 
 	private void EndPhase0()
 	{
+		phase++;
 		ActivateStarSpots();
         Phase1Tiles.SetActive(false);
 		BridgeLocations.SetActive(true);
-		phase++;
 	}
 
 	private void EndPhase1()
 	{
+		phase++;
 		ActivateStarSpots();
 		//TODO: enable projectiles?
-		phase++;
 	}
 
 	private void EndPhase2()
 	{
 		//TODO: end game
+		print("You win!");
 	}
 
 	private void ActivateStarSpots()
 	{
-		StarSpotSets[phase].SetActive(true);
+		currentStarSpots = new List<StarSpot>();
+		Transform t = StarSpotSets[phase].transform;
+		foreach (Transform tc in t)
+		{
+			currentStarSpots.Add(tc.gameObject.GetComponent<StarSpot>());
+		}
+		queuedStarSpots = new List<StarSpot>(currentStarSpots);
+
+		ActivateStarGroup();
+	}
+
+	private void ActivateStarGroup()
+	{
+		/*StarSpotSets[phase].SetActive(true);
 		Star currentStar = starsRequiredPrefabs[phase].GetComponent<Star>();
 		int numCollected = gm.starsCollected[(int)currentStar.starType];
 		StarSpot[] starSpots = StarSpotSets[phase].GetComponentsInChildren<StarSpot>();
@@ -90,6 +114,26 @@ public class Boss : MonoBehaviour {
 				starObj = starSpots[r].gameObject;
 			}
 			starObj.SetActive(false);
+		}*/
+
+		int numRemaining = StarsRemaining();
+		int starsToPlace = Mathf.Min(numRemaining, STAR_GROUP_SIZE);
+		print("Placing " + starsToPlace);
+		for (int i = 0; i < starsToPlace; i++)
+		{
+			//activate random inactive, unfilled star
+			int r = Random.Range(0, queuedStarSpots.Count);
+			StarSpot spot = queuedStarSpots[r];
+			spot.gameObject.SetActive(true);
+			queuedStarSpots.Remove(spot);
+			numRemaining--;
 		}
+	}
+
+	private int StarsRemaining()
+	{
+		Star currentStar = starsRequiredPrefabs[phase].GetComponent<Star>();
+		int numRemaining = gm.starsCollected[(int)currentStar.starType];
+		return numRemaining;
 	}
 }

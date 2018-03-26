@@ -555,14 +555,17 @@ public class PlayerDemo : MonoBehaviour {
 		if (collision.contacts.Length == 0) return; //not sure what happened
 
 		//TODO: don't assume it's land, check that first
-		if (collision.gameObject.tag == "Slime" || collision.gameObject.tag == "Obstacle")
+		if (collision.gameObject.tag == "Slime" || collision.gameObject.tag == "Obstacle" || collision.gameObject.tag == "StarSpot")
         {
             return;
         }
-		
+
 		if (HasGround(collision) && !HasGround(lastCollision))
 		{
-			grounds.Add(collision.gameObject);
+			if (!grounds.Contains(collision.gameObject))
+			{
+				grounds.Add(collision.gameObject);
+			}
 			groundNormal = GetGround(collision).normal;
 		}
 
@@ -607,12 +610,11 @@ public class PlayerDemo : MonoBehaviour {
 
 	private void OnCollisionExit2D(Collision2D collision)
 	{
-		if (collision.collider.CompareTag("Slime") || collision.gameObject.tag == "Obstacle")
+		if (collision.collider.CompareTag("Slime") || collision.gameObject.tag == "Obstacle" || collision.gameObject.tag == "StarSpot")
 		{
 			return;
 		}
-
-        lastCollision = null;
+		lastCollision = null;
 		grounds.Remove(collision.gameObject);
 		if (collision.gameObject == wall)
 		{
@@ -761,7 +763,7 @@ public class PlayerDemo : MonoBehaviour {
 		}
 
 		StarSpot starSpot = collision.gameObject.GetComponent<StarSpot>();
-		if (starSpot != null && !starSpot.filled)
+		if (starSpot != null && !starSpot.touched)
 		{
 			starSpot.Fill();
 		}

@@ -5,6 +5,7 @@ using UnityEngine;
 public class StarSpot : MonoBehaviour {
 	
 	public AudioSource StarFillSound;
+	public bool touched = false;
 	public bool filled = false;
 
 	private const float SHRUNK_SCALE = 0.5f;
@@ -21,6 +22,7 @@ public class StarSpot : MonoBehaviour {
 
 	public void Fill()
 	{
+		touched = true;
 		StarFillSound.Play();
 
 		Star currentStar = boss.starsRequiredPrefabs[boss.phase].GetComponent<Star>();

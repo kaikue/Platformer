@@ -10,6 +10,7 @@ TagManager:
   - BridgeCollider
   - SlimeRetriever
   - Obstacle
+  - StarSpot
   layers:
   - Default
   - TransparentFX
