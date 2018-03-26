@@ -11,6 +11,8 @@ public class StarSpot : MonoBehaviour {
 	private const float SHRUNK_SCALE = 0.5f;
 	private const float SHRINK_TIME = 1.0f;
 
+	private const float PITCH_VARIATION = 0.2f;
+
 	private GameManager gm;
 	private Boss boss;
 
@@ -23,6 +25,8 @@ public class StarSpot : MonoBehaviour {
 	public void Fill()
 	{
 		touched = true;
+
+		StarFillSound.pitch = Random.Range(1 - PITCH_VARIATION, 1 + PITCH_VARIATION);
 		StarFillSound.Play();
 
 		Star currentStar = boss.starsRequiredPrefabs[boss.phase].GetComponent<Star>();
