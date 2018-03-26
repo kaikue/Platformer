@@ -4,34 +4,35 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour {
 
-    private AudioSource CrashSound;
-    bool destroying;
+	private AudioSource CrashSound;
+	bool destroying;
 
 	// Use this for initialization
-	void Start () {
-        CrashSound = GetComponent<AudioSource>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    if (destroying && !CrashSound.isPlaying)
-        {
-            Destroy(gameObject);
-        }
+	void Start() {
+		CrashSound = GetComponent<AudioSource>();
 	}
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Player"))
-        {
-            collision.collider.gameObject.GetComponent<PlayerDemo>().Kill();
-        }
+	// Update is called once per frame
+	void Update() {
+		if (destroying && !CrashSound.isPlaying)
+		{
+			Destroy(gameObject);
+		}
+	}
+
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		if (collision.collider.CompareTag("Player"))
+		{
+			collision.collider.gameObject.GetComponent<PlayerDemo>().Kill();
+		}
 
 		if (!collision.collider.CompareTag("Obstacle"))
 		{
-            CrashSound.Play();
-            GetComponent<BoxCollider2D>().enabled = false;
-            GetComponent<SpriteRenderer>().enabled = false;
+			CrashSound.Play();
+			GetComponent<BoxCollider2D>().enabled = false;
+			GetComponent<SpriteRenderer>().enabled = false;
+			destroying = true;
 		}
-    }
+	}
 }
