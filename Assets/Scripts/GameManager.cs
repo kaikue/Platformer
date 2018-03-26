@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject hudOverlayPrefab;
 	public GameObject levelStarPrefab;
 	public GameObject loadingOverlay;
+	public HUDOverlay hudOverlay;
 
 	public bool paused = false;
 	private bool overlayActive = false;
@@ -19,7 +20,6 @@ public class GameManager : MonoBehaviour {
 
 	private GameObject player;
 	private GameObject pauseOverlay;
-	private HUDOverlay hudOverlay;
 	private Star levelStar;
 
 	public int[] starsCollected;

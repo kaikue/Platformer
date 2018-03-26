@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss : MonoBehaviour {
+public class Boss : MonoBehaviour
+{
 
 	public GameObject Phase1Tiles;
 	public GameObject BridgeLocations;
@@ -15,12 +16,12 @@ public class Boss : MonoBehaviour {
 	private GameManager gm;
 	private List<StarSpot> currentStarSpots;
 	private List<StarSpot> queuedStarSpots;
-	
+
 	private void Start()
 	{
 		gm = GameObject.Find("GameManager").GetComponent<GameManager>();
 		ActivateStarSpots();
-    }
+	}
 
 	private void Update()
 	{
@@ -44,11 +45,15 @@ public class Boss : MonoBehaviour {
 				ActivateStarGroup();
 			}
 		}
+		else
+		{
+			UpdateHUD();
+		}
 	}
-	
+
 	private void NextPhase()
 	{
-		switch(phase)
+		switch (phase)
 		{
 			case 0:
 				EndPhase0();
@@ -66,7 +71,7 @@ public class Boss : MonoBehaviour {
 	{
 		phase++;
 		ActivateStarSpots();
-        Phase1Tiles.SetActive(false);
+		Phase1Tiles.SetActive(false);
 		BridgeLocations.SetActive(true);
 	}
 
@@ -81,6 +86,8 @@ public class Boss : MonoBehaviour {
 	{
 		//TODO: end game
 		print("You win!");
+
+		gm.hudOverlay.gameObject.SetActive(false);
 	}
 
 	private void ActivateStarSpots()
@@ -111,10 +118,32 @@ public class Boss : MonoBehaviour {
 		}
 	}
 
+	private Star GetCurrentStar()
+	{
+		return starsRequiredPrefabs[phase].GetComponent<Star>();
+	}
+
 	private int StarsRemaining()
 	{
-		Star currentStar = starsRequiredPrefabs[phase].GetComponent<Star>();
+		Star currentStar = GetCurrentStar();
 		int numRemaining = gm.starsCollected[(int)currentStar.starType];
 		return numRemaining;
+	}
+
+	private Color CurrentColor()
+	{
+		Star currentStar = GetCurrentStar();
+		return currentStar.GetColor();
+	}
+
+	private void UpdateHUD()
+	{
+		gm.hudOverlay.gameObject.SetActive(false);
+		/*Vector2 pos = gm.hudOverlay.contents[0].GetComponent<RectTransform>().anchoredPosition;
+		pos.x = -300;
+		gm.hudOverlay.contents[0].GetComponent<RectTransform>().anchoredPosition = pos;
+		Color[] starColors = { CurrentColor() };
+		int[] starCounts = { StarsRemaining() };
+		gm.hudOverlay.SetStars(starColors, starCounts);*/
 	}
 }
