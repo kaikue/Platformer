@@ -588,8 +588,7 @@ public class PlayerDemo : MonoBehaviour {
 				
 				ResetWalljump();
 				StopRoll();
-
-				SkidSound.PlayScheduled(0.1);
+				//SkidSound.PlayScheduled(0.1);
 			}
 		}
 
@@ -616,6 +615,7 @@ public class PlayerDemo : MonoBehaviour {
 		}
 		lastCollision = null;
 		grounds.Remove(collision.gameObject);
+
 		if (collision.gameObject == wall)
 		{
 			StartCoroutine(LeaveWall());
