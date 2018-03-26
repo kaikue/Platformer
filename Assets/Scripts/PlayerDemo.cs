@@ -49,6 +49,8 @@ public class PlayerDemo : MonoBehaviour {
 
 	private const float FRAME_TIME = 0.1f; //time in seconds per frame of animation
 
+	private const float PITCH_VARIATION = 0.1f;
+
 	private float baseScaleX;
 	private float baseScaleY;
 	private float baseScaleZ;
@@ -265,7 +267,7 @@ public class PlayerDemo : MonoBehaviour {
 				//regular jump
 				StopRoll();
 				velocity.y += JUMP_VEL;
-                JumpSound.Play();
+                PlayJumpSound();
 				jumpQueued = false;
 			}
 
@@ -284,7 +286,8 @@ public class PlayerDemo : MonoBehaviour {
 				walljumpPush = true;
 				jumpQueued = false;
 
-                SkidSound.Stop();
+				PlayJumpSound();
+				SkidSound.Stop();
 			}
 			velocity.y += GRAVITY_ACCEL;
 		}
@@ -784,4 +787,9 @@ public class PlayerDemo : MonoBehaviour {
         }
     }
 
+	private void PlayJumpSound()
+	{
+		JumpSound.pitch = UnityEngine.Random.Range(2 - PITCH_VARIATION, 2 + PITCH_VARIATION);
+		JumpSound.Play();
+	}
 }
