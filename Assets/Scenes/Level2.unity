@@ -70002,7 +70002,7 @@ Prefab:
     - target: {fileID: 8195094282716542078, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
       propertyPath: m_Tiles.Array.data[1898].second.m_ColliderType
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8195094282716542078, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
@@ -70017,12 +70017,12 @@ Prefab:
     - target: {fileID: 8195094282716542078, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
       propertyPath: m_Tiles.Array.data[1899].second.m_TileIndex
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8195094282716542078, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
       propertyPath: m_Tiles.Array.data[1899].second.m_TileSpriteIndex
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8195094282716542078, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
@@ -70037,7 +70037,7 @@ Prefab:
     - target: {fileID: 8195094282716542078, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
       propertyPath: m_Tiles.Array.data[1899].second.m_ColliderType
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8195094282716542078, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}

@@ -568,20 +568,24 @@ public class PlayerDemo : MonoBehaviour {
 			rb.velocity = velocity;
 		}
 
-		if (HasWall(collision) && !HasWall(lastCollision))
+		if (HasWall(collision))
 		{
-			StopCoroutine(LeaveWall());
 			float x = Vector2.Dot(Vector2.right, GetWall(collision).normal);
-			wallSide = Mathf.RoundToInt(x);
-			wall = collision.gameObject;
+			int newWallSide = Mathf.RoundToInt(x);
+			if (!HasWall(lastCollision) || newWallSide != wallSide)
+			{
+				wallSide = newWallSide;
+				StopCoroutine(LeaveWall());
+				wall = collision.gameObject;
+				
+				ResetWalljump();
+				StopRoll();
 
-			ResetWalljump();
-			StopRoll();
-
-            SkidSound.PlayScheduled(0.1);
+				SkidSound.PlayScheduled(0.1);
+			}
 		}
 
-        if (!HasGround(collision) && HasGround(lastCollision))
+		if (!HasGround(collision) && HasGround(lastCollision))
         {
 		    grounds.Remove(collision.gameObject);
         }
