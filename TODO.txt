@@ -13,6 +13,7 @@ If you die you restart the scene
 
 Add back roll cancel jump?
 Add back HUD sliding in/out?
+Add back hitsnapping (note issues when rolling off of platform and immediately under ledge)
 Review collisions and any line with four spaces
 Enemies
 Rolling hurts enemies
