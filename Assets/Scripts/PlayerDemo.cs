@@ -592,6 +592,7 @@ public class PlayerDemo : MonoBehaviour {
 
         if (!HasWall(collision) && HasWall(lastCollision))
         {
+			SkidSound.Stop();
 			StartCoroutine(LeaveWall());
         }
 
