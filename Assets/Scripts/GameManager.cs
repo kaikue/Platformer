@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject starCollectOverlayPrefab;
 	public GameObject hudOverlayPrefab;
 	public GameObject levelStarPrefab;
+	public GameObject loadingOverlay;
 
 	public bool paused = false;
 	private bool overlayActive = false;

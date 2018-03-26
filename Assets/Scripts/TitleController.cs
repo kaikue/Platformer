@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class TitleController : MonoBehaviour {
 
 	public GameObject ContinueButton;
+	public GameObject loadingOverlay;
 
 	public string FirstLevelName = "Hub";
 
@@ -22,6 +23,7 @@ public class TitleController : MonoBehaviour {
 	{
 		string[] lines = File.ReadAllLines(GameManager.SAVE_PATH);
 		string levelName = lines[0];
+		loadingOverlay.SetActive(true);
 		SceneManager.LoadScene(levelName);
 	}
 
@@ -37,7 +39,8 @@ public class TitleController : MonoBehaviour {
 		{
 			sw.WriteLine(FirstLevelName);
 		}
-		
+
+		loadingOverlay.SetActive(true);
 		//load intro
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 	}

@@ -39,9 +39,10 @@ GameObject:
   - component: {fileID: 4275791656815204}
   - component: {fileID: 212377626433703258}
   - component: {fileID: 61781543729399992}
+  - component: {fileID: 114423365787878484}
   m_Layer: 0
   m_Name: Portal
-  m_TagString: Portal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,7 +102,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1201116547847756}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -60, y: 5, z: 0}
+  m_LocalPosition: {x: -11.4, y: 1.1, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children:
   - {fileID: 4366534117257994}
@@ -182,6 +183,20 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114423365787878484
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1201116547847756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03fbbfae5a88f92418e83e6d088e9fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  starsRequired: 6
+  starSprite: {fileID: 1715090526306334}
+  numText: {fileID: 1657283647485464}
 --- !u!114 &114478059048409848
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -214,7 +229,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 6
+  m_Text: 0
 --- !u!114 &114553741635710972
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -310,7 +325,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1fd6f60a7186b6b48b3720b3d2fdfa58, type: 3}
-  m_Color: {r: 1, g: 0.81960785, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

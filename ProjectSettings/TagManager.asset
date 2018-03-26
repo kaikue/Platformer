@@ -10,7 +10,6 @@ TagManager:
   - BridgeCollider
   - SlimeRetriever
   - Obstacle
-  - Portal
   layers:
   - Default
   - TransparentFX

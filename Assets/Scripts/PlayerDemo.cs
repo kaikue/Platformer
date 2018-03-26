@@ -155,7 +155,7 @@ public class PlayerDemo : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.N))
 		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+			NextLevel();
 		}
 
 		bool triggerPressed = Input.GetAxis("RTrigger") > 0;
@@ -716,19 +716,7 @@ public class PlayerDemo : MonoBehaviour {
         {
             respawnPoint = transform.position; 
         }
-
-		if (collision.CompareTag("Portal"))
-		{
-            //TODO
-            if (gm.starsCollected[0] >= 6 && SceneManager.GetActiveScene().name.Equals("Hub"))
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            } else if (gm.starsCollected[1] >= 6 && SceneManager.GetActiveScene().name.Equals("Level2"))
-            {
-                SceneManager.LoadScene("Title");
-            }
-		}
-
+		
 		Star star = collision.gameObject.GetComponent<Star>();
 		if (star != null)
 		{
@@ -744,6 +732,23 @@ public class PlayerDemo : MonoBehaviour {
 			gm.ShowHUDDoorStars(door);
 			door.TryOpen();
 		}
+
+		Portal portal = collision.gameObject.GetComponent<Portal>();
+		if (portal != null)
+		{
+			int starType = (int)gm.levelStarPrefab.GetComponent<Star>().starType;
+			if (gm.starsCollected[starType] >= portal.starsRequired)
+			{
+				NextLevel();
+			}
+		}
+	}
+
+	private void NextLevel()
+	{
+		gm.loadingOverlay.SetActive(true);
+		int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+		SceneManager.LoadScene(sceneIndex + 1);
 	}
 
     private void OnTriggerExit2D(Collider2D collision)
