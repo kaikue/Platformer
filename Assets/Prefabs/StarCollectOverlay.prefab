@@ -406,6 +406,7 @@ MonoBehaviour:
   left: {fileID: 1812735060619646}
   right: {fileID: 1404456113080954}
   starName: {fileID: 1180655393683574}
+  starImage: {fileID: 1105573404029346}
 --- !u!114 &114393345220364002
 MonoBehaviour:
   m_ObjectHideFlags: 1

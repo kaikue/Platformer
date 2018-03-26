@@ -8,6 +8,7 @@ public class StarCollectOverlay : MonoBehaviour {
 	public GameObject left;
 	public GameObject right;
 	public GameObject starName;
+	public GameObject starImage;
 
 	private const float SLIDE_TIME = 4.0f;
 	private const float SPEED_SCALE = 60;
@@ -33,6 +34,9 @@ public class StarCollectOverlay : MonoBehaviour {
 		rightRect.anchoredPosition = new Vector2(CENTER_OFFSET + canvasWidth / 2, rightRect.anchoredPosition.y);
 
 		lastRealTime = Time.realtimeSinceStartup;
+
+		GameManager gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+		starImage.GetComponent<Image>().color = gm.levelStarPrefab.GetComponent<Star>().GetColor();
 	}
 
 	private void Update()
