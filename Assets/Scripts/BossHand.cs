@@ -19,26 +19,32 @@ public class BossHand : MonoBehaviour {
 	private const float POUND_TOP = 5.0f;
 	private const float POUND_BOTTOM = -3.0f;
 
+	private const float SWEEP_UNDER_HEIGHT = -10.0f;
+	private const float SWEEP_WALL_X = 18.5f;
+
 	public const float IDLE_TIME = 5.0f;
 	public const float COLLIDER_REACTIVATE_TIME = 1.0f;
 
 	//times are cumulative
-	private const float POUND_PHASE1_TIME = 1.0f;
-	private const float POUND_PHASE2_TIME = 2.0f;
+	public const float POUND_PHASE1_TIME = 1.0f;
+	public const float POUND_PHASE2_TIME = 2.0f;
 	public const float POUND_PHASE3_TIME = 2.5f;
 	public const float POUND_PHASE4_TIME = 3.5f;
 
-	private const float SWEEP_PHASE1_TIME = 1.0f;
-	private const float SWEEP_PHASE2_TIME = 2.5f;
-	private const float SWEEP_PHASE3_TIME = 4.0f;
+	public const float SWEEP_PHASE1_TIME = 1.0f;
+	public const float SWEEP_PHASE2_TIME = 2.5f;
+	public const float SWEEP_PHASE3_TIME = 4.0f;
 	public const float SWEEP_PHASE4_TIME = 5.0f;
 
 	private float time;
 	private Boss boss;
+	private GameObject player;
+	private Vector2 splineStart;
 
 	private void Start()
 	{
 		boss = GameObject.Find("Boss").GetComponent<Boss>();
+		player = GameObject.FindGameObjectWithTag("Player");
 		Idle();
 	}
 	
@@ -58,25 +64,9 @@ public class BossHand : MonoBehaviour {
 	{
 		time = 0;
 		state = AttackState.SWEEP;
+		splineStart = transform.position;
 	}
 	
-	/*private bool PhaseComplete()
-	{
-		switch (state)
-		{
-			case AttackState.IDLE:
-				return false;
-			case AttackState.POUND:
-				return time >= POUND_PHASE4_TIME;
-			case AttackState.SWEEP:
-				return time >= SWEEP_PHASE4_TIME;
-			case AttackState.DESTROY:
-				return time >= POUND_PHASE4_TIME;
-			default:
-				return true;
-		}
-	}*/
-
 	private Vector2 GetPosition()
 	{
 		switch(state)
@@ -127,12 +117,33 @@ public class BossHand : MonoBehaviour {
 
 	private Vector2 GetSweepPosition()
 	{
-		//first phase: spline between start pos, point under player, wall
-		//second phase: hold
-		//third phase: lerp between wall and mid at same height
-		//fourth phase: hold
-		float y = Mathf.Sin(Time.time * 2f);
-		return new Vector2(SideMultiplier * 6, y);
+		if (time < SWEEP_PHASE1_TIME)
+		{
+			//first phase: spline between start pos, point under player, wall
+			Vector2 start = splineStart;
+			Vector2 mid = new Vector2(player.transform.position.x, player.transform.position.y + SWEEP_UNDER_HEIGHT);
+			Vector2 end = new Vector2(SideMultiplier * SWEEP_WALL_X, player.transform.position.y);
+			float t = time / SWEEP_PHASE1_TIME;
+
+			return Vector2.Lerp(Vector2.Lerp(start, mid, t), Vector2.Lerp(mid, end, t), t);
+		}
+		else if (time < SWEEP_PHASE2_TIME)
+		{
+			//second phase: hold
+			return new Vector2(SideMultiplier * SWEEP_WALL_X, transform.position.y);
+		}
+		else if (time < SWEEP_PHASE3_TIME)
+		{
+			//third phase: lerp between wall and mid at same height
+			float t = (time - SWEEP_PHASE2_TIME) / (SWEEP_PHASE3_TIME - SWEEP_PHASE2_TIME);
+			float x = Mathf.Lerp(SideMultiplier * SWEEP_WALL_X, SideMultiplier * WIDTH, t);
+			return new Vector2(x, transform.position.y);
+		}
+		else
+		{
+			//fourth phase: hold
+			return new Vector2(SideMultiplier * WIDTH, transform.position.y);
+		}
 	}
 
 	private Vector2 GetDestroyPosition()
@@ -152,9 +163,15 @@ public class BossHand : MonoBehaviour {
 			transform.position = Vector2.Lerp(transform.position, GetPosition(), 10 * Time.fixedDeltaTime);
 		}
 		
-		if (state == AttackState.POUND && time > POUND_PHASE2_TIME)
+		if ((state == AttackState.POUND && time > POUND_PHASE2_TIME) ||
+			(state == AttackState.SWEEP && time < SWEEP_PHASE1_TIME))
 		{
 			SetAllColliders(false);
+		}
+
+		if (state == AttackState.SWEEP && time >= SWEEP_PHASE1_TIME)
+		{
+			SetAllColliders(true);
 		}
 
 		time += Time.fixedDeltaTime;

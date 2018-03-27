@@ -5,7 +5,9 @@ using UnityEngine.Tilemaps;
 
 public class Boss : MonoBehaviour
 {
-
+	public GameObject face;
+	public Sprite normalFace;
+	public Sprite angryFace;
 	public GameObject Phase1Tiles;
 	public GameObject Phase12Tiles;
 	public GameObject BridgeLocations;
@@ -19,6 +21,8 @@ public class Boss : MonoBehaviour
 	private const int STAR_GROUP_SIZE = 3;
 
 	private GameManager gm;
+	private SpriteRenderer sr;
+	private GameObject player;
 	private List<StarSpot> currentStarSpots;
 	private List<StarSpot> queuedStarSpots;
 	private BossHand left;
@@ -28,6 +32,8 @@ public class Boss : MonoBehaviour
 	private void Start()
 	{
 		gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+		sr = face.GetComponent<SpriteRenderer>();
+		player = GameObject.FindGameObjectWithTag("Player");
 		left = leftHand.GetComponent<BossHand>();
 		right = rightHand.GetComponent<BossHand>();
 		ActivateStarSpots();
@@ -53,7 +59,7 @@ public class Boss : MonoBehaviour
 				{
 					Win();
 				}
-				if (!destroying)
+				else if (!destroying)
 				{
 					destroying = true;
 					StopAllCoroutines();
@@ -180,7 +186,9 @@ public class Boss : MonoBehaviour
 
 	private void Attack()
 	{
-		if (Random.Range(0f, 1f) < 0.5f)
+		float rand = Random.Range(0f, 1f);
+		print(rand);
+		if (rand < 0.34f)
 		{
 			StartCoroutine(PoundAttack());
 		}
@@ -195,7 +203,9 @@ public class Boss : MonoBehaviour
 		left.PoundAttack();
 		right.PoundAttack();
 
-		yield return new WaitForSeconds(BossHand.POUND_PHASE3_TIME);
+		yield return new WaitForSeconds(BossHand.POUND_PHASE2_TIME);
+		sr.sprite = angryFace;
+		yield return new WaitForSeconds(BossHand.POUND_PHASE3_TIME - BossHand.POUND_PHASE2_TIME);
 		PoundSlam();
 		yield return new WaitForSeconds(BossHand.POUND_PHASE4_TIME - BossHand.POUND_PHASE3_TIME);
 
@@ -214,7 +224,6 @@ public class Boss : MonoBehaviour
 
 	private IEnumerator SweepAttack()
 	{
-		GameObject player = GameObject.FindGameObjectWithTag("Player");
 		float playerX = player.transform.position.x;
 		if (playerX < 0)
 		{
@@ -225,13 +234,16 @@ public class Boss : MonoBehaviour
 			right.SweepAttack();
 		}
 
-		yield return new WaitForSeconds(BossHand.SWEEP_PHASE4_TIME);
+		yield return new WaitForSeconds(BossHand.SWEEP_PHASE2_TIME);
+		sr.sprite = angryFace;
+		yield return new WaitForSeconds(BossHand.SWEEP_PHASE4_TIME - BossHand.SWEEP_PHASE2_TIME);
 
 		StartCoroutine(WaitAttack());
 	}
 
 	private IEnumerator WaitAttack()
 	{
+		sr.sprite = normalFace;
 		left.Idle();
 		right.Idle();
 		yield return new WaitForSeconds(BossHand.IDLE_TIME);
@@ -245,11 +257,13 @@ public class Boss : MonoBehaviour
 		right.StopAllCoroutines();
 		left.SetAllColliders(true);
 		right.SetAllColliders(true);
-
+		
 		left.PoundAttack();
 		right.PoundAttack();
 
-		yield return new WaitForSeconds(BossHand.POUND_PHASE3_TIME);
+		yield return new WaitForSeconds(BossHand.POUND_PHASE2_TIME);
+		sr.sprite = angryFace;
+		yield return new WaitForSeconds(BossHand.POUND_PHASE3_TIME - BossHand.POUND_PHASE2_TIME);
 		DestroySlam();
 		yield return new WaitForSeconds(BossHand.POUND_PHASE4_TIME - BossHand.POUND_PHASE3_TIME);
 
