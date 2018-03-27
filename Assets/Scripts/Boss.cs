@@ -1,14 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Boss : MonoBehaviour
 {
 
 	public GameObject Phase1Tiles;
+	public GameObject Phase12Tiles;
 	public GameObject BridgeLocations;
 	public GameObject[] starsRequiredPrefabs; //required types for each phase
 	public GameObject[] StarSpotSets;
+	public GameObject leftHand;
+	public GameObject rightHand;
+	public Tile bridgeTile;
 	public int phase = 0;
 
 	private const int STAR_GROUP_SIZE = 3;
@@ -80,6 +85,8 @@ public class Boss : MonoBehaviour
 		phase++;
 		ActivateStarSpots();
 		//TODO: enable projectiles?
+		Phase12Tiles.SetActive(false);
+		FillSlimeBridges2();
 	}
 
 	private void EndPhase2()
@@ -145,5 +152,15 @@ public class Boss : MonoBehaviour
 		Color[] starColors = { CurrentColor() };
 		int[] starCounts = { StarsRemaining() };
 		gm.hudOverlay.SetStars(starColors, starCounts);*/
+	}
+
+	private void FillSlimeBridges2()
+	{
+		int[] xs = { -17, -16, -15, 14, 15, 16 };
+		foreach (int x in xs)
+		{
+			Vector3Int pos = new Vector3Int(x, 2, 0);
+			BridgeLocations.GetComponent<Tilemap>().SetTile(pos, bridgeTile);
+		}
 	}
 }
