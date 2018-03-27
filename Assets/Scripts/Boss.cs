@@ -311,12 +311,19 @@ public class Boss : MonoBehaviour
 		SpriteRenderer fadeSprite = fade.GetComponent<SpriteRenderer>();
 		Color transparent = new Color(1, 1, 1, 0);
 		Color white = new Color(1, 1, 1, 1);
-		float t = 0;
-		while (t < FADE_TIME)
+		AudioSource music = gm.GetComponent<AudioSource>();
+		float baseVolume = music.volume;
+		float fadeTime = 0;
+		while (fadeTime < FADE_TIME)
 		{
-			Color c = Color.Lerp(transparent, white, t / FADE_TIME);
+			float t = fadeTime / FADE_TIME;
+			Color c = Color.Lerp(transparent, white, t);
 			fadeSprite.color = c;
-			t += Time.deltaTime;
+
+			float volume = Mathf.Lerp(baseVolume, 0, t);
+			music.volume = volume;
+
+			fadeTime += Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
 
