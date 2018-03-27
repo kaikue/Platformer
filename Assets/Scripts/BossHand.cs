@@ -37,13 +37,11 @@ public class BossHand : MonoBehaviour {
 	public const float SWEEP_PHASE4_TIME = 5.0f;
 
 	private float time;
-	private Boss boss;
 	private GameObject player;
 	private Vector2 splineStart;
 
 	private void Start()
 	{
-		boss = GameObject.Find("Boss").GetComponent<Boss>();
 		player = GameObject.FindGameObjectWithTag("Player");
 		Idle();
 	}

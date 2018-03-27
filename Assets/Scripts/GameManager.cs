@@ -17,8 +17,7 @@ public class GameManager : MonoBehaviour {
 	private bool overlayActive = false;
 
 	public const string SAVE_PATH = ".save";
-
-	private GameObject player;
+	
 	private GameObject pauseOverlay;
 	private Star levelStar;
 
@@ -30,7 +29,6 @@ public class GameManager : MonoBehaviour {
 	{
 		GameObject hudObject = Instantiate(hudOverlayPrefab);
 		hudOverlay = hudObject.GetComponent<HUDOverlay>();
-		player = GameObject.Find("Player");
 		LoadSave();
 	}
 	
