@@ -21,11 +21,16 @@ public class Boss : MonoBehaviour
 	private GameManager gm;
 	private List<StarSpot> currentStarSpots;
 	private List<StarSpot> queuedStarSpots;
+	private BossHand left;
+	private BossHand right;
 
 	private void Start()
 	{
 		gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+		left = leftHand.GetComponent<BossHand>();
+		right = rightHand.GetComponent<BossHand>();
 		ActivateStarSpots();
+		StartCoroutine(WaitAttack());
 	}
 
 	private void Update()
@@ -162,5 +167,58 @@ public class Boss : MonoBehaviour
 			Vector3Int pos = new Vector3Int(x, 2, 0);
 			BridgeLocations.GetComponent<Tilemap>().SetTile(pos, bridgeTile);
 		}
+	}
+
+	private void Attack()
+	{
+		if (Random.Range(0f, 1f) < 0.5f)
+		{
+			StartCoroutine(PoundAttack());
+		}
+		else
+		{
+			StartCoroutine(SweepAttack());
+		}
+	}
+
+	private IEnumerator PoundAttack()
+	{
+		left.PoundAttack();
+		right.PoundAttack();
+
+		yield return new WaitForSeconds(BossHand.POUND_PHASE3_TIME);
+		print("WHAM"); //TODO
+		yield return new WaitForSeconds(BossHand.POUND_PHASE4_TIME - BossHand.POUND_PHASE3_TIME);
+
+		left.ReactivateColliders();
+		right.ReactivateColliders();
+		StartCoroutine(WaitAttack());
+	}
+
+	private IEnumerator SweepAttack()
+	{
+		GameObject player = GameObject.FindGameObjectWithTag("Player");
+		float playerX = player.transform.position.x;
+		if (playerX < 0)
+		{
+			left.SweepAttack();
+		}
+		else
+		{
+			right.SweepAttack();
+		}
+
+		yield return new WaitForSeconds(BossHand.SWEEP_PHASE4_TIME);
+
+		StartCoroutine(WaitAttack());
+	}
+
+	private IEnumerator WaitAttack()
+	{
+		left.Idle();
+		right.Idle();
+		yield return new WaitForSeconds(BossHand.IDLE_TIME);
+
+		Attack();
 	}
 }

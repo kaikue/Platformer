@@ -232,7 +232,7 @@ public class PlayerDemo : MonoBehaviour {
 		}
 		
 		bool onGround = grounds.Count > 0;
-		/*if (!onGround && velocity.y == 0)
+		if (!onGround && velocity.y == 0)
 		{
 			//not on ground but not moving up/down- try to snap to ground
 			RaycastHit2D[] hits = BoxCast(GRAVITY_NORMAL, SNAP_DIST);
@@ -243,7 +243,7 @@ public class PlayerDemo : MonoBehaviour {
 				offset.y -= hitDist;
 				onGround = true;
 			}
-		}*/
+		}
 
 		if (onGround && velocity.y <= 0) //on the ground, didn't just jump
 		{
