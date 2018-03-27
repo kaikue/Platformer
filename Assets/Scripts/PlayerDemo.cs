@@ -799,7 +799,7 @@ public class PlayerDemo : MonoBehaviour {
 		{
 			//apply some velocity- use walljump code
 			walljumpTime = WALLJUMP_TIME;
-			lastWallSide = UnityEngine.Random.Range(0, 1) < 0.5 ? -1 : 1;
+			lastWallSide = UnityEngine.Random.Range(0f, 1f) < 0.5f ? -1 : 1;
 			Vector2 velocity = rb.velocity;
 			velocity.y = JUMP_VEL / 2;
 			rb.velocity = velocity;
