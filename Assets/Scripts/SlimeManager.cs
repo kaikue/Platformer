@@ -11,6 +11,7 @@ public class SlimeManager : MonoBehaviour {
     public GameObject slimeObjectIndicatorPrefab;
     public GameObject player;
 	public GameObject sprite;
+	public GameObject particles;
 	public float followDistance;
 
     public AudioSource SlimeSound;
@@ -63,6 +64,7 @@ public class SlimeManager : MonoBehaviour {
                     Destroy(activeBridge.gameObject);
                     activeBridge = null;
                     sr.enabled = true;
+					particles.SetActive(true);
                     WhistleSound.Play();
                 }
 
@@ -73,8 +75,9 @@ public class SlimeManager : MonoBehaviour {
                 newSlimeObject.transform.position = selectedBridge.transform.position;
                 activeBridge = newSlimeObject;
                 sr.enabled = false;
+				particles.SetActive(false);
 
-                SlimeSound.Play();
+				SlimeSound.Play();
 			}
 			
 			bridgeSwapQueued = false;
