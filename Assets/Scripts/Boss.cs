@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class Boss : MonoBehaviour
@@ -16,14 +17,17 @@ public class Boss : MonoBehaviour
 	public GameObject leftHand;
 	public GameObject rightHand;
 	public Tile bridgeTile;
+	public GameObject fade;
 	public int phase = 0;
 
 	private const int STAR_GROUP_SIZE = 3;
 
 	private const float SCREEN_SHAKE_TIME = 0.8f;
 	private const float SCREEN_SHAKE_AMOUNT = 0.35f;
-
+	
 	private const float POUND_CHANCE = 0.5f;
+
+	private const float FADE_TIME = 3.0f;
 
 	private GameManager gm;
 	private SpriteRenderer sr;
@@ -33,6 +37,7 @@ public class Boss : MonoBehaviour
 	private BossHand left;
 	private BossHand right;
 	private bool destroying = false;
+	private bool won = false;
 
 	private void Start()
 	{
@@ -116,10 +121,11 @@ public class Boss : MonoBehaviour
 
 	private void Win()
 	{
-		//TODO: end game
-		print("You win!");
+		if (won) return;
 
+		won = true;
 		gm.hudOverlay.gameObject.SetActive(false);
+		StartCoroutine(FadeOut());
 	}
 
 	private void ActivateStarSpots()
@@ -220,7 +226,7 @@ public class Boss : MonoBehaviour
 
 	private void PoundSlam()
 	{
-		StartCoroutine(ScreenShake());
+		StartCoroutine(ScreenShake(true));
 		player.GetComponent<PlayerDemo>().Shove();
 		//TODO: play sound
 		print("WHAM");
@@ -283,11 +289,11 @@ public class Boss : MonoBehaviour
 		NextPhase();
 	}
 
-	private IEnumerator ScreenShake()
+	private IEnumerator ScreenShake(bool end)
 	{
 		Vector3 basePos = Camera.main.transform.localPosition;
 		float shakeTime = 0;
-		while (shakeTime < SCREEN_SHAKE_TIME)
+		while (shakeTime < SCREEN_SHAKE_TIME || !end)
 		{
 			Vector2 pos2d = (Vector2)basePos + Random.insideUnitCircle * SCREEN_SHAKE_AMOUNT;
 			Camera.main.transform.localPosition = new Vector3(pos2d.x, pos2d.y, basePos.z);
@@ -297,5 +303,25 @@ public class Boss : MonoBehaviour
 		}
 
 		Camera.main.transform.localPosition = basePos;
+	}
+
+	private IEnumerator FadeOut()
+	{
+		StartCoroutine(ScreenShake(false));
+		SpriteRenderer fadeSprite = fade.GetComponent<SpriteRenderer>();
+		Color transparent = new Color(1, 1, 1, 0);
+		Color white = new Color(1, 1, 1, 1);
+		float t = 0;
+		while (t < FADE_TIME)
+		{
+			Color c = Color.Lerp(transparent, white, t / FADE_TIME);
+			fadeSprite.color = c;
+			t += Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+
+		yield return new WaitForSeconds(FADE_TIME / 2);
+		int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+		SceneManager.LoadScene(sceneIndex + 1);
 	}
 }
