@@ -792,4 +792,19 @@ public class PlayerDemo : MonoBehaviour {
 		JumpSound.pitch = UnityEngine.Random.Range(2 - PITCH_VARIATION, 2 + PITCH_VARIATION);
 		JumpSound.Play();
 	}
+
+	public void Shove()
+	{
+		if (grounds.Count > 0)
+		{
+			//apply some velocity- use walljump code
+			walljumpTime = WALLJUMP_TIME;
+			lastWallSide = UnityEngine.Random.Range(0, 1) < 0.5 ? -1 : 1;
+			Vector2 velocity = rb.velocity;
+			velocity.y = JUMP_VEL / 2;
+			rb.velocity = velocity;
+			walljumpPush = true;
+			DeathSound.Play();
+		}
+	}
 }
