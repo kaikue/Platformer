@@ -8,8 +8,7 @@ public class BossHand : MonoBehaviour {
 	{
 		IDLE,
 		POUND,
-		SWEEP,
-		DESTROY
+		SWEEP
 	}
 
 	public int SideMultiplier;
@@ -60,13 +59,7 @@ public class BossHand : MonoBehaviour {
 		time = 0;
 		state = AttackState.SWEEP;
 	}
-
-	public void DestroyAttack()
-	{
-		time = 0;
-		state = AttackState.DESTROY;
-	}
-
+	
 	/*private bool PhaseComplete()
 	{
 		switch (state)
@@ -94,8 +87,6 @@ public class BossHand : MonoBehaviour {
 				return GetPoundPosition();
 			case AttackState.SWEEP:
 				return GetSweepPosition();
-			case AttackState.DESTROY:
-				return GetDestroyPosition();
 			default:
 				return GetIdlePosition();
 		}
@@ -157,45 +148,22 @@ public class BossHand : MonoBehaviour {
 		}
 		else
 		{
-			transform.position = GetPosition();
+			//transform.position = GetPosition();
+			transform.position = Vector2.Lerp(transform.position, GetPosition(), 10 * Time.fixedDeltaTime);
 		}
-
-		/*Vector2 oldPos = transform.position;
-		Vector2 newPos = GetPosition();
-		if ((newPos - oldPos).magnitude < 0.3f)
-		{
-			transform.position = newPos;
-		}
-		else
-		{
-			transform.position = Vector2.Lerp(transform.position, GetPosition(), 0.1f);
-		}*/
-		//transform.position = Vector2.Lerp(transform.position, GetPosition(), 1);// Time.fixedDeltaTime);
-
-		if (state == AttackState.POUND && time > POUND_PHASE2_TIME) //also for destroy?
+		
+		if (state == AttackState.POUND && time > POUND_PHASE2_TIME)
 		{
 			SetAllColliders(false);
 		}
 
 		time += Time.fixedDeltaTime;
-
-		/*if (PhaseComplete())
-		{
-			if (state == AttackState.DESTROY)
-			{
-				boss.NextPhase(); //but only once
-			}
-			else if (state == AttackState.POUND)
-			{
-				//pound, but only once
-			}
-			Idle();
-		}*/
 	}
 
-	private void SetAllColliders(bool enabled)
+	public void SetAllColliders(bool enabled)
 	{
-		foreach (BoxCollider2D bc in gameObject.GetComponents<BoxCollider2D>()) {
+		foreach (BoxCollider2D bc in gameObject.GetComponents<BoxCollider2D>())
+		{
 			bc.enabled = enabled;
 		}
 	}

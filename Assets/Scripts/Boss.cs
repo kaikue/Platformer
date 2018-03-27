@@ -23,6 +23,7 @@ public class Boss : MonoBehaviour
 	private List<StarSpot> queuedStarSpots;
 	private BossHand left;
 	private BossHand right;
+	private bool destroying = false;
 
 	private void Start()
 	{
@@ -48,7 +49,16 @@ public class Boss : MonoBehaviour
 		{
 			if (StarsRemaining() == 0)
 			{
-				NextPhase();
+				if (phase == 2)
+				{
+					Win();
+				}
+				if (!destroying)
+				{
+					destroying = true;
+					StopAllCoroutines();
+					StartCoroutine(DestroyAttack());
+				}
 			}
 			else
 			{
@@ -72,7 +82,6 @@ public class Boss : MonoBehaviour
 				EndPhase1();
 				break;
 			default:
-				EndPhase2();
 				break;
 		}
 	}
@@ -94,7 +103,7 @@ public class Boss : MonoBehaviour
 		FillSlimeBridges2();
 	}
 
-	private void EndPhase2()
+	private void Win()
 	{
 		//TODO: end game
 		print("You win!");
@@ -187,12 +196,20 @@ public class Boss : MonoBehaviour
 		right.PoundAttack();
 
 		yield return new WaitForSeconds(BossHand.POUND_PHASE3_TIME);
-		print("WHAM"); //TODO
+		PoundSlam();
 		yield return new WaitForSeconds(BossHand.POUND_PHASE4_TIME - BossHand.POUND_PHASE3_TIME);
 
 		left.ReactivateColliders();
 		right.ReactivateColliders();
 		StartCoroutine(WaitAttack());
+	}
+
+	private void PoundSlam()
+	{
+		//TODO: screenshake
+		//TODO: push player up and to either side
+		//TODO: play sound
+		print("WHAM");
 	}
 
 	private IEnumerator SweepAttack()
@@ -220,5 +237,31 @@ public class Boss : MonoBehaviour
 		yield return new WaitForSeconds(BossHand.IDLE_TIME);
 
 		Attack();
+	}
+
+	private IEnumerator DestroyAttack()
+	{
+		left.StopAllCoroutines();
+		right.StopAllCoroutines();
+		left.SetAllColliders(true);
+		right.SetAllColliders(true);
+
+		left.PoundAttack();
+		right.PoundAttack();
+
+		yield return new WaitForSeconds(BossHand.POUND_PHASE3_TIME);
+		DestroySlam();
+		yield return new WaitForSeconds(BossHand.POUND_PHASE4_TIME - BossHand.POUND_PHASE3_TIME);
+
+		left.ReactivateColliders();
+		right.ReactivateColliders();
+		StartCoroutine(WaitAttack());
+		destroying = false;
+	}
+
+	private void DestroySlam()
+	{
+		PoundSlam();
+		NextPhase();
 	}
 }
