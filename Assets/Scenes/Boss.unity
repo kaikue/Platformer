@@ -73412,6 +73412,48 @@ Prefab:
       propertyPath: bridgeActivatorTiles
       value: 
       objectReference: {fileID: 1843179295}
+    - target: {fileID: 4737551508986542, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1203827195302076, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114610709582776350, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212926289798690916, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212926289798690916, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212926289798690916, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
+        type: 2}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114176967768173080, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4737551508986542, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 20561347038397932, guid: 35ad3e55d09eb8c489b0980002ddbcfb,
+        type: 2}
+      propertyPath: orthographic size
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 35ad3e55d09eb8c489b0980002ddbcfb, type: 2}
   m_IsPrefabParent: 0
