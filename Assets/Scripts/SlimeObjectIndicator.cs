@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SlimeObjectIndicator : MonoBehaviour {
 
+	public GameObject sprite;
     private SpriteRenderer sr;
 
     public bool hint = false;
@@ -12,7 +13,7 @@ public class SlimeObjectIndicator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        sr = GetComponent<SpriteRenderer>();	
+        sr = sprite.GetComponent<SpriteRenderer>();	
 	}
 	
 	// Update is called once per frame
