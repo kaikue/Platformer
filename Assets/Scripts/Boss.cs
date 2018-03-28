@@ -18,6 +18,8 @@ public class Boss : MonoBehaviour
 	public GameObject rightHand;
 	public Tile bridgeTile;
 	public GameObject fade;
+	public GameObject breakParticles1;
+	public GameObject breakParticles2;
 	public int phase = 0;
 
 	private const int STAR_GROUP_SIZE = 3;
@@ -107,6 +109,7 @@ public class Boss : MonoBehaviour
 		phase++;
 		ActivateStarSpots();
 		Phase1Tiles.SetActive(false);
+		breakParticles1.SetActive(true);
 		BridgeLocations.SetActive(true);
 	}
 
@@ -116,6 +119,7 @@ public class Boss : MonoBehaviour
 		ActivateStarSpots();
 		//TODO: enable projectiles?
 		Phase12Tiles.SetActive(false);
+		breakParticles2.SetActive(true);
 		FillSlimeBridges2();
 	}
 
