@@ -8,6 +8,7 @@ public class SlimeObjectIndicator : MonoBehaviour {
 
     public bool hint = false;
     public bool canActivate = true;
+    public bool colliding = false;
 
 	// Use this for initialization
 	void Start () {
@@ -19,12 +20,27 @@ public class SlimeObjectIndicator : MonoBehaviour {
         sr.enabled = hint;
 	}
 
+    private void FixedUpdate()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+
+        if (Mathf.Abs(rb.velocity.y) > 1.0f)
+        {
+            canActivate = false;
+        } else if (!colliding)
+        {
+            canActivate = true;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             print("enter");
             canActivate = false;
+            colliding = true;
         }
     }
 
@@ -34,6 +50,7 @@ public class SlimeObjectIndicator : MonoBehaviour {
         {
             print("stay");
             canActivate = false;
+            colliding = true;
         }
     }
 
@@ -43,6 +60,7 @@ public class SlimeObjectIndicator : MonoBehaviour {
         {
             print("exit");
             canActivate = true;
+            colliding = false;
         }
     }
 }
