@@ -44,8 +44,13 @@ public class SlimeManager : MonoBehaviour {
 		LoadBridgeSprites();
 		sr.sprite = floatSprites[0];
 	}
-	
-	private void LoadFloatSprites()
+
+    private void Awake()
+    {
+        sr = sprite.GetComponent<SpriteRenderer>();
+    }
+
+    private void LoadFloatSprites()
 	{
 		floatSprites = new Sprite[NUM_FLOAT_SPRITES];
 		for (int i = 0; i < NUM_FLOAT_SPRITES; i++)
@@ -131,7 +136,10 @@ public class SlimeManager : MonoBehaviour {
 
 	public void DestroyBridge()
 	{
-		Destroy(activeBridge.gameObject);
+        if (activeBridge != null)
+        {
+		    Destroy(activeBridge.gameObject);
+        }
 		activeBridge = null;
 		SetRender(true);
 		particles.SetActive(true);

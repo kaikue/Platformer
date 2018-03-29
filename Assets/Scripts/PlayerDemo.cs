@@ -758,9 +758,12 @@ public class PlayerDemo : MonoBehaviour {
 			int starType = (int)gm.levelStarPrefab.GetComponent<Star>().starType;
 			if (gm.starsCollected[starType] >= portal.starsRequired)
             {
-				SlimeManager slimeManager = Slime.GetComponent<SlimeManager>();
-				slimeManager.DestroyBridge();
-				slimeManager.sprite.SetActive(false);
+                if (Slime.activeSelf)
+                {
+    				SlimeManager slimeManager = Slime.GetComponent<SlimeManager>();
+                    slimeManager.DestroyBridge();
+                    slimeManager.sprite.SetActive(false);
+                }
 				SlimeGuide.SetActive(true);
             }
 
