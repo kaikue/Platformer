@@ -19,7 +19,7 @@ EditorBuildSettings:
     guid: 6aa6f04d63813a44b9a70bfc75a57e19
   - enabled: 1
     path: Assets/Scenes/CharredActual.unity
-    guid: 076c8035a8cf343428eaf5d120250e5e
+    guid: 68914c1afb8c5d84c93f5a39052710a7
   - enabled: 1
     path: Assets/Scenes/Boss.unity
     guid: 42702fbf53fb80240b52bd04292cc38c
