@@ -234,14 +234,15 @@ public class PlayerDemo : MonoBehaviour {
 		}
 		
 		//patch for player sometimes floating (in boss fight)
-		if (grounds.Count > 0)
+		/*if (grounds.Count > 0)
 		{
 			RaycastHit2D[] hits = BoxCast(GRAVITY_NORMAL, 0.1f);
 			if (hits.Length == 0)
 			{
+				print("CLEARING");
 				grounds.Clear();
 			}
-		}
+		}*/
 
 		bool onGround = grounds.Count > 0;
 		/*if (!onGround && velocity.y == 0)
@@ -496,7 +497,7 @@ public class PlayerDemo : MonoBehaviour {
 	private RaycastHit2D[] BoxCast(Vector2 direction, float distance)
 	{
 		Vector2 size = ec.points[2] - ec.points[0];
-		return Physics2D.BoxCastAll(gameObject.transform.position, size, 0, direction, distance, LayerMask.GetMask("LevelGeometry"));
+		return Physics2D.BoxCastAll(rb.position, size, 0, direction, distance, LayerMask.GetMask("LevelGeometry"));
 	}
 	
 	private void ResetWalljump()
@@ -627,10 +628,10 @@ public class PlayerDemo : MonoBehaviour {
 				//SkidSound.PlayScheduled(0.1);
 			}
 		}
-
-		if (!HasGround(collision) && HasGround(lastCollision))
-        {
-		    grounds.Remove(collision.gameObject);
+		
+		if (!HasGround(collision))// && HasGround(lastCollision))
+		{
+			grounds.Remove(collision.gameObject);
         }
 
         if (!HasWall(collision) && HasWall(lastCollision))
