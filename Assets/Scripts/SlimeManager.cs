@@ -26,12 +26,14 @@ public class SlimeManager : MonoBehaviour {
 
     private SlimeObjectIndicator selectedBridge;
     private GameObject activeBridge;
+	private SlimeObjectIndicator lastSelectedBridge;
 
-    private readonly Dictionary<Vector3Int, SlimeObjectIndicator> closeBridges = 
+	private readonly Dictionary<Vector3Int, SlimeObjectIndicator> closeBridges = 
         new Dictionary<Vector3Int, SlimeObjectIndicator>();
     private bool bridgeSwapQueued;
 
 	private Sprite[] floatSprites;
+	public Sprite[] bridgeSprites;
 	private int animFrame = 0;
 	private float frameTime = FRAME_TIME;
 
@@ -39,6 +41,7 @@ public class SlimeManager : MonoBehaviour {
         sr = sprite.GetComponent<SpriteRenderer>();
         bc = GetComponent<BoxCollider2D>();
 		LoadFloatSprites();
+		LoadBridgeSprites();
 		sr.sprite = floatSprites[0];
 	}
 	
@@ -48,6 +51,15 @@ public class SlimeManager : MonoBehaviour {
 		for (int i = 0; i < NUM_FLOAT_SPRITES; i++)
 		{
 			floatSprites[i] = Resources.Load<Sprite>("Images/Slime/Float/frame" + (i + 1));
+		}
+	}
+
+	private void LoadBridgeSprites()
+	{
+		bridgeSprites = new Sprite[SlimeBridgeAnimation.NUM_FRAMES];
+		for (int i = 0; i < SlimeBridgeAnimation.NUM_FRAMES; i++)
+		{
+			bridgeSprites[i] = Resources.Load<Sprite>("Images/Slime/Bridge/frame" + (i + 1));
 		}
 	}
 
@@ -77,39 +89,61 @@ public class SlimeManager : MonoBehaviour {
 		{
 			if (activeBridge != null)
 			{
+				if (lastSelectedBridge != null)
+				{
+					lastSelectedBridge.activated = false;
+				}
+
                 if (selectedBridge != null &&
                     Vector3.Distance(selectedBridge.gameObject.transform.position, activeBridge.transform.position) > 1.0f)
                 {
                     // selected bridge is different from active bridge. Immediately switch to selected bridge
                     Destroy(activeBridge.gameObject);
-                    GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
-                    newSlimeObject.transform.position = selectedBridge.transform.position;
-                    activeBridge = newSlimeObject;
+					FormBridge();
                 } else
-                {
-                    transform.position = activeBridge.transform.position;
-                    Destroy(activeBridge.gameObject);
-                    activeBridge = null;
-                    sr.enabled = true;
-					particles.SetActive(true);
-                    WhistleSound.Play();
+				{
+					WhistleSound.Play();
+					transform.position = activeBridge.transform.position;
+					DestroyBridge();
                 }
-
 			}
 			else if (selectedBridge != null && selectedBridge.canActivate) 
 			{
-                GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
-                newSlimeObject.transform.position = selectedBridge.transform.position;
-                activeBridge = newSlimeObject;
-                sr.enabled = false;
+				SetRender(false);
 				particles.SetActive(false);
-
-				SlimeSound.Play();
+				FormBridge();
 			}
 			
 			bridgeSwapQueued = false;
 		}
     }
+
+	private void FormBridge()
+	{
+		selectedBridge.activated = true;
+		GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
+		newSlimeObject.transform.position = selectedBridge.transform.position;
+		activeBridge = newSlimeObject;
+		SlimeSound.PlayDelayed(0.5f);
+		lastSelectedBridge = selectedBridge;
+		newSlimeObject.GetComponentInChildren<SlimeBridgeAnimation>().sprites = bridgeSprites;
+	}
+
+	public void DestroyBridge()
+	{
+		Destroy(activeBridge.gameObject);
+		activeBridge = null;
+		SetRender(true);
+		particles.SetActive(true);
+	}
+
+	private void SetRender(bool enabled)
+	{
+		GameObject slimeGuide = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerDemo>().SlimeGuide;
+		
+		SpriteRenderer renderer = slimeGuide.activeSelf ? slimeGuide.GetComponent<SpriteRenderer>() : sr;
+		renderer.enabled = enabled;
+	}
 
     private Vector2 GetRadialVelocity()
     {

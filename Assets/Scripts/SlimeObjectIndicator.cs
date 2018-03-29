@@ -10,6 +10,7 @@ public class SlimeObjectIndicator : MonoBehaviour {
     public bool hint = false;
     public bool canActivate = true;
     public bool colliding = false;
+	public bool activated = false;
 
 	// Use this for initialization
 	void Start () {
@@ -18,7 +19,7 @@ public class SlimeObjectIndicator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        sr.enabled = hint;
+        sr.enabled = hint && !activated;
 	}
 
     private void FixedUpdate()
@@ -39,7 +40,6 @@ public class SlimeObjectIndicator : MonoBehaviour {
     {
         if (collision.CompareTag("Player"))
         {
-            print("enter");
             canActivate = false;
             colliding = true;
         }
@@ -49,7 +49,6 @@ public class SlimeObjectIndicator : MonoBehaviour {
     {
         if (collision.CompareTag("Player"))
         {
-            print("stay");
             canActivate = false;
             colliding = true;
         }
@@ -59,7 +58,6 @@ public class SlimeObjectIndicator : MonoBehaviour {
     {
         if (collision.CompareTag("Player"))
         {
-            print("exit");
             canActivate = true;
             colliding = false;
         }

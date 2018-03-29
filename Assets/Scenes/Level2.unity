@@ -50667,7 +50667,7 @@ Prefab:
     - target: {fileID: 8195094280544958352, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
       propertyPath: m_TileColorArray.Array.data[2].m_Data.r
-      value: 0
+      value: 8.786509e+19
       objectReference: {fileID: 0}
     - target: {fileID: 8195094280544958352, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
@@ -50677,7 +50677,7 @@ Prefab:
     - target: {fileID: 8195094280544958352, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
       propertyPath: m_TileColorArray.Array.data[2].m_Data.b
-      value: 0
+      value: 1.199107e-27
       objectReference: {fileID: 0}
     - target: {fileID: 8195094280544958352, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
@@ -72217,7 +72217,7 @@ Prefab:
     - target: {fileID: 8195094280544958352, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
       propertyPath: m_Tiles.Array.data[16].first.y
-      value: 68
+      value: 49
       objectReference: {fileID: 0}
     - target: {fileID: 8195094280544958352, guid: aee6c188cbd40d04d83c8455eeb6589b,
         type: 2}
