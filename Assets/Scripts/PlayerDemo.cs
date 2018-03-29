@@ -547,7 +547,8 @@ public class PlayerDemo : MonoBehaviour {
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (collision.gameObject.tag == "Slime")
+		if (collision.gameObject.tag == "Slime"
+			&& collision.gameObject.transform.position.y < rb.position.y)
 		{
 			float prevXVel = rb.velocity.x;
 			rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
