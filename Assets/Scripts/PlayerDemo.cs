@@ -233,8 +233,18 @@ public class PlayerDemo : MonoBehaviour {
 			}
 		}
 		
+		//patch for player sometimes floating (in boss fight)
+		if (grounds.Count > 0)
+		{
+			RaycastHit2D[] hits = BoxCast(GRAVITY_NORMAL, 0.1f);
+			if (hits.Length == 0)
+			{
+				grounds.Clear();
+			}
+		}
+
 		bool onGround = grounds.Count > 0;
-		if (!onGround && velocity.y == 0)
+		/*if (!onGround && velocity.y == 0)
 		{
 			//not on ground but not moving up/down- try to snap to ground
 			RaycastHit2D[] hits = BoxCast(GRAVITY_NORMAL, SNAP_DIST);
@@ -247,7 +257,7 @@ public class PlayerDemo : MonoBehaviour {
 				onGround = true;
 				grounds.Add(hit.transform.gameObject);
 			}
-		}
+		}*/
 
 		if (onGround && velocity.y <= 0) //on the ground, didn't just jump
 		{
