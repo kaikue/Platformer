@@ -10,6 +10,7 @@ public class SlimeBridgeAnimation : MonoBehaviour {
 	
 	private SpriteRenderer sr;
 	public Sprite[] sprites;
+	public GameObject parent;
 	
 	private void Start()
 	{
@@ -27,6 +28,10 @@ public class SlimeBridgeAnimation : MonoBehaviour {
 		for (int frame = 0; frame < NUM_FRAMES; frame++)
 		{
 			sr.sprite = sprites[frame];
+			if (frame == NUM_FRAMES - 1)
+			{
+				parent.GetComponent<BoxCollider2D>().enabled = true;
+			}
 			yield return new WaitForSeconds(FRAME_TIME);
 		}
 	}

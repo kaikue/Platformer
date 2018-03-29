@@ -77,7 +77,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1818013010895252}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -107,6 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 516a329053344cd4188ff5fa4b0d1efd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  parent: {fileID: 1818013010895252}
 --- !u!212 &212904427674218534
 SpriteRenderer:
   m_ObjectHideFlags: 1
