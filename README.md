@@ -43,4 +43,5 @@ Run the provided .exe file. Make sure the UnityPlayer.dll file and the _data fol
 
 - Wind chimes: https://freesound.org/people/MrCisum/sounds/336664/
 - Shatter sound: soundbible.com/105-Light-Bulb-Breaking.html
+- Boom sound: https://freesound.org/people/studiomandragore/sounds/401630/
 - Font: https://www.dafont.com/amperzand.font and https://www.dafont.com/mont.font

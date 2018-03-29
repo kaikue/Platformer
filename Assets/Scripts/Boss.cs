@@ -232,8 +232,7 @@ public class Boss : MonoBehaviour
 	{
 		StartCoroutine(ScreenShake(true));
 		player.GetComponent<PlayerDemo>().Shove();
-		//TODO: play sound
-		print("WHAM");
+		GetComponent<AudioSource>().Play();
 	}
 
 	private IEnumerator SweepAttack()
