@@ -17,7 +17,11 @@ public class SlimeManager : MonoBehaviour {
     public AudioSource SlimeSound;
     public AudioSource WhistleSound;
 
-    private SpriteRenderer sr;
+	private const int NUM_FLOAT_SPRITES = 7;
+
+	private const float FRAME_TIME = 0.1f; //time in seconds per frame of animation
+	
+	private SpriteRenderer sr;
     private BoxCollider2D bc;
 
     private SlimeObjectIndicator selectedBridge;
@@ -27,17 +31,40 @@ public class SlimeManager : MonoBehaviour {
         new Dictionary<Vector3Int, SlimeObjectIndicator>();
     private bool bridgeSwapQueued;
 
+	private Sprite[] floatSprites;
+	private int animFrame = 0;
+	private float frameTime = FRAME_TIME;
+
 	void Start () {
         sr = sprite.GetComponent<SpriteRenderer>();
         bc = GetComponent<BoxCollider2D>();
+		LoadFloatSprites();
+		sr.sprite = floatSprites[0];
 	}
 	
+	private void LoadFloatSprites()
+	{
+		floatSprites = new Sprite[NUM_FLOAT_SPRITES];
+		for (int i = 0; i < NUM_FLOAT_SPRITES; i++)
+		{
+			floatSprites[i] = Resources.Load<Sprite>("Images/Slime/Float/frame" + (i + 1));
+		}
+	}
+
 	void Update () {
         if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl)
 			|| Input.GetKeyDown(KeyCode.JoystickButton1) || Input.GetKeyDown(KeyCode.JoystickButton2))
         {
             bridgeSwapQueued = true;
         }
+
+		frameTime -= Time.deltaTime;
+		if (frameTime <= 0)
+		{
+			frameTime = FRAME_TIME;
+			animFrame = (animFrame + 1) % NUM_FLOAT_SPRITES;
+			sr.sprite = floatSprites[animFrame];
+		}
 	}
 
     private void FixedUpdate()
