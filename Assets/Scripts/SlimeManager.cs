@@ -33,6 +33,7 @@ public class SlimeManager : MonoBehaviour {
     private bool bridgeSwapQueued;
 
 	private Sprite[] floatSprites;
+	public Sprite[] bridgeSprites;
 	private int animFrame = 0;
 	private float frameTime = FRAME_TIME;
 
@@ -40,6 +41,7 @@ public class SlimeManager : MonoBehaviour {
         sr = sprite.GetComponent<SpriteRenderer>();
         bc = GetComponent<BoxCollider2D>();
 		LoadFloatSprites();
+		LoadBridgeSprites();
 		sr.sprite = floatSprites[0];
 	}
 	
@@ -49,6 +51,15 @@ public class SlimeManager : MonoBehaviour {
 		for (int i = 0; i < NUM_FLOAT_SPRITES; i++)
 		{
 			floatSprites[i] = Resources.Load<Sprite>("Images/Slime/Float/frame" + (i + 1));
+		}
+	}
+
+	private void LoadBridgeSprites()
+	{
+		bridgeSprites = new Sprite[SlimeBridgeAnimation.NUM_FRAMES];
+		for (int i = 0; i < SlimeBridgeAnimation.NUM_FRAMES; i++)
+		{
+			bridgeSprites[i] = Resources.Load<Sprite>("Images/Slime/Bridge/frame" + (i + 1));
 		}
 	}
 
@@ -113,8 +124,9 @@ public class SlimeManager : MonoBehaviour {
 		GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
 		newSlimeObject.transform.position = selectedBridge.transform.position;
 		activeBridge = newSlimeObject;
-		SlimeSound.Play();
+		SlimeSound.PlayDelayed(0.5f);
 		lastSelectedBridge = selectedBridge;
+		newSlimeObject.GetComponentInChildren<SlimeBridgeAnimation>().sprites = bridgeSprites;
 	}
 
 	public void DestroyBridge()
