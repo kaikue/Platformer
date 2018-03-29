@@ -21,6 +21,7 @@ public class Fireball : MonoBehaviour {
 		if (collision.collider.CompareTag("Player"))
 		{
 			collision.collider.gameObject.GetComponent<PlayerDemo>().Kill();
+            Destroy(gameObject);
 		}
 
 		if (!collision.collider.CompareTag("Obstacle"))
