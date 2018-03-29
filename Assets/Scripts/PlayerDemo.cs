@@ -80,6 +80,8 @@ public class PlayerDemo : MonoBehaviour {
 
     private Vector3 respawnPoint;
 
+	private Vector2 lastGroundPos;
+
 	enum AnimState
 	{
 		STAND,
@@ -238,15 +240,29 @@ public class PlayerDemo : MonoBehaviour {
 			RaycastHit2D[] hits = BoxCast(GRAVITY_NORMAL, SNAP_DIST);
 			if (hits.Length > 0)
 			{
-				float hitDist = hits[0].distance;
+				RaycastHit2D hit = hits[0];
+				float hitDist = hit.distance;
 				//not quite the right distance (it's from center of bbox), but moveposition will handle that
 				offset.y -= hitDist;
 				onGround = true;
+				grounds.Add(hit.transform.gameObject);
 			}
 		}
 
 		if (onGround && velocity.y <= 0) //on the ground, didn't just jump
 		{
+			//align to platform moving down (for boss hands)
+			Vector2 newGroundPos = grounds[0].transform.position;
+			if (lastGroundPos != null)
+			{
+				float yDiff = newGroundPos.y - lastGroundPos.y;
+				if (yDiff < 0)
+				{
+					offset.y += -0.1f;
+				}
+			}
+			lastGroundPos = newGroundPos;
+
 			/*if (groundAngle >= SLIDE_THRESHOLD)
 			{
 				print("slide");
