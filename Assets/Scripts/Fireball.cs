@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Fireball : MonoBehaviour {
 
+    private void Start()
+    {
+		AudioSource shootSound = GetComponent<AudioSource>();
+        shootSound.pitch = Random.Range(0.7f * shootSound.pitch, 1.3f * shootSound.pitch);
+        shootSound.Play();
+    }
+
     // Use this for initialization
     private void Update()
     {

@@ -21,7 +21,14 @@ public class FireSpawner : MonoBehaviour {
         {
             Spawn();
             timeToSpawn = 1.0f / SPAWN_RATE;
+        } else if (timeToSpawn <= Mathf.Min((1.0f / SPAWN_RATE) * 2.0f / 3.0f, 1.0f))
+        {
+            if (!GetComponent<AudioSource>().isPlaying)
+            {
+                GetComponent<AudioSource>().Play();
+            }
         }
+
 
         timeToSpawn -= Time.fixedDeltaTime;
 	}
@@ -31,5 +38,7 @@ public class FireSpawner : MonoBehaviour {
         GameObject fire = Instantiate(firePrefab);
         fire.transform.position = new Vector3(transform.position.x, transform.position.y + Y_OFFSET, transform.position.z);
         fire.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, LAUNCH_VELOCITY);
+
+        GetComponent<AudioSource>().Stop();
     }
 }
