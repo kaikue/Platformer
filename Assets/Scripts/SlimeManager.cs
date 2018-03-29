@@ -90,18 +90,15 @@ public class SlimeManager : MonoBehaviour {
                     Destroy(activeBridge.gameObject);
 					FormBridge();
                 } else
-                {
-                    transform.position = activeBridge.transform.position;
-                    Destroy(activeBridge.gameObject);
-                    activeBridge = null;
-                    sr.enabled = true;
-					particles.SetActive(true);
-                    WhistleSound.Play();
+				{
+					WhistleSound.Play();
+					transform.position = activeBridge.transform.position;
+					DestroyBridge();
                 }
 			}
 			else if (selectedBridge != null && selectedBridge.canActivate) 
 			{
-				sr.enabled = false;
+				SetRender(false);
 				particles.SetActive(false);
 				FormBridge();
 			}
@@ -118,6 +115,22 @@ public class SlimeManager : MonoBehaviour {
 		activeBridge = newSlimeObject;
 		SlimeSound.Play();
 		lastSelectedBridge = selectedBridge;
+	}
+
+	public void DestroyBridge()
+	{
+		Destroy(activeBridge.gameObject);
+		activeBridge = null;
+		SetRender(true);
+		particles.SetActive(true);
+	}
+
+	private void SetRender(bool enabled)
+	{
+		GameObject slimeGuide = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerDemo>().SlimeGuide;
+		
+		SpriteRenderer renderer = slimeGuide.activeSelf ? slimeGuide.GetComponent<SpriteRenderer>() : sr;
+		renderer.enabled = enabled;
 	}
 
     private Vector2 GetRadialVelocity()

@@ -34,9 +34,11 @@ public class SlimeGuide : MonoBehaviour {
     {
         while (spriteIndex < 5 + spriteStaticFrames)
         {
-            spriteIndex++;
-            sr.sprite = spriteIndex < spriteStaticFrames ? sprites[0] : sprites[spriteIndex - spriteStaticFrames];
-            yield return new WaitForSecondsRealtime(0.16f);
+			print(spriteIndex + " " + spriteStaticFrames + " " + sprites.Length);
+
+			sr.sprite = spriteIndex < spriteStaticFrames ? sprites[0] : sprites[spriteIndex - spriteStaticFrames];
+			spriteIndex++;
+			yield return new WaitForSecondsRealtime(0.16f);
         }
     }
 

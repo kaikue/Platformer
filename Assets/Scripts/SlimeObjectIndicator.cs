@@ -40,7 +40,6 @@ public class SlimeObjectIndicator : MonoBehaviour {
     {
         if (collision.CompareTag("Player"))
         {
-            print("enter");
             canActivate = false;
             colliding = true;
         }
@@ -50,7 +49,6 @@ public class SlimeObjectIndicator : MonoBehaviour {
     {
         if (collision.CompareTag("Player"))
         {
-            print("stay");
             canActivate = false;
             colliding = true;
         }
@@ -60,7 +58,6 @@ public class SlimeObjectIndicator : MonoBehaviour {
     {
         if (collision.CompareTag("Player"))
         {
-            print("exit");
             canActivate = true;
             colliding = false;
         }
