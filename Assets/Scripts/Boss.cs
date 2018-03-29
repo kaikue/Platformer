@@ -20,6 +20,8 @@ public class Boss : MonoBehaviour
 	public GameObject fade;
 	public GameObject breakParticles1;
 	public GameObject breakParticles2;
+	public GameObject whamSound;
+	public GameObject roarSound;
 	public int phase = 0;
 
 	private const int STAR_GROUP_SIZE = 3;
@@ -218,7 +220,7 @@ public class Boss : MonoBehaviour
 		right.PoundAttack();
 
 		yield return new WaitForSeconds(BossHand.POUND_PHASE2_TIME);
-		sr.sprite = angryFace;
+		GetAngry();
 		yield return new WaitForSeconds(BossHand.POUND_PHASE3_TIME - BossHand.POUND_PHASE2_TIME);
 		PoundSlam();
 		yield return new WaitForSeconds(BossHand.POUND_PHASE4_TIME - BossHand.POUND_PHASE3_TIME);
@@ -232,7 +234,7 @@ public class Boss : MonoBehaviour
 	{
 		StartCoroutine(ScreenShake(true));
 		player.GetComponent<PlayerDemo>().Shove();
-		GetComponent<AudioSource>().Play();
+		whamSound.GetComponent<AudioSource>().Play();
 	}
 
 	private IEnumerator SweepAttack()
@@ -248,7 +250,7 @@ public class Boss : MonoBehaviour
 		}
 
 		yield return new WaitForSeconds(BossHand.SWEEP_PHASE2_TIME);
-		sr.sprite = angryFace;
+		GetAngry();
 		yield return new WaitForSeconds(BossHand.SWEEP_PHASE4_TIME - BossHand.SWEEP_PHASE2_TIME);
 
 		StartCoroutine(WaitAttack());
@@ -275,7 +277,7 @@ public class Boss : MonoBehaviour
 		right.PoundAttack();
 
 		yield return new WaitForSeconds(BossHand.POUND_PHASE2_TIME);
-		sr.sprite = angryFace;
+		GetAngry();
 		yield return new WaitForSeconds(BossHand.POUND_PHASE3_TIME - BossHand.POUND_PHASE2_TIME);
 		DestroySlam();
 		yield return new WaitForSeconds(BossHand.POUND_PHASE4_TIME - BossHand.POUND_PHASE3_TIME);
@@ -290,6 +292,12 @@ public class Boss : MonoBehaviour
 	{
 		PoundSlam();
 		NextPhase();
+	}
+
+	private void GetAngry()
+	{
+		roarSound.GetComponent<AudioSource>().Play();
+		sr.sprite = angryFace;
 	}
 
 	private IEnumerator ScreenShake(bool end)
