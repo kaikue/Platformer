@@ -51,6 +51,7 @@ public class Boss : MonoBehaviour
 		left = leftHand.GetComponent<BossHand>();
 		right = rightHand.GetComponent<BossHand>();
 		ActivateStarSpots();
+		gm.hudOverlay.gameObject.SetActive(false);
 		StartCoroutine(WaitAttack());
 	}
 
@@ -338,7 +339,7 @@ public class Boss : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 
-		yield return new WaitForSeconds(FADE_TIME / 2);
+		yield return new WaitForSeconds(0.5f);
 		int sceneIndex = SceneManager.GetActiveScene().buildIndex;
 		SceneManager.LoadScene(sceneIndex + 1);
 	}
