@@ -547,26 +547,32 @@ public class PlayerDemo : MonoBehaviour {
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (collision.gameObject.tag == "Slime"
-			&& collision.gameObject.transform.position.y < rb.position.y)
+		if (collision.gameObject.tag == "Slime")
 		{
-			float prevXVel = rb.velocity.x;
-			rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
-			if (rb.velocity.y < MIN_SLIME_BOUNCE)
+			if (collision.gameObject.transform.position.y < rb.position.y)
 			{
-				rb.velocity = new Vector2(rb.velocity.x, MIN_SLIME_BOUNCE);
-			}
-			//rb.velocity = new Vector2(rb.velocity.x, SLIME_BOUNCE_MULTIPLIER * JUMP_VEL);
+				float prevXVel = rb.velocity.x;
+				rb.velocity = Vector2.Reflect(rb.velocity, collision.contacts[0].normal);
+				if (rb.velocity.y < MIN_SLIME_BOUNCE)
+				{
+					rb.velocity = new Vector2(rb.velocity.x, MIN_SLIME_BOUNCE);
+				}
+				//rb.velocity = new Vector2(rb.velocity.x, SLIME_BOUNCE_MULTIPLIER * JUMP_VEL);
 
-			//reverse if rolling into slime
-			if (isRolling() && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
+				//reverse if rolling into slime
+				if (isRolling() && Mathf.Sign(rb.velocity.x) != Mathf.Sign(prevXVel))
+				{
+					rollDir *= -1;
+				}
+
+				BounceSound.Play();
+			}
+			else
 			{
-				rollDir *= -1;
+				Vector2 velocity = rb.velocity;
+				velocity.y = 0;
+				rb.velocity = velocity;
 			}
-
-            BounceSound.Play();
-
-			return;
 		}
     }
 
