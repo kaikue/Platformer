@@ -375,7 +375,7 @@ public class PlayerDemo : MonoBehaviour {
 		{
 			//apply roll velocity
 			float timeFactor = rollTime / ROLL_TIME;
-			float rollVel = ROLL_VEL * timeFactor;
+			float rollVel = Mathf.Max(ROLL_VEL * timeFactor, MAX_RUN_VEL);
 			
 			//roll in direction of ground
 			Vector2 groundVec;
@@ -392,6 +392,9 @@ public class PlayerDemo : MonoBehaviour {
 			velocity.x += rollVec.x;
 			float speedCapX = Mathf.Abs(rollVec.x);
 			velocity.x = Mathf.Clamp(velocity.x, -speedCapX, speedCapX);
+            // Experimental momentum conservation
+            velocity.x = velocity.x < 0 ? -speedCapX : speedCapX;
+            // End Experimental momentum conservation
 			offset.y += rollVec.y * Time.fixedDeltaTime; //do this with offset so it doesn't persist when rolling up
 
 			//roll for longer on slope
