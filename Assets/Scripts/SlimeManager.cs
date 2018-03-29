@@ -26,8 +26,9 @@ public class SlimeManager : MonoBehaviour {
 
     private SlimeObjectIndicator selectedBridge;
     private GameObject activeBridge;
+	private SlimeObjectIndicator lastSelectedBridge;
 
-    private readonly Dictionary<Vector3Int, SlimeObjectIndicator> closeBridges = 
+	private readonly Dictionary<Vector3Int, SlimeObjectIndicator> closeBridges = 
         new Dictionary<Vector3Int, SlimeObjectIndicator>();
     private bool bridgeSwapQueued;
 
@@ -77,14 +78,17 @@ public class SlimeManager : MonoBehaviour {
 		{
 			if (activeBridge != null)
 			{
+				if (lastSelectedBridge != null)
+				{
+					lastSelectedBridge.activated = false;
+				}
+
                 if (selectedBridge != null &&
                     Vector3.Distance(selectedBridge.gameObject.transform.position, activeBridge.transform.position) > 1.0f)
                 {
                     // selected bridge is different from active bridge. Immediately switch to selected bridge
                     Destroy(activeBridge.gameObject);
-                    GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
-                    newSlimeObject.transform.position = selectedBridge.transform.position;
-                    activeBridge = newSlimeObject;
+					FormBridge();
                 } else
                 {
                     transform.position = activeBridge.transform.position;
@@ -94,22 +98,27 @@ public class SlimeManager : MonoBehaviour {
 					particles.SetActive(true);
                     WhistleSound.Play();
                 }
-
 			}
 			else if (selectedBridge != null && selectedBridge.canActivate) 
 			{
-                GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
-                newSlimeObject.transform.position = selectedBridge.transform.position;
-                activeBridge = newSlimeObject;
-                sr.enabled = false;
+				sr.enabled = false;
 				particles.SetActive(false);
-
-				SlimeSound.Play();
+				FormBridge();
 			}
 			
 			bridgeSwapQueued = false;
 		}
     }
+
+	private void FormBridge()
+	{
+		selectedBridge.activated = true;
+		GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
+		newSlimeObject.transform.position = selectedBridge.transform.position;
+		activeBridge = newSlimeObject;
+		SlimeSound.Play();
+		lastSelectedBridge = selectedBridge;
+	}
 
     private Vector2 GetRadialVelocity()
     {
