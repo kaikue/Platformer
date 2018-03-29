@@ -45,3 +45,4 @@ Run the provided .exe file. Make sure the UnityPlayer.dll file and the _data fol
 - Shatter sound: soundbible.com/105-Light-Bulb-Breaking.html
 - Boom sound: https://freesound.org/people/studiomandragore/sounds/401630/
 - Font: https://www.dafont.com/amperzand.font and https://www.dafont.com/mont.font
+- Music by Brandon Fiechter and Derek Fiechter
