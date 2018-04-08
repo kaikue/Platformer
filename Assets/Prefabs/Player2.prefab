@@ -373,7 +373,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1937045308031960}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.05976, y: 3.7678523, z: -0.14576934}
+  m_LocalPosition: {x: -1.6786928, y: -25.010242, z: -0.14576934}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4160731401533184}
@@ -708,11 +708,11 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -0.45, y: -0.9675}
-  - {x: -0.45, y: 0.9675}
-  - {x: 0.45, y: 0.9675}
-  - {x: 0.45, y: -0.9675}
-  - {x: -0.45, y: -0.9675}
+  - {x: -0.25, y: -0.9675}
+  - {x: -0.25, y: 0.9675}
+  - {x: 0.25, y: 0.9675}
+  - {x: 0.25, y: -0.9675}
+  - {x: -0.25, y: -0.9675}
 --- !u!81 &81473358567031346
 AudioListener:
   m_ObjectHideFlags: 1
