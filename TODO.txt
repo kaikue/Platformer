@@ -1,5 +1,31 @@
 https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
+Polish:
+	Reduce player bounding box size to cover feet
+	Little jump after jump while rolling under ledge
+	Make roll velocity max of roll vel and run vel (so still rolls to a halt)
+	Particles on crystals breaking
+	Particles on fireballs
+		flying, emitting, destroying
+	Jump sound pitch variation
+	Background on star # GUI
+	Prevent fall star -> pit star sequence break
+	Add more stuff to top left of crystal level
+	Slime appears?
+	Zoom in to star when approaching (then zoom out after collected)
+	Change slime key back to E?
+	Remove signs, replace with floating text
+		Gamepad controls too
+	Keyboard/gamepad support for menus
+	Freeze for a bit on hit then flicker after respawning
+	Don't show slime when you can't place it (bouncing up in boss fight phase 3)
+	More checkpoints?
+	Checkpoint notification?
+	Smaller colliders on fire
+	Make boss faster
+	More stars in charred level (+ increase req to 6)?
+	4+ wide walljumps too hard?
+
 camera 2/3 down?
 
 Scene transition (to particular point in scene)
