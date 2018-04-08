@@ -130,6 +130,7 @@ public class SlimeManager : MonoBehaviour {
 		GameObject newSlimeObject = Instantiate(slimeObjectPrefab);
 		newSlimeObject.transform.position = selectedBridge.transform.position;
 		activeBridge = newSlimeObject;
+		SlimeSound.pitch = 1.0f;
 		SlimeSound.PlayDelayed(0.5f);
 		lastSelectedBridge = selectedBridge;
 		newSlimeObject.GetComponentInChildren<SlimeBridgeAnimation>().sprites = bridgeSprites;
@@ -142,6 +143,8 @@ public class SlimeManager : MonoBehaviour {
 		    Destroy(activeBridge.gameObject);
         }
 		activeBridge = null;
+		SlimeSound.pitch = 0.7f;
+		SlimeSound.Play();
 		SetRender(true);
 		particles.SetActive(true);
 	}
@@ -290,4 +293,9 @@ public class SlimeManager : MonoBehaviour {
 
         return (1.0f / connectedTilePositions.Count) * avgPos;
     }
+
+	public bool CanActivateBridge()
+	{
+		return selectedBridge != null && selectedBridge.canActivate;
+	}
 }
