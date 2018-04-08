@@ -34,11 +34,11 @@ public class PlayerDemo : MonoBehaviour {
 	private const float ROLL_TIME = 1.0f; //time it takes for roll to wear off naturally
 	private const float MAX_ROLL_TIME = 2.0f; //time it takes for roll to wear off at the bottom of a long slope
 	private const float ROLL_MAX_ADDITION = 5.0f; //amount of roll added on high slopes
-	private const float ROLLJUMP_VEL = JUMP_VEL * 2 / 3; //roll cancel jump y speed
+	private const float ROLLJUMP_VEL = JUMP_VEL * 2.0f / 3.0f; //roll cancel jump y speed
 	private const float ROLL_HEIGHT = 0.5f; //scale factor of height when rolling
 	private const float ROLL_FORCE_AMOUNT = 0.1f; //how much to push the player when they can't unroll
 
-    private const float SLIME_BOUNCE_MULTIPLIER = 1.5f; // minimum bounce given by slime as a multiple of JUMP_VEL
+	private const float SLIME_BOUNCE_MULTIPLIER = 1.5f; // minimum bounce given by slime as a multiple of JUMP_VEL
 	private const float MIN_SLIME_BOUNCE = SLIME_BOUNCE_MULTIPLIER * JUMP_VEL;
 
 	private static float SLIDE_THRESHOLD;
@@ -363,11 +363,13 @@ public class PlayerDemo : MonoBehaviour {
 		{
 			if (canRoll)
 			{
+				//start roll
 				canRoll = false;
 				rollTime = ROLL_TIME;
 				SetRollCollider();
+				ResetWalljump();
 
-                RollSound.Play();
+				RollSound.Play();
 			}
 		}
 
@@ -375,7 +377,13 @@ public class PlayerDemo : MonoBehaviour {
 		{
 			//apply roll velocity
 			float timeFactor = rollTime / ROLL_TIME;
-			float rollVel = Mathf.Max(ROLL_VEL * timeFactor, MAX_RUN_VEL);
+			float rollVel = rollDir * ROLL_VEL * timeFactor;
+
+			bool shouldStop = false;
+			if (Mathf.Abs(rollVel) < Mathf.Abs(velocity.x))
+			{
+				shouldStop = true;
+			}
 			
 			//roll in direction of ground
 			Vector2 groundVec;
@@ -388,13 +396,11 @@ public class PlayerDemo : MonoBehaviour {
 			{
 				groundVec = Vector2.right;
 			}
-			Vector2 rollVec = rollDir * rollVel * groundVec;
+			Vector2 rollVec = rollVel * groundVec;
 			velocity.x += rollVec.x;
 			float speedCapX = Mathf.Abs(rollVec.x);
 			velocity.x = Mathf.Clamp(velocity.x, -speedCapX, speedCapX);
-            // Experimental momentum conservation
-            velocity.x = velocity.x < 0 ? -speedCapX : speedCapX;
-            // End Experimental momentum conservation
+			
 			offset.y += rollVec.y * Time.fixedDeltaTime; //do this with offset so it doesn't persist when rolling up
 
 			//roll for longer on slope
@@ -408,7 +414,7 @@ public class PlayerDemo : MonoBehaviour {
 
 			rollTime -= Time.fixedDeltaTime;
 
-			if (!isRolling())
+			if (!isRolling() || shouldStop)
 			{
 				StopRoll();
 			}
@@ -470,7 +476,7 @@ public class PlayerDemo : MonoBehaviour {
 		SetColliderHeight(rollTop);
 	}
 
-	private void SetNormalCollider()
+	private void StopRoll()
 	{
 		//if it fits, otherwise keep anim state and rolling
 		if (!rollingCollider) return;
@@ -484,8 +490,12 @@ public class PlayerDemo : MonoBehaviour {
 		if (hits.Length > 0) //collided with something else
 		{
 			canRoll = false;
-			rollTime = ROLL_FORCE_AMOUNT;
+			rollTime = Mathf.Max(rollTime + Time.fixedDeltaTime, ROLL_FORCE_AMOUNT);
 			SetRollCollider();
+		}
+		else
+		{
+			rollTime = 0;
 		}
 	}
 
@@ -510,13 +520,7 @@ public class PlayerDemo : MonoBehaviour {
 
         SkidSound.Stop();
 	}
-
-	private void StopRoll()
-	{
-		rollTime = 0;
-		SetNormalCollider();
-	}
-
+	
 	private void SetAnimState(AnimState state)
 	{
 		animState = state;

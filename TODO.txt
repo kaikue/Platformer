@@ -3,7 +3,7 @@ https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 Polish:
 	Reduce player bounding box size to cover feet
 	Little jump after jump while rolling under ledge
-	Make roll velocity max of roll vel and run vel (so still rolls to a halt)
+	Set jump anim instead of slide right after leaving wall, not after grace period
 	Particles on crystals breaking
 	Particles on fireballs
 		flying, emitting, destroying
@@ -43,9 +43,10 @@ Add back hitsnapping (note issues when rolling off of platform and immediately u
 Review collisions and any line with four spaces
 Enemies
 Rolling hurts enemies
+Map of level in dead ends
 Bosses
-Super Stars (x3, different overlay text & image)
-Don't spawn if superstar was collected
+	Super Stars (x3, different overlay text & image)
+	Don't spawn if superstar was collected
 Levels
 	left: Water? Rainy forest? Temple?
 	up: Ice/mountain
@@ -75,8 +76,8 @@ Pause screen buttons
 	resume, options?, quit
 
 Star collect overlay
-Different banner/star image color for different star type
-Fancy transitions for banner and overlay
+	Different banner/star image color for different star type
+	Fancy transitions for banner and overlay
 
 HUD overlay- use quadratic slope for in/out movement?
 
@@ -106,8 +107,6 @@ Art
 		Scenery
 		Backgrounds
 	Spikes
-
-Team logo (with sound)
 
 pick up/throw?
 
