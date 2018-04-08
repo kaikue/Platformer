@@ -100,7 +100,8 @@ public class SlimeManager : MonoBehaviour {
 				}
 
                 if (selectedBridge != null &&
-                    Vector3.Distance(selectedBridge.gameObject.transform.position, activeBridge.transform.position) > 1.0f)
+					selectedBridge.canActivate &&
+					Vector3.Distance(selectedBridge.gameObject.transform.position, activeBridge.transform.position) > 1.0f)
                 {
                     // selected bridge is different from active bridge. Immediately switch to selected bridge
                     Destroy(activeBridge.gameObject);
