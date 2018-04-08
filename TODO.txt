@@ -4,7 +4,6 @@ Polish:
 	Don't show slime when you can't place it (bouncing up in boss fight phase 3)
 	Walking just barely off the edge will cause wrong wallslide image (facing left but back against wall to right)
 	Set jump anim instead of slide right after leaving wall, not after grace period
-	Particles on crystals breaking
 	Jump sound pitch variation
 	Background on star # GUI
 	Prevent fall star -> pit star sequence break
@@ -46,7 +45,7 @@ Rolling hurts enemies
 Map of level in dead ends
 Bosses
 	Super Stars (x3, different overlay text & image)
-	Don't spawn if superstar was collected
+	Don't spawn boss if superstar was collected
 Levels
 	left: Water? Rainy forest? Temple?
 	up: Ice/mountain
@@ -68,12 +67,11 @@ Slopes
 
 Water
 Decreases gravity
-Decreases move speed
+Decreases move speed?
 Allows offground jumps after swim animation is complete
 	plays full swim animation then goes to swim-stand
 
-Pause screen buttons
-	resume, options?, quit
+Options buttons on title and pause
 
 Star collect overlay
 	Different banner/star image color for different star type

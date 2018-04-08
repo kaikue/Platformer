@@ -180,6 +180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f32c19ce4c820814bbe966af85d319be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ParticlePrefab: {fileID: 1325691388494546, guid: 7e3aa7c5258b9d2498ee9ce02af1921c,
+    type: 2}
 --- !u!212 &212660719805554470
 SpriteRenderer:
   m_ObjectHideFlags: 1

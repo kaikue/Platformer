@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour {
 
+	public GameObject ParticlePrefab;
+
 	private AudioSource CrashSound;
 	bool destroying;
 
@@ -34,6 +36,8 @@ public class Obstacle : MonoBehaviour {
 			GetComponent<BoxCollider2D>().enabled = false;
 			GetComponent<SpriteRenderer>().enabled = false;
 			destroying = true;
+			GameObject particles = Instantiate(ParticlePrefab);
+			particles.transform.position = gameObject.transform.position;
 		}
 	}
 }
