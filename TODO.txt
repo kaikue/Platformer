@@ -1,7 +1,6 @@
 https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
 Polish:
-	Slime sometimes renders behind blocks (foreground layer)
 	Don't show slime when you can't place it (bouncing up in boss fight phase 3)
 	Walking just barely off the edge will cause wrong wallslide image (facing left but back against wall to right)
 	Set jump anim instead of slide right after leaving wall, not after grace period
@@ -10,8 +9,8 @@ Polish:
 	Background on star # GUI
 	Prevent fall star -> pit star sequence break
 	Add more stuff to top left of crystal level (move top section to left and don't let them climb above it?)
-	Slime appears?
 	Zoom in to star when approaching (then zoom out after collected)
+	Slime appears in cutscene when collecting last star in hub?
 	Remove signs, replace with floating text
 		Gamepad controls too
 	Change slime key back to E?
