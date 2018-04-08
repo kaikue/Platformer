@@ -2,7 +2,6 @@ https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
 Polish:
 	Reduce player bounding box size to cover feet
-	Little jump after jump while rolling under ledge
 	Set jump anim instead of slide right after leaving wall, not after grace period
 	Particles on crystals breaking
 	Particles on fireballs
@@ -37,6 +36,9 @@ Health- add to HUD
 Hurt you, send you back to latest checkpoint
 If you die you restart the scene
 
+More moves
+	Jump higher if rolling?
+	Roll + jump = long jump?
 Add back roll cancel jump?
 Add back HUD sliding in/out?
 Add back hitsnapping (note issues when rolling off of platform and immediately under ledge)

@@ -291,11 +291,14 @@ public class PlayerDemo : MonoBehaviour {
 			velocity.y = 0;
 			if (jumpQueued)
 			{
+				jumpQueued = false;
 				//regular jump
 				StopRoll();
-				velocity.y += JUMP_VEL;
-                PlayJumpSound();
-				jumpQueued = false;
+				if (!isRolling()) //don't jump if forced roll
+				{
+					velocity.y += JUMP_VEL;
+					PlayJumpSound();
+				}
 			}
 
 			//print(grounds.Count + " " + velocity.y + " " + onGround + " " + (velocity.y <= 0));
