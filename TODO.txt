@@ -1,6 +1,7 @@
 https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
 Polish:
+	Slime bridge replacement (with existing bridge) can get player stuck in it
 	Reduce player bounding box size to cover feet
 	Set jump anim instead of slide right after leaving wall, not after grace period
 	Particles on crystals breaking
@@ -12,17 +13,18 @@ Polish:
 	Add more stuff to top left of crystal level
 	Slime appears?
 	Zoom in to star when approaching (then zoom out after collected)
-	Change slime key back to E?
 	Remove signs, replace with floating text
 		Gamepad controls too
+	Change slime key back to E?
 	Keyboard/gamepad support for menus
 	Freeze for a bit on hit then flicker after respawning
 	Don't show slime when you can't place it (bouncing up in boss fight phase 3)
-	More checkpoints?
 	Checkpoint notification?
 	Smaller colliders on fire
 	Make boss faster
 	More stars in charred level (+ increase req to 6)?
+		climb up wall with walljump + slime
+		horizontal fireball run
 	4+ wide walljumps too hard?
 
 camera 2/3 down?
