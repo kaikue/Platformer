@@ -11,9 +11,11 @@ public class FireSpawner : MonoBehaviour {
     public GameObject firePrefab;
 
     private float timeToSpawn;
+	private ParticleSystem particles;
 
 	void Start () {
         timeToSpawn = SPAWN_OFFSET;
+		particles = gameObject.GetComponent<ParticleSystem>();
 	}
 
     void FixedUpdate () {
@@ -40,5 +42,7 @@ public class FireSpawner : MonoBehaviour {
         fire.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, LAUNCH_VELOCITY);
 
         GetComponent<AudioSource>().Stop();
+
+		particles.Play();
     }
 }

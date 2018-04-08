@@ -5,8 +5,6 @@ Polish:
 	Reduce player bounding box size to cover feet
 	Set jump anim instead of slide right after leaving wall, not after grace period
 	Particles on crystals breaking
-	Particles on fireballs
-		flying, emitting, destroying
 	Jump sound pitch variation
 	Background on star # GUI
 	Prevent fall star -> pit star sequence break
