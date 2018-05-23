@@ -1,18 +1,18 @@
 https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
 Polish:
+	Make slime animation faster + activate collider at start of animation
 	Don't show slime when you can't place it (bouncing up in boss fight phase 3)
 	Walking just barely off the edge will cause wrong wallslide image (facing left but back against wall to right)
 	Set jump anim instead of slide right after leaving wall, not after grace period
 	Jump sound pitch variation
-	Background on star # GUI
+	Outline on star # GUI (white text, dark outline)
 	Prevent fall star -> pit star sequence break
 	Add more stuff to top left of crystal level (move top section to left and don't let them climb above it?)
 	Zoom in to star when approaching (then zoom out after collected)
 	Slime appears in cutscene when collecting last star in hub?
 	Remove signs, replace with floating text
 		Gamepad controls too
-	Change slime key back to E?
 	Keyboard/gamepad support for menus
 	Freeze for a bit on hit then flicker after respawning
 	Checkpoint notification?
@@ -21,6 +21,27 @@ Polish:
 		climb up wall with walljump + slime
 		horizontal fireball run
 	4+ wide walljumps too hard?
+	Wallslide sound
+		test with corners in boss level (2 tilesets)
+	Remove N cheat
+	Walljump (+ regular jump) grace period 0.25 seconds
+	Variable jump height?
+	Slow when sliding down walls?
+
+Walljump mechanics
+	Trigger: press jump key when against wall
+		hold towards wall?
+		hold away from wall?
+		not if last jumped against that side in midair?
+	Effect: jump up (vertical)
+	Effect: push away from wall (horizontal)
+		push declines over time?
+		push suddenly stops after brief window?
+		push is only impulse?
+		push continues if no movement key pressed?
+	Consequences:
+		can jump back and forth up narrow vertical corridor
+		can climb single vertical wall?
 
 camera 2/3 down?
 
@@ -37,12 +58,36 @@ More moves
 	Jump higher if rolling?
 	Roll + jump = long jump?
 Add back roll cancel jump?
-Add back HUD sliding in/out?
+Add back HUD sliding in/out
+	Also show star count when paused
 Add back hitsnapping (note issues when rolling off of platform and immediately under ledge)
 Review collisions and any line with four spaces
+Coins
 Enemies
-Rolling hurts enemies
-Map of level in dead ends
+	Rolling hurts enemies
+	Should make the game FUN
+	Slimes- have to roll under ledge and squish one to teach mechanic
+Obstacles
+	Collapsing blocks
+	Thwomps (spiky)
+	Rotating blocks
+	Rollthroughable blocks
+Level design
+	Map of level in dead ends
+	Show stuff the player can't get to yet
+	Mix of exploration, puzzles, combat
+	Introduce main mechanic safely, then iterate & complicate
+	Sneak peeks of other levels
+	Invisible secrets (hints on map & elsewhere)
+	Mini-speedruns
+	Levels tell a story
+		Conspiracy- detective sends you to "pick up clues", he was the one who did the crime and wants you to collect evidence
+		Tournament
+		Race- one in swimming level, one in land level
+		Exploring ancient deep ruins
+		Climbing a mountain
+		Digging to the core
+		Fixing the village
 Bosses
 	Super Stars (x3, different overlay text & image)
 	Don't spawn boss if superstar was collected
@@ -57,6 +102,9 @@ Levels
 	other levels:
 		Beehive
 		Lava
+		Ocean- surfer dude fish, fast currents
+		Collect keys from corners of the map to unlock door
+		See phone notes
 		
 Boss doors require that level's color x5
 Secret final door requires all 11 of all colors
