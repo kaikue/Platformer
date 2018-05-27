@@ -21,12 +21,14 @@ Polish:
 		climb up wall with walljump + slime
 		horizontal fireball run
 	4+ wide walljumps too hard?
-	Wallslide sound
-		test with corners in boss level (2 tilesets)
 	Remove N cheat
 	Walljump (+ regular jump) grace period 0.25 seconds
 	Variable jump height?
-	Slow when sliding down walls?
+	Slow when sliding down walls? (only when moving down)
+		also only do slide image when moving down?
+		slide particles?
+		Wallslide sound
+			test with corners in boss level (2 tilesets)
 
 Walljump mechanics
 	Trigger: press jump key when against wall
