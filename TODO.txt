@@ -1,11 +1,9 @@
 https://eev.ee/blog/2017/10/13/coaxing-2d-platforming-out-of-unity/
 
 Polish:
-	Make slime animation faster + activate collider at start of animation
 	Don't show slime when you can't place it (bouncing up in boss fight phase 3)
 	Walking just barely off the edge will cause wrong wallslide image (facing left but back against wall to right)
 	Set jump anim instead of slide right after leaving wall, not after grace period
-	Jump sound pitch variation
 	Outline on star # GUI (white text, dark outline)
 	Prevent fall star -> pit star sequence break
 	Add more stuff to top left of crystal level (move top section to left and don't let them climb above it?)
@@ -20,7 +18,7 @@ Polish:
 	More stars in charred level (+ increase req to 6)?
 		climb up wall with walljump + slime
 		horizontal fireball run
-	4+ wide walljumps too hard?
+		fall -> walljump
 	Remove N cheat
 	Walljump (+ regular jump) grace period 0.25 seconds
 	Variable jump height?
