@@ -23,7 +23,6 @@ public class SlimeGuide : MonoBehaviour {
 
     private void Awake()
     {
-        print("awoken");
         sr = GetComponent<SpriteRenderer>();
         spriteIndex = 0;
         sr.sprite = sprites[spriteIndex];

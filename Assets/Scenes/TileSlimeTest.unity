@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 8
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -39,6 +39,7 @@ RenderSettings:
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -54,11 +55,10 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 9
+    serializedVersion: 10
     m_Resolution: 2
     m_BakeResolution: 40
-    m_TextureWidth: 1024
-    m_TextureHeight: 1024
+    m_AtlasSize: 1024
     m_AO: 0
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
@@ -301,6 +301,7 @@ TilemapRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
@@ -323,9 +324,11 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
+  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
+  m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
 --- !u!1839735485 &968554991
 Tilemap:
@@ -1210,11 +1213,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
-  m_TileRefreshArray:
-  - serializedVersion: 1
-    m_DirtyIndex: 0
-  - serializedVersion: 1
-    m_DirtyIndex: 1
 --- !u!1 &982025839
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,6 +1282,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpriteObject: {fileID: 1746320881}
+  HurtZone: {fileID: 0}
+  SlimeGuide: {fileID: 0}
+  Slime: {fileID: 0}
+  portal: {fileID: 0}
+  JumpSound: {fileID: 0}
+  RollSound: {fileID: 0}
+  SkidSound: {fileID: 0}
+  BounceSound: {fileID: 0}
+  StarCollectSound: {fileID: 0}
+  DeathSound: {fileID: 0}
 --- !u!81 &982025843
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1361,6 +1369,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 982025839}
   Y_WINDOW: 2
+  FALLING_VELOCITY: 0
+  FALLING_SHIFT_RATE: 0
 --- !u!81 &1000665790
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1471,6 +1481,7 @@ TilemapRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
@@ -1493,9 +1504,11 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
+  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
+  m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
 --- !u!1839735485 &1124052457
 Tilemap:
@@ -1640,9 +1653,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
-  m_TileRefreshArray:
-  - serializedVersion: 1
-    m_DirtyIndex: 0
 --- !u!1001 &1124179129
 Prefab:
   m_ObjectHideFlags: 0
@@ -1759,7 +1769,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebe19088893e5524791ec7c0cce9dd23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
 --- !u!61 &1498662247
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1921,6 +1930,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
@@ -1993,8 +2003,14 @@ MonoBehaviour:
   bridgeActivatorTiles: {fileID: 1124052457}
   slimeObjectPrefab: {fileID: 1450990807660284, guid: 9c2d195f560e87a47800be4b369d867c,
     type: 2}
+  slimeObjectIndicatorPrefab: {fileID: 0}
   player: {fileID: 982025839}
+  sprite: {fileID: 0}
+  particles: {fileID: 0}
   followDistance: 1
+  SlimeSound: {fileID: 0}
+  WhistleSound: {fileID: 0}
+  bridgeSprites: []
 --- !u!1 &1746320881
 GameObject:
   m_ObjectHideFlags: 0
@@ -2040,6 +2056,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
@@ -2059,7 +2076,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1544870823
-  m_SortingLayer: 6
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c61fdafa0ec27d649a98699fe507f59d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
