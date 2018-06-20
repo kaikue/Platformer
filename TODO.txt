@@ -18,6 +18,7 @@ Polish:
 	More stars in charred level (+ increase req to 6)?
 		climb up wall with walljump + slime
 		horizontal fireball run
+		fall -> walljump
 
 camera 2/3 down?
 
