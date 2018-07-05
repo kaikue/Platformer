@@ -848,6 +848,7 @@ public class PlayerDemo : MonoBehaviour
         if (star != null)
         {
             gm.CollectStar(star);
+			other.SetActive(false);
             Destroy(other);
             StarCollectSound.Play();
 
