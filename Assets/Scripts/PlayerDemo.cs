@@ -845,10 +845,10 @@ public class PlayerDemo : MonoBehaviour
         }
 
         Star star = other.GetComponent<Star>();
-        if (star != null)
+        if (star != null && !star.playerTouched)
         {
+			star.playerTouched = true;
             gm.CollectStar(star);
-			other.SetActive(false);
             Destroy(other);
             StarCollectSound.Play();
 

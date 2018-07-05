@@ -18,6 +18,8 @@ public class Star : MonoBehaviour {
 	public StarType starType;
 	public int starValue;
 
+	public bool playerTouched = false;
+
 	private const float STAR_DISTANCE = 0.1f;
 	private const float STAR_SPEED = 3.0f;
 
