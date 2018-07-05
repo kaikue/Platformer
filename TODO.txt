@@ -15,7 +15,7 @@ Polish:
 	Freeze for a bit on hit then flicker after respawning
 	Checkpoint notification?
 	Make boss faster
-	More stars in charred level (+ increase req to 6)?
+	More stars?
 		climb up wall with walljump + slime
 		horizontal fireball run
 		fall -> walljump
