@@ -5,7 +5,6 @@ Polish:
 	Walking just barely off the edge will cause wrong wallslide image (facing left but back against wall to right)
 	Set jump anim instead of slide right after leaving wall, not after grace period
 	Outline on star # GUI (white text, dark outline)
-	Prevent fall star -> pit star sequence break
 	Add more stuff to top left of crystal level (move top section to left and don't let them climb above it?)
 	Zoom in to star when approaching (then zoom out after collected)
 	Slime appears in cutscene when collecting last star in hub?
@@ -19,14 +18,10 @@ Polish:
 		climb up wall with walljump + slime
 		horizontal fireball run
 		fall -> walljump
-	Remove N cheat
 	Walljump (+ regular jump) grace period 0.25 seconds
-	Variable jump height?
-	Slow when sliding down walls? (only when moving down)
-		also only do slide image when moving down?
-		slide particles?
-		Wallslide sound
-			test with corners in boss level (2 tilesets)
+	slide particles?
+	Wallslide sound
+		test with corners in boss level (2 tilesets)
 
 Walljump mechanics
 	Trigger: press jump key when against wall
